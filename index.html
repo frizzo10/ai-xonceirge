@@ -203,6 +203,36 @@ footer{border-top:1px solid var(--gray-300);padding:36px 48px;display:flex;justi
   .closing{padding:100px 24px}
   footer{padding:32px 20px}
 }
+
+/* BETRAYAL */
+.betrayal{background:var(--off-black);padding:140px 48px}
+.betrayal-inner{max-width:1000px;margin:0 auto}
+.betrayal-header{text-align:center;margin-bottom:100px}
+.betrayal-header h2{font-family:'DM Serif Display',serif;font-size:clamp(32px,5vw,68px);line-height:1.08;letter-spacing:-2px;color:var(--white);margin-top:20px}
+.betrayal-header h2 em{font-style:italic;color:rgba(255,255,255,0.28)}
+.betrayal-cards{display:flex;flex-direction:column;gap:0}
+.b-card{padding:64px 0;border-bottom:1px solid rgba(255,255,255,0.07);display:grid;grid-template-columns:80px 1fr 1fr;gap:48px;align-items:start}
+.b-card:last-child{border-bottom:none}
+.b-number{font-family:'DM Serif Display',serif;font-size:72px;line-height:1;color:rgba(255,255,255,0.06);letter-spacing:-2px;padding-top:4px}
+.b-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.28);margin-bottom:16px;grid-column:2;grid-row:1;align-self:end}
+.b-scenario{grid-column:2;grid-row:2}
+.b-moment{font-family:'DM Serif Display',serif;font-size:clamp(18px,2.2vw,26px);color:var(--white);line-height:1.3;letter-spacing:-0.3px;margin-bottom:16px}
+.b-what{font-size:15px;color:rgba(255,255,255,0.38);line-height:1.75}
+.b-vs{grid-column:3;grid-row:2;background:rgba(55,138,221,0.07);border:1px solid rgba(55,138,221,0.2);border-radius:18px;padding:28px 28px}
+.b-vs-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--blue-400);margin-bottom:12px}
+.b-vs-body{font-size:14px;color:rgba(255,255,255,0.62);line-height:1.75}
+.betrayal-close{margin-top:100px;padding-top:100px;border-top:1px solid rgba(255,255,255,0.07);text-align:center}
+.betrayal-close h3{font-family:'DM Serif Display',serif;font-size:clamp(28px,4vw,56px);color:var(--white);line-height:1.15;letter-spacing:-1.5px;margin-bottom:24px;font-weight:400}
+.betrayal-close p{font-size:clamp(16px,1.8vw,19px);color:rgba(255,255,255,0.42);max-width:640px;margin:0 auto 48px;line-height:1.8}
+@media(max-width:768px){
+  .betrayal{padding:80px 24px}
+  .b-card{grid-template-columns:1fr;gap:20px}
+  .b-number{font-size:48px;padding:0}
+  .b-label{grid-column:1;grid-row:2}
+  .b-scenario{grid-column:1;grid-row:3}
+  .b-vs{grid-column:1;grid-row:4}
+  .betrayal-close{margin-top:64px;padding-top:64px}
+}
 </style>
 </head>
 <body>
@@ -250,7 +280,59 @@ footer{border-top:1px solid var(--gray-300);padding:36px 48px;display:flex;justi
       <h2>We know. <em>We have the answer.</em></h2>
     </div>
   </div>
+
+<section class="betrayal">
+  <div class="betrayal-inner">
+    <div class="betrayal-header">
+      <span class="eyebrow" style="color:var(--gray-500)">They've been listening for years</span>
+      <h2>They heard everything.<br>They just never told you<br><em>what they did with it.</em></h2>
+    </div>
+    <div class="betrayal-cards">
+      <div class="b-card">
+        <div class="b-number">01</div>
+        <div class="b-label">Annoying</div>
+        <div class="b-scenario">
+          <p class="b-moment">You mention a black dress for a dinner party.</p>
+          <p class="b-what">For the next three weeks every app you open — Instagram, Google, your weather app, the news — is selling you black dresses. Shoes. Jewelry. Spanx. It follows you like a shadow. You mentioned it once. To find something you needed. And they turned it into a month-long ambush.</p>
+        </div>
+        <div class="b-vs">
+          <div class="b-vs-label">What Concierge does</div>
+          <div class="b-vs-body">Tells you the three best options near you, checks Saturday's weather, notices your dinner is at Nobu so calibrates the formality, remembers you hate heels. Finds you the dress. Then stops. Because you got what you needed.</div>
+        </div>
+      </div>
+      <div class="b-card">
+        <div class="b-number">02</div>
+        <div class="b-label">Invasive</div>
+        <div class="b-scenario">
+          <p class="b-moment">You Google a chest pain symptom at midnight.</p>
+          <p class="b-what">You were scared. You just wanted to know if you needed to go to the ER. Within 24 hours life insurance ads are following you across every device you own. Your fear at midnight — was sold to companies you've never heard of before you even knew if you were okay.</p>
+        </div>
+        <div class="b-vs">
+          <div class="b-vs-label">What Concierge does</div>
+          <div class="b-vs-body">Tells you whether it's urgent. Finds the nearest ER and its wait time if you need it. Explains what the symptom likely means for someone your age. Gives you the answer. Tells nobody. Ever.</div>
+        </div>
+      </div>
+      <div class="b-card">
+        <div class="b-number">03</div>
+        <div class="b-label">Violating</div>
+        <div class="b-scenario">
+          <p class="b-moment">You quietly search for a divorce lawyer from your home computer.</p>
+          <p class="b-what">You weren't ready to tell anyone. You were just looking. Three days later the ads appear — on the shared family iPad. On your spouse's suggested content. The algorithm didn't know your situation. It didn't care. It just saw data worth monetizing. Your most private moment became inventory.</p>
+        </div>
+        <div class="b-vs">
+          <div class="b-vs-label">What Concierge does</div>
+          <div class="b-vs-body">Helps you understand your rights. Finds you a lawyer. Tells you what to expect. Keeps it between us. Your private moments are not our business model. They never will be.</div>
+        </div>
+      </div>
+    </div>
+    <div class="betrayal-close">
+      <h3>We have no ulterior motive.<br>We never will.</h3>
+      <p>No ads. No data selling. No algorithm working for someone else. We took the same listening power they've been using against you for years — and pointed it entirely at you. Your life. Your problems. Your answers. Finally, AI working for you the way it always should have.</p>
+      <a href="/app.html" class="btn-primary">Try it — it's free</a>
+    </div>
+  </div>
 </section>
+
 
 <section class="versus">
   <div class="versus-header">
