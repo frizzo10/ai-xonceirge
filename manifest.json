@@ -1,0 +1,22 @@
+{
+  "name": "Concierge — We have the answer",
+  "short_name": "Concierge",
+  "description": "The expert already standing next to you. We know everything. We have the answer.",
+  "start_url": "/app.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0F0F0D",
+  "theme_color": "#0F0F0D",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "categories": ["lifestyle", "productivity", "utilities"],
+  "shortcuts": [
+    { "name": "Medical help",  "url": "/app.html?q=medical",  "description": "Get medical help now" },
+    { "name": "Legal help",    "url": "/app.html?q=legal",    "description": "Know your rights" },
+    { "name": "Car trouble",   "url": "/app.html?q=car",      "description": "Car help now" },
+    { "name": "Just talk",     "url": "/app.html?q=talk",     "description": "Talk it through" }
+  ]
+}

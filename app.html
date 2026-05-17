@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Concierge">
+<meta name="theme-color" content="#0F0F0D">
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
+<title>Concierge</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#0F0F0D;--surface:#1C1C19;--surface2:#242421;
+  --white:#FAFAF7;--border:rgba(255,255,255,0.09);--border2:rgba(255,255,255,0.15);
+  --text:rgba(255,255,255,0.95);--text2:rgba(255,255,255,0.52);--text3:rgba(255,255,255,0.26);
+  --blue:#378ADD;--blue-dim:rgba(55,138,221,0.14);--blue-border:rgba(55,138,221,0.36);
+  --green:#639922;--green-dim:rgba(99,153,34,0.14);--green-border:rgba(99,153,34,0.4);
+  --safe:env(safe-area-inset-bottom,0px);
+}
+html,body{height:100%;overflow:hidden;background:var(--black)}
+body{font-family:'DM Sans',sans-serif;color:var(--text);font-size:16px;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column}
+
+.topbar{padding:52px 20px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:0.5px solid var(--border);flex-shrink:0}
+.topbar-brand{font-family:'DM Serif Display',serif;font-size:22px;letter-spacing:-0.3px;color:var(--text)}
+.listen-toggle{display:flex;align-items:center;gap:7px;padding:7px 14px;border-radius:20px;border:0.5px solid var(--border2);background:var(--surface);font-size:12px;font-weight:500;color:var(--text2);cursor:pointer;transition:all 0.2s;-webkit-tap-highlight-color:transparent}
+.listen-toggle.on{background:var(--green-dim);border-color:var(--green-border);color:#C0DD97}
+.listen-dot{width:7px;height:7px;border-radius:50%;background:var(--text3);flex-shrink:0;transition:background 0.2s}
+.listen-toggle.on .listen-dot{background:var(--green)}
+
+.scroll-area{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(110px + var(--safe))}
+
+.ambient-banner{margin:14px 16px 0;padding:13px 16px;background:var(--green-dim);border:0.5px solid var(--green-border);border-radius:14px;font-size:13px;color:#C0DD97;line-height:1.55;display:none}
+.ambient-banner.show{display:block}
+
+.greeting{padding:20px 20px 6px;font-size:14px;color:var(--text2)}
+.greeting strong{color:var(--text);font-weight:500}
+
+.prob-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:10px 16px 16px}
+.prob-btn{border:0.5px solid var(--border2);border-radius:16px;background:var(--surface);padding:14px 6px 12px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;transition:all 0.15s;-webkit-tap-highlight-color:transparent;text-align:center}
+.prob-btn:active{transform:scale(0.94)}
+.prob-btn.active{background:var(--blue-dim);border-color:var(--blue-border)}
+.prob-btn .pbi{font-size:22px}
+.prob-btn .pbl{font-size:10px;color:var(--text2);line-height:1.2;font-weight:500}
+.prob-btn.active .pbl{color:#B5D4F4}
+
+.divider{height:0.5px;background:var(--border);margin:0 16px 16px}
+
+.chat-wrap{padding:0 16px;display:flex;flex-direction:column;gap:14px}
+.chat-wrap.hidden{display:none}
+.bubble-label{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:4px;padding:0 4px}
+.bubble{padding:14px 18px;border-radius:20px;font-size:14px;line-height:1.65;max-width:88%}
+.bubble.ai{background:var(--surface2);border:0.5px solid var(--border2);color:var(--text);align-self:flex-start;border-bottom-left-radius:5px;display:flex;flex-direction:column}
+.bubble.user{background:var(--blue);color:var(--white);align-self:flex-end;border-bottom-right-radius:5px;max-width:78%}
+.chips-row{display:flex;gap:8px;flex-wrap:wrap;padding:2px 0 4px}
+.chip{font-size:12px;padding:7px 14px;border:0.5px solid var(--border2);border-radius:20px;color:var(--text2);background:var(--surface);cursor:pointer;transition:all 0.15s;-webkit-tap-highlight-color:transparent}
+.chip:active{transform:scale(0.96)}
+.chip.active-chip{border-color:var(--blue);color:var(--blue)}
+
+.typing-dots{display:flex;gap:5px;align-items:center;padding:4px 0}
+.typing-dots span{width:7px;height:7px;border-radius:50%;background:var(--text3);animation:blink 1.2s infinite}
+.typing-dots span:nth-child(2){animation-delay:.2s}
+.typing-dots span:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+
+.bottom-bar{position:fixed;bottom:0;left:0;right:0;padding:12px 16px calc(12px + var(--safe));background:rgba(15,15,13,0.96);backdrop-filter:blur(20px);border-top:0.5px solid var(--border2);display:flex;gap:10px;align-items:flex-end}
+.input-wrap{flex:1;background:var(--surface);border:0.5px solid var(--border2);border-radius:24px;padding:10px 18px;display:flex;align-items:center}
+.input-wrap textarea{flex:1;background:none;border:none;outline:none;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--text);line-height:1.4;resize:none;max-height:100px;min-height:24px;height:24px}
+.input-wrap textarea::placeholder{color:var(--text3)}
+.send-btn{width:44px;height:44px;border-radius:50%;background:var(--blue);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:opacity 0.2s;-webkit-tap-highlight-color:transparent}
+.send-btn:active{opacity:0.8;transform:scale(0.94)}
+.send-btn svg{width:18px;height:18px;fill:white}
+
+.intel-section{padding:0 16px 8px}
+.intel-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:10px}
+.intel-card{background:var(--surface);border:0.5px solid var(--border2);border-radius:16px;padding:16px 18px;margin-bottom:10px;cursor:pointer;transition:background 0.15s}
+.intel-card:active{background:var(--surface2)}
+.i-source{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.i-title{font-size:14px;font-weight:500;color:var(--text);margin-bottom:4px;line-height:1.4}
+.i-why{font-size:12px;color:var(--text3);line-height:1.4}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-brand">Concierge</div>
+  <div class="listen-toggle" id="listenToggle" onclick="toggleListen()">
+    <div class="listen-dot" id="listenDot"></div>
+    <span id="listenLabel">Listen &amp; Help off</span>
+  </div>
+</div>
+
+<div class="scroll-area" id="scrollArea">
+  <div class="ambient-banner" id="ambientBanner">
+    ⚡ <strong>Listening to help you —</strong> Monday 9:41am · Miami, FL · I-95 backed up 23 min. Dentist tomorrow 2pm. Rain at 3pm school pickup.
+  </div>
+
+  <div class="greeting" id="greeting">Good morning. <strong>What do you need help with?</strong></div>
+
+  <div class="prob-grid">
+    <div class="prob-btn" onclick="selectProblem(this,'traffic')"><div class="pbi">🚗</div><div class="pbl">Traffic</div></div>
+    <div class="prob-btn" onclick="selectProblem(this,'kids')"><div class="pbi">👶</div><div class="pbl">Kids</div></div>
+    <div class="prob-btn" onclick="selectProblem(this,'medical')"><div class="pbi">🏥</div><div class="pbl">Medical</div></div>
+    <div class="prob-btn" onclick="selectProblem(this,'money')"><div class="pbi">💸</div><div class="pbl">Money</div></div>
+    <div class="prob-btn" onclick="selectProblem(this,'work')"><div class="pbi">💼</div><div class="pbl">Work stress</div></div>
+    <div class="prob-btn" onclick="selectProblem(this,'food')"><div class="pbi">🍽️</div><div class="pbl">Dinner</div></div>
+    <div class="prob-btn" onclick="selectProblem(this,'sleep')"><div class="pbi">😴</div><div class="pbl">Sleep</div></div>
+    <div class="prob-btn" onclick="selectProblem(this,'relationship')"><div class="pbi">❤️</div><div class="pbl">Relationship</div></div>
+    <div class="prob-btn" onclick="selectProblem(this,'bills')"><div class="pbi">📄</div><div class="pbl">Bills</div></div>
+    <div class="prob-btn" onclick="selectProblem(this,'home')"><div class="pbi">🔧</div><div class="pbl">Home repair</div></div>
+    <div class="prob-btn" onclick="selectProblem(this,'pet')"><div class="pbi">🐾</div><div class="pbl">Pet problems</div></div>
+    <div class="prob-btn" onclick="selectProblem(this,'neighbor')"><div class="pbi">🏘️</div><div class="pbl">Neighbor</div></div>
+    <div class="prob-btn" onclick="selectProblem(this,'job')"><div class="pbi">🔍</div><div class="pbl">Find a job</div></div>
+    <div class="prob-btn" onclick="selectProblem(this,'school')"><div class="pbi">🏫</div><div class="pbl">School</div></div>
+    <div class="prob-btn" onclick="selectProblem(this,'legal')"><div class="pbi">⚖️</div><div class="pbl">Legal help</div></div>
+    <div class="prob-btn" onclick="selectProblem(this,'anxiety')"><div class="pbi">🧠</div><div class="pbl">Anxiety</div></div>
+    <div class="prob-btn" onclick="selectProblem(this,'landlord')"><div class="pbi">🏠</div><div class="pbl">Landlord</div></div>
+    <div class="prob-btn" onclick="selectProblem(this,'car')"><div class="pbi">🚙</div><div class="pbl">Car trouble</div></div>
+    <div class="prob-btn" onclick="selectProblem(this,'insurance')"><div class="pbi">🛡️</div><div class="pbl">Insurance</div></div>
+    <div class="prob-btn" onclick="selectProblem(this,'talk')"><div class="pbi">💬</div><div class="pbl">Just talk</div></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="intel-section" id="intelSection" style="display:none">
+    <div class="intel-label">We noticed — just for you</div>
+    <div class="intel-card" onclick="askAbout('My neighbor reported a phone scam in my area. What do I need to know?')">
+      <div class="i-source" style="color:#9FE1CB">Nextdoor · Your area</div>
+      <div class="i-title">Phone scam reported in your zip code</div>
+      <div class="i-why">Caller poses as utility company. 3 neighbors hit this week → tap to learn what to do</div>
+    </div>
+    <div class="intel-card" onclick="askAbout('There is a new FDA warning on a common medication. What should I know?')">
+      <div class="i-source" style="color:#CECBF6">FDA · Drug update</div>
+      <div class="i-title">New warning on a common blood pressure medication</div>
+      <div class="i-why">Issued 4 days ago. Affects millions of prescriptions → tap for details</div>
+    </div>
+    <div class="intel-card" onclick="askAbout('I-95 North is heavily backed up today. What are my best alternate routes from Miami?')">
+      <div class="i-source" style="color:#FAC775">Traffic · Right now</div>
+      <div class="i-title">I-95 N backed up 23 min past normal</div>
+      <div class="i-why">Accident near NW 79th. FL-826 is clear → tap for best route</div>
+    </div>
+  </div>
+
+  <div class="chat-wrap hidden" id="chatWrap"></div>
+</div>
+
+<div class="bottom-bar">
+  <div class="input-wrap">
+    <textarea id="msgInput" placeholder="Ask me anything..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+  </div>
+  <button class="send-btn" onclick="sendMessage()" aria-label="Send">
+    <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+  </button>
+</div>
+
+<script>
+if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
+
+const SYSTEM = `You are Concierge — the expert always standing next to the user.
+You know everything and you have the answer. You are calm, warm, specific, and immediately useful.
+Never vague. Never say "consult a professional" as your only answer — give the actual answer first, then suggest a pro if needed.
+You are the brilliant friend who knows medicine, law, finance, parenting, car trouble, landlord rights, insurance, and everything else daily life throws at regular people.
+Keep responses to 3-4 sentences max. Be direct. Be human. Have the answer.`;
+
+let history = [];
+let listenOn = false;
+
+const problems = {
+  traffic:      { msg:"I-95 N is backed up 23 min past normal. Take FL-826 to NW 36th — saves about 15 min right now. Want me to text you the route?", chips:["Set commute reminder","Tomorrow morning traffic","Best gas on my route"] },
+  kids:         { msg:"What's going on — behavior, school, or something else? I can help you script a conversation, understand what's behind it, or find local help.", chips:["Give me a calm-down script","What does this behavior mean?","Find a therapist nearby"] },
+  medical:      { msg:"Is this urgent right now or something to get checked? I can find urgent care near you, explain symptoms, or help you prep for a doctor visit.", chips:["Find urgent care now","Explain these symptoms","Prep for my appointment"] },
+  money:        { msg:"Tight this month or something bigger? I can help you cut the biggest expenses, negotiate a bill, or find quick income options in your area.", chips:["Cut my biggest expenses","Negotiate a bill","Find gig work near me"] },
+  work:         { msg:"Work stress is real. Do you need to handle a specific situation, draft a message to your boss, or figure out if it's time to make a move?", chips:["Help me respond to my boss","Is this job worth keeping?","How do I set a boundary?"] },
+  food:         { msg:"Tell me what's in your fridge and I'll build a meal around it — no grocery run needed. Or I can find something fast near you right now.", chips:["Use what I have","Quick 20-min dinner","Something the kids will eat"] },
+  sleep:        { msg:"How many hours are you getting and what's waking you up? There are a few quick wins depending on whether it's falling asleep or staying asleep.", chips:["I can't fall asleep","I wake up at 3am","I'm always exhausted"] },
+  relationship: { msg:"I'm here — no judgment. Is this a conversation you need to have, are you trying to figure out what you're feeling, or do you just need to talk?", chips:["Help me say it right","How do I know if it's serious?","I just need to vent"] },
+  bills:        { msg:"Which bill is hurting most? I can help you negotiate it down, find assistance programs in your state, or build a payoff order that makes sense.", chips:["Negotiate my bill down","Find assistance programs","Which to pay first?"] },
+  home:         { msg:"Describe what's broken — I'll tell you if it's a DIY fix, what it should cost, and who to call if you need a pro. Don't get overcharged.", chips:["Is this a DIY fix?","What should this cost?","Find a local contractor"] },
+  pet:          { msg:"What's going on with your pet — health, behavior, or something else? I can triage it before you spend on a vet visit.", chips:["Triage these symptoms","Find a vet near me","Help with behavior"] },
+  neighbor:     { msg:"Neighbor issues have a right order of escalation. Tell me what happened and I'll tell you exactly what to do — starting with the least confrontational.", chips:["Draft a calm message","Know my legal rights","When to involve the HOA?"] },
+  job:          { msg:"Let's figure out your next move. Are you looking actively right now, exploring options, or dealing with something at a current job?", chips:["Update my resume","Find jobs in my field","How to negotiate an offer"] },
+  school:       { msg:"Is this academic, social, or with a teacher or admin? I can help you prep for a meeting, understand your child's rights, or find local support.", chips:["Prep for a parent meeting","Understand my child's rights","Find a tutor near me"] },
+  legal:        { msg:"I'm not a lawyer but I'll give you the real answer first. Tell me what happened and I'll tell you your options — and whether you actually need an attorney.", chips:["Is this worth pursuing?","Find free legal aid","Know my rights as a tenant"] },
+  anxiety:      { msg:"You're not alone in this. Do you want a quick grounding exercise right now, help figuring out what's triggering it, or someone to talk it through with?", chips:["Grounding exercise now","What's causing this?","Find a therapist near me"] },
+  landlord:     { msg:"Tenant rights are stronger than most people know. Tell me what's happening and I'll tell you exactly what you're owed and what to do next.", chips:["Know my rights","Draft a demand letter","When can I withhold rent?"] },
+  car:          { msg:"Describe what it's doing — the sound, the feel, any warning lights — and I'll tell you if it's urgent, what it likely is, and what it should cost to fix.", chips:["Is this urgent?","Estimated repair cost","Find a mechanic near me"] },
+  insurance:    { msg:"Insurance claims are confusing by design. Tell me what happened and I'll walk you through exactly how to handle it so you don't get lowballed.", chips:["Help me file a claim","Am I being lowballed?","Find better rates"] },
+  talk:         { msg:"I'm here. What's on your mind?", chips:["Tell me something interesting","Help me think through something","I've been having a rough time"] }
+};
+
+function toggleListen() {
+  listenOn = !listenOn;
+  document.getElementById('listenToggle').classList.toggle('on', listenOn);
+  document.getElementById('listenDot').style.background = listenOn ? '#639922' : '';
+  document.getElementById('listenLabel').textContent = listenOn ? 'Listen & Help on' : 'Listen & Help off';
+  document.getElementById('ambientBanner').classList.toggle('show', listenOn);
+  document.getElementById('intelSection').style.display = listenOn ? 'block' : 'none';
+  updateGreeting();
+}
+
+function updateGreeting() {
+  const h = new Date().getHours();
+  const t = h < 12 ? 'morning' : h < 17 ? 'afternoon' : 'evening';
+  const g = document.getElementById('greeting');
+  if (listenOn) {
+    g.innerHTML = `Good ${t}. <strong>I'm listening — here's what I noticed for you.</strong>`;
+  } else {
+    g.innerHTML = `Good ${t}. <strong>What do you need help with?</strong>`;
+  }
+}
+
+function selectProblem(el, key) {
+  document.querySelectorAll('.prob-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  const p = problems[key];
+  if (!p) return;
+  showChat();
+  addBubble('ai', p.msg, p.chips);
+  history = [{ role:'assistant', content: p.msg }];
+}
+
+function showChat() {
+  document.getElementById('chatWrap').classList.remove('hidden');
+}
+
+function addBubble(role, text, chips) {
+  const wrap = document.getElementById('chatWrap');
+  if (role === 'user') {
+    const b = document.createElement('div');
+    b.className = 'bubble user';
+    b.textContent = text;
+    wrap.appendChild(b);
+  } else {
+    const lbl = document.createElement('div');
+    lbl.className = 'bubble-label';
+    lbl.textContent = 'Concierge';
+    const b = document.createElement('div');
+    b.className = 'bubble ai';
+    b.textContent = text;
+    wrap.appendChild(lbl);
+    wrap.appendChild(b);
+    if (chips && chips.length) {
+      const row = document.createElement('div');
+      row.className = 'chips-row';
+      chips.forEach(c => {
+        const chip = document.createElement('div');
+        chip.className = 'chip';
+        chip.textContent = c;
+        chip.onclick = () => askAbout(c);
+        row.appendChild(chip);
+      });
+      wrap.appendChild(row);
+    }
+  }
+  scrollBottom();
+}
+
+function addTyping() {
+  const wrap = document.getElementById('chatWrap');
+  const b = document.createElement('div');
+  b.className = 'bubble ai';
+  b.id = 'typingBubble';
+  b.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+  wrap.appendChild(b);
+  scrollBottom();
+}
+
+function removeTyping() {
+  const t = document.getElementById('typingBubble');
+  if (t) t.remove();
+}
+
+function scrollBottom() {
+  const s = document.getElementById('scrollArea');
+  setTimeout(() => s.scrollTop = s.scrollHeight, 50);
+}
+
+async function askAbout(text) {
+  showChat();
+  addBubble('user', text);
+  history.push({ role:'user', content: text });
+  addTyping();
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: history, system: SYSTEM })
+    });
+    const data = await res.json();
+    removeTyping();
+    const reply = data.reply || "I'm having trouble connecting right now. Try again in a moment.";
+    addBubble('ai', reply);
+    history.push({ role:'assistant', content: reply });
+  } catch(e) {
+    removeTyping();
+    addBubble('ai', "Connection issue — check your signal and try again.");
+  }
+}
+
+async function sendMessage() {
+  const input = document.getElementById('msgInput');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  input.style.height = '24px';
+  await askAbout(text);
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+function autoResize(el) {
+  el.style.height = '24px';
+  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+}
+
+// Check URL params for deep link
+const params = new URLSearchParams(location.search);
+const q = params.get('q');
+if (q) {
+  const btn = [...document.querySelectorAll('.prob-btn')].find(b => b.getAttribute('onclick').includes(`'${q}'`));
+  if (btn) btn.click();
+}
+
+updateGreeting();
+</script>
+</body>
+</html>
