@@ -32,11 +32,11 @@ body{font-family:'DM Sans',sans-serif;color:var(--text);font-size:16px;-webkit-f
 .listen-toggle.on .listen-dot{background:var(--green)}
 
 /* TWO VIEWS */
-.view{display:none;flex-direction:column;flex:1;overflow:hidden}
+.view{display:none;flex-direction:column;flex:1;min-height:0}
 .view.active{display:flex}
 
 /* ── HOME VIEW ── */
-#homeView{overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(32px + var(--safe))}
+#homeView{overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(80px + var(--safe))}
 .home-greeting{padding:24px 20px 18px;font-size:15px;color:var(--text2);line-height:1.5}
 .home-greeting strong{color:var(--text);font-weight:500;display:block;font-size:17px;margin-bottom:4px}
 .prob-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 16px}
@@ -46,7 +46,7 @@ body{font-family:'DM Sans',sans-serif;color:var(--text);font-size:16px;-webkit-f
 .prob-btn .pbl{font-size:10px;color:var(--text2);line-height:1.2;font-weight:500}
 
 /* ── VOICE VIEW ── */
-#voiceView{position:relative}
+#voiceView{position:relative;overflow:hidden}
 .voice-back{position:absolute;top:16px;left:20px;font-size:13px;color:var(--text3);cursor:pointer;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;gap:5px;padding:8px 0}
 .voice-back svg{width:14px;height:14px;fill:var(--text3)}
 
