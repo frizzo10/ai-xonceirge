@@ -8,7 +8,6 @@
 <meta name="apple-mobile-web-app-title" content="Concierge">
 <meta name="theme-color" content="#0A0A08">
 <link rel="manifest" href="/manifest.json">
-<link rel="apple-touch-icon" href="/icons/icon-192.png">
 <title>Concierge</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <style>
@@ -19,90 +18,79 @@
   --text:rgba(255,255,255,0.95);--text2:rgba(255,255,255,0.52);--text3:rgba(255,255,255,0.26);
   --blue:#378ADD;--blue-dim:rgba(55,138,221,0.14);--blue-border:rgba(55,138,221,0.36);
   --green:#639922;--green-dim:rgba(99,153,34,0.14);--green-border:rgba(99,153,34,0.4);
-  --red:#E05252;
-  --safe:env(safe-area-inset-bottom,0px);
+  --red:#E05252;--safe:env(safe-area-inset-bottom,0px);
 }
 html,body{height:100%;overflow:hidden;background:var(--black)}
 body{font-family:'DM Sans',sans-serif;color:var(--text);font-size:16px;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column}
 
 /* TOPBAR */
 .topbar{padding:52px 20px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:0.5px solid var(--border);flex-shrink:0}
-.topbar-brand{font-family:'DM Serif Display',serif;font-size:22px;letter-spacing:-0.3px;color:var(--text)}
-.listen-toggle{display:flex;align-items:center;gap:7px;padding:7px 14px;border-radius:20px;border:0.5px solid var(--border2);background:var(--surface);font-size:12px;font-weight:500;color:var(--text2);cursor:pointer;transition:all 0.2s;-webkit-tap-highlight-color:transparent}
+.topbar-brand{font-family:'DM Serif Display',serif;font-size:22px;letter-spacing:-0.3px}
+.listen-toggle{display:flex;align-items:center;gap:7px;padding:7px 14px;border-radius:20px;border:0.5px solid var(--border2);background:var(--surface);font-size:12px;font-weight:500;color:var(--text2);cursor:pointer;-webkit-tap-highlight-color:transparent}
 .listen-toggle.on{background:var(--green-dim);border-color:var(--green-border);color:#C0DD97}
-.listen-dot{width:7px;height:7px;border-radius:50%;background:var(--text3);flex-shrink:0;transition:background 0.2s}
+.listen-dot{width:7px;height:7px;border-radius:50%;background:var(--text3);flex-shrink:0}
 .listen-toggle.on .listen-dot{background:var(--green)}
 
-/* SCROLL */
-.scroll-area{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(180px + var(--safe))}
+/* TWO VIEWS */
+.view{display:none;flex-direction:column;flex:1;overflow:hidden}
+.view.active{display:flex}
 
-/* VOICE HERO */
-.voice-hero{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 32px 32px;text-align:center}
-.voice-prompt{font-family:'DM Serif Display',serif;font-size:clamp(22px,5vw,32px);color:var(--text);letter-spacing:-0.5px;margin-bottom:8px;line-height:1.2}
-.voice-sub{font-size:14px;color:var(--text3);margin-bottom:40px}
-
-/* MIC BUTTON */
-.mic-wrap{position:relative;display:flex;align-items:center;justify-content:center;margin-bottom:32px}
-.mic-ring{position:absolute;width:120px;height:120px;border-radius:50%;border:1.5px solid var(--blue-border);opacity:0;transform:scale(1);transition:all 0.3s}
-.mic-ring.pulse{animation:ring 1.5s ease-out infinite}
-@keyframes ring{0%{opacity:0.6;transform:scale(1)}100%{opacity:0;transform:scale(1.8)}}
-.mic-btn{width:88px;height:88px;border-radius:50%;background:var(--blue);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;z-index:1;transition:all 0.2s;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 32px rgba(55,138,221,0.35)}
-.mic-btn:active,.mic-btn.recording{transform:scale(0.94);background:#2066AA;box-shadow:0 4px 16px rgba(55,138,221,0.5)}
-.mic-btn.recording{background:var(--red);box-shadow:0 8px 32px rgba(224,82,82,0.45)}
-.mic-btn svg{width:32px;height:32px;fill:white}
-.mic-status{font-size:13px;color:var(--text3);min-height:20px;transition:color 0.2s}
-.mic-status.active{color:var(--blue)}
-.mic-status.recording{color:var(--red)}
-.mic-status.error{color:var(--red)}
-
-/* OR DIVIDER */
-.or-divider{display:flex;align-items:center;gap:16px;padding:0 32px;margin-bottom:24px;width:100%}
-.or-line{flex:1;height:0.5px;background:var(--border)}
-.or-text{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3)}
-
-/* PROB GRID */
-.prob-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 16px 16px}
-.prob-btn{border:0.5px solid var(--border2);border-radius:14px;background:var(--surface);padding:12px 6px 10px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;transition:all 0.15s;-webkit-tap-highlight-color:transparent;text-align:center}
-.prob-btn:active{transform:scale(0.94)}
-.prob-btn.active{background:var(--blue-dim);border-color:var(--blue-border)}
-.prob-btn .pbi{font-size:20px}
+/* ── HOME VIEW ── */
+#homeView{overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(32px + var(--safe))}
+.home-greeting{padding:24px 20px 18px;font-size:15px;color:var(--text2);line-height:1.5}
+.home-greeting strong{color:var(--text);font-weight:500;display:block;font-size:17px;margin-bottom:4px}
+.prob-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 16px}
+.prob-btn{border:0.5px solid var(--border2);border-radius:14px;background:var(--surface);padding:16px 6px 13px;display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer;transition:transform 0.12s;-webkit-tap-highlight-color:transparent;text-align:center}
+.prob-btn:active{transform:scale(0.91)}
+.prob-btn .pbi{font-size:24px}
 .prob-btn .pbl{font-size:10px;color:var(--text2);line-height:1.2;font-weight:500}
-.prob-btn.active .pbl{color:#B5D4F4}
 
-/* CHAT */
-.chat-wrap{padding:16px 16px 0;display:flex;flex-direction:column;gap:12px}
-.chat-wrap.hidden{display:none}
-.bubble-label{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:4px;padding:0 4px}
-.bubble{padding:14px 18px;border-radius:20px;font-size:15px;line-height:1.65;max-width:88%}
-.bubble.ai{background:var(--surface2);border:0.5px solid var(--border2);color:var(--text);align-self:flex-start;border-bottom-left-radius:5px}
-.bubble.user{background:var(--blue);color:var(--white);align-self:flex-end;border-bottom-right-radius:5px;max-width:78%}
-.chips-row{display:flex;gap:8px;flex-wrap:wrap;padding:2px 0 4px}
-.chip{font-size:12px;padding:7px 14px;border:0.5px solid var(--border2);border-radius:20px;color:var(--text2);background:var(--surface);cursor:pointer;transition:all 0.15s;-webkit-tap-highlight-color:transparent}
-.chip:active{transform:scale(0.96)}
-.chip:hover{border-color:var(--blue);color:var(--blue)}
+/* ── VOICE VIEW ── */
+#voiceView{position:relative}
+.voice-back{position:absolute;top:16px;left:20px;font-size:13px;color:var(--text3);cursor:pointer;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;gap:5px;padding:8px 0}
+.voice-back svg{width:14px;height:14px;fill:var(--text3)}
 
-/* TYPING */
-.typing-dots{display:flex;gap:5px;align-items:center;padding:4px 0}
-.typing-dots span{width:7px;height:7px;border-radius:50%;background:var(--text3);animation:blink 1.2s infinite}
-.typing-dots span:nth-child(2){animation-delay:.2s}
-.typing-dots span:nth-child(3){animation-delay:.4s}
-@keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+.voice-stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 40px;gap:16px}
+.voice-category{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--text3)}
+.voice-prompt{font-family:'DM Serif Display',serif;font-size:clamp(26px,6vw,38px);line-height:1.15;letter-spacing:-0.8px;color:var(--text);text-align:center;max-width:300px}
 
-/* BOTTOM BAR */
-.bottom-bar{position:fixed;bottom:0;left:0;right:0;padding:12px 16px calc(12px + var(--safe));background:rgba(10,10,8,0.97);backdrop-filter:blur(20px);border-top:0.5px solid var(--border2);display:flex;gap:10px;align-items:flex-end}
-.input-wrap{flex:1;background:var(--surface);border:0.5px solid var(--border2);border-radius:24px;padding:10px 18px;display:flex;align-items:center;gap:8px}
-.input-wrap textarea{flex:1;background:none;border:none;outline:none;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--text);line-height:1.4;resize:none;max-height:100px;min-height:24px;height:24px}
-.input-wrap textarea::placeholder{color:var(--text3)}
-.input-mic{background:none;border:none;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;flex-shrink:0}
-.input-mic svg{width:20px;height:20px;fill:var(--text3);transition:fill 0.2s}
-.input-mic.recording svg{fill:var(--red)}
-.send-btn{width:44px;height:44px;border-radius:50%;background:var(--blue);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;-webkit-tap-highlight-color:transparent}
-.send-btn:active{opacity:0.8;transform:scale(0.94)}
-.send-btn svg{width:18px;height:18px;fill:white}
+/* MIC */
+.mic-wrap{position:relative;display:flex;align-items:center;justify-content:center;width:140px;height:140px}
+.mic-ring{position:absolute;inset:0;border-radius:50%;border:1.5px solid rgba(55,138,221,0.3);opacity:0;transform:scale(1)}
+.mic-ring.pulse{animation:ripple 1.6s ease-out infinite}
+.mic-ring.pulse.delay{animation-delay:0.55s}
+@keyframes ripple{0%{opacity:0.6;transform:scale(0.85)}100%{opacity:0;transform:scale(1.7)}}
+.mic-btn{width:96px;height:96px;border-radius:50%;background:var(--blue);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;z-index:1;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 36px rgba(55,138,221,0.4);transition:all 0.18s}
+.mic-btn:active,.mic-btn.listening{transform:scale(0.93)}
+.mic-btn.listening{background:#1a5fa0;box-shadow:0 4px 20px rgba(55,138,221,0.6)}
+.mic-btn.thinking{background:var(--surface2);box-shadow:none;cursor:default}
+.mic-btn svg{width:36px;height:36px;fill:white}
+.mic-hint{font-size:13px;color:var(--text3);min-height:20px;text-align:center;transition:color 0.2s}
+.mic-hint.live{color:var(--blue)}
+.mic-hint.error{color:var(--red)}
 
-/* AMBIENT BANNER */
-.ambient-banner{margin:14px 16px 0;padding:13px 16px;background:var(--green-dim);border:0.5px solid var(--green-border);border-radius:14px;font-size:13px;color:#C0DD97;line-height:1.55;display:none}
-.ambient-banner.show{display:block}
+/* RESPONSE AREA */
+.response-area{width:100%;padding:0 20px;max-height:200px;overflow-y:auto}
+.response-bubble{background:var(--surface2);border:0.5px solid var(--border2);border-radius:18px;border-bottom-left-radius:4px;padding:16px 20px;font-size:15px;line-height:1.7;color:var(--text);margin-bottom:12px}
+.response-chips{display:flex;gap:8px;flex-wrap:wrap;padding:0 4px}
+.r-chip{font-size:12px;padding:8px 16px;border:0.5px solid var(--border2);border-radius:20px;color:var(--text2);background:var(--surface);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:all 0.15s}
+.r-chip:active{transform:scale(0.95)}
+.r-chip:hover{border-color:var(--blue);color:var(--blue)}
+
+/* TYPE TOGGLE */
+.type-toggle{padding:12px 20px;display:flex;align-items:center;gap:10px;border-top:0.5px solid var(--border)}
+.type-input{flex:1;background:var(--surface);border:0.5px solid var(--border2);border-radius:20px;padding:10px 16px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);outline:none}
+.type-input::placeholder{color:var(--text3)}
+.type-send{width:40px;height:40px;border-radius:50%;background:var(--blue);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;-webkit-tap-highlight-color:transparent}
+.type-send svg{width:16px;height:16px;fill:white}
+.type-toggle-btn{font-size:12px;color:var(--text3);cursor:pointer;white-space:nowrap;-webkit-tap-highlight-color:transparent;background:none;border:none;padding:0}
+
+/* TYPING DOTS */
+.dots{display:flex;gap:5px;align-items:center;padding:6px 2px}
+.dots span{width:7px;height:7px;border-radius:50%;background:var(--text3);animation:blink 1.2s infinite}
+.dots span:nth-child(2){animation-delay:.2s}
+.dots span:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.2}40%{opacity:1}}
 </style>
 </head>
 <body>
@@ -115,378 +103,379 @@ body{font-family:'DM Sans',sans-serif;color:var(--text);font-size:16px;-webkit-f
   </div>
 </div>
 
-<div class="scroll-area" id="scrollArea">
-
-  <div class="ambient-banner" id="ambientBanner">
-    ⚡ <strong>Listening to help —</strong> I'm watching your day. I'll tell you what matters before you ask.
+<!-- HOME VIEW: 20 BUTTONS -->
+<div class="view active" id="homeView">
+  <div class="home-greeting">
+    <strong id="greeting">What do you need help with?</strong>
+    Tap what's happening — we'll take it from there.
   </div>
-
-  <!-- VOICE HERO -->
-  <div class="voice-hero" id="voiceHero">
-    <p class="voice-prompt">Tell me what's going on.</p>
-    <p class="voice-sub">Hold the mic and talk — or type below</p>
-
-    <div class="mic-wrap">
-      <div class="mic-ring" id="micRing"></div>
-      <button class="mic-btn" id="mainMicBtn" onclick="toggleMainMic()">
-        <svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23" stroke="white" stroke-width="2" fill="none"/><line x1="8" y1="23" x2="16" y2="23" stroke="white" stroke-width="2" fill="none"/></svg>
-      </button>
-    </div>
-    <p class="mic-status" id="micStatus">Tap to talk</p>
-  </div>
-
-  <!-- OR DIVIDER -->
-  <div class="or-divider">
-    <div class="or-line"></div>
-    <span class="or-text">or tap what's happening</span>
-    <div class="or-line"></div>
-  </div>
-
-  <!-- 20 BUTTONS -->
   <div class="prob-grid">
-    <div class="prob-btn" onclick="selectProblem(this,'traffic')"><div class="pbi">🚗</div><div class="pbl">Traffic</div></div>
-    <div class="prob-btn" onclick="selectProblem(this,'kids')"><div class="pbi">👶</div><div class="pbl">Kids</div></div>
-    <div class="prob-btn" onclick="selectProblem(this,'medical')"><div class="pbi">🏥</div><div class="pbl">Medical</div></div>
-    <div class="prob-btn" onclick="selectProblem(this,'money')"><div class="pbi">💸</div><div class="pbl">Money</div></div>
-    <div class="prob-btn" onclick="selectProblem(this,'work')"><div class="pbi">💼</div><div class="pbl">Work</div></div>
-    <div class="prob-btn" onclick="selectProblem(this,'food')"><div class="pbi">🍽️</div><div class="pbl">Dinner</div></div>
-    <div class="prob-btn" onclick="selectProblem(this,'sleep')"><div class="pbi">😴</div><div class="pbl">Sleep</div></div>
-    <div class="prob-btn" onclick="selectProblem(this,'relationship')"><div class="pbi">❤️</div><div class="pbl">Relationship</div></div>
-    <div class="prob-btn" onclick="selectProblem(this,'bills')"><div class="pbi">📄</div><div class="pbl">Bills</div></div>
-    <div class="prob-btn" onclick="selectProblem(this,'home')"><div class="pbi">🔧</div><div class="pbl">Home</div></div>
-    <div class="prob-btn" onclick="selectProblem(this,'pet')"><div class="pbi">🐾</div><div class="pbl">Pet</div></div>
-    <div class="prob-btn" onclick="selectProblem(this,'neighbor')"><div class="pbi">🏘️</div><div class="pbl">Neighbor</div></div>
-    <div class="prob-btn" onclick="selectProblem(this,'job')"><div class="pbi">🔍</div><div class="pbl">Find a job</div></div>
-    <div class="prob-btn" onclick="selectProblem(this,'school')"><div class="pbi">🏫</div><div class="pbl">School</div></div>
-    <div class="prob-btn" onclick="selectProblem(this,'legal')"><div class="pbi">⚖️</div><div class="pbl">Legal</div></div>
-    <div class="prob-btn" onclick="selectProblem(this,'anxiety')"><div class="pbi">🧠</div><div class="pbl">Anxiety</div></div>
-    <div class="prob-btn" onclick="selectProblem(this,'landlord')"><div class="pbi">🏠</div><div class="pbl">Landlord</div></div>
-    <div class="prob-btn" onclick="selectProblem(this,'car')"><div class="pbi">🚙</div><div class="pbl">Car</div></div>
-    <div class="prob-btn" onclick="selectProblem(this,'insurance')"><div class="pbi">🛡️</div><div class="pbl">Insurance</div></div>
-    <div class="prob-btn" onclick="selectProblem(this,'talk')"><div class="pbi">💬</div><div class="pbl">Just talk</div></div>
+    <div class="prob-btn" onclick="openVoice('car','Car trouble','Tell me about your car.')"><div class="pbi">🚙</div><div class="pbl">Car</div></div>
+    <div class="prob-btn" onclick="openVoice('medical','Medical','What\'s going on with your health?')"><div class="pbi">🏥</div><div class="pbl">Medical</div></div>
+    <div class="prob-btn" onclick="openVoice('kids','Kids','Tell me about your child.')"><div class="pbi">👶</div><div class="pbl">Kids</div></div>
+    <div class="prob-btn" onclick="openVoice('legal','Legal help','What\'s the legal situation?')"><div class="pbi">⚖️</div><div class="pbl">Legal</div></div>
+    <div class="prob-btn" onclick="openVoice('landlord','Landlord','Tell me what\'s happening with your landlord.')"><div class="pbi">🏠</div><div class="pbl">Landlord</div></div>
+    <div class="prob-btn" onclick="openVoice('money','Money','What\'s the financial situation?')"><div class="pbi">💸</div><div class="pbl">Money</div></div>
+    <div class="prob-btn" onclick="openVoice('bills','Bills &amp; debt','Which company is this with?')"><div class="pbi">📄</div><div class="pbl">Bills</div></div>
+    <div class="prob-btn" onclick="openVoice('insurance','Insurance','Auto, home, or health?')"><div class="pbi">🛡️</div><div class="pbl">Insurance</div></div>
+    <div class="prob-btn" onclick="openVoice('work','Work stress','What specifically happened?')"><div class="pbi">💼</div><div class="pbl">Work</div></div>
+    <div class="prob-btn" onclick="openVoice('relationship','Relationship','Tell me what\'s going on.')"><div class="pbi">❤️</div><div class="pbl">Relationship</div></div>
+    <div class="prob-btn" onclick="openVoice('anxiety','Anxiety','Is this something specific, or a feeling that won\'t go away?')"><div class="pbi">🧠</div><div class="pbl">Anxiety</div></div>
+    <div class="prob-btn" onclick="openVoice('home','Home repair','What\'s broken — describe what you see, hear, or smell.')"><div class="pbi">🔧</div><div class="pbl">Home</div></div>
+    <div class="prob-btn" onclick="openVoice('pet','Pet problems','What kind of pet, and what are you seeing?')"><div class="pbi">🐾</div><div class="pbl">Pet</div></div>
+    <div class="prob-btn" onclick="openVoice('school','School issues','How old is your child?')"><div class="pbi">🏫</div><div class="pbl">School</div></div>
+    <div class="prob-btn" onclick="openVoice('neighbor','Neighbor drama','What happened?')"><div class="pbi">🏘️</div><div class="pbl">Neighbor</div></div>
+    <div class="prob-btn" onclick="openVoice('traffic','Traffic','Where are you headed?')"><div class="pbi">🚗</div><div class="pbl">Traffic</div></div>
+    <div class="prob-btn" onclick="openVoice('food','Dinner','What do you have in the fridge?')"><div class="pbi">🍽️</div><div class="pbl">Dinner</div></div>
+    <div class="prob-btn" onclick="openVoice('sleep','Sleep','Can\'t fall asleep, or wake up in the night?')"><div class="pbi">😴</div><div class="pbl">Sleep</div></div>
+    <div class="prob-btn" onclick="openVoice('job','Find a job','Are you looking now, or dealing with a current job?')"><div class="pbi">🔍</div><div class="pbl">Find a job</div></div>
+    <div class="prob-btn" onclick="openVoice('talk','Just talk','I\'m here. What\'s on your mind?')"><div class="pbi">💬</div><div class="pbl">Just talk</div></div>
   </div>
-
-  <!-- CHAT -->
-  <div class="chat-wrap hidden" id="chatWrap"></div>
-
 </div>
 
-<!-- BOTTOM BAR -->
-<div class="bottom-bar">
-  <div class="input-wrap">
-    <textarea id="msgInput" placeholder="Or type here..." rows="1"
-      onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
-    <button class="input-mic" id="inputMicBtn" onclick="toggleInputMic()" aria-label="Voice input">
-      <svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+<!-- VOICE VIEW -->
+<div class="view" id="voiceView">
+  <div class="voice-back" onclick="goHome()">
+    <svg viewBox="0 0 24 24"><path d="M19 12H5M12 5l-7 7 7 7" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+    Back
+  </div>
+
+  <div class="voice-stage">
+    <span class="voice-category" id="voiceCategory"></span>
+    <p class="voice-prompt" id="voicePrompt"></p>
+
+    <div class="mic-wrap">
+      <div class="mic-ring" id="ring1"></div>
+      <div class="mic-ring delay" id="ring2"></div>
+      <button class="mic-btn" id="micBtn" onclick="toggleMic()">
+        <svg viewBox="0 0 24 24" id="micIcon">
+          <rect x="9" y="2" width="6" height="13" rx="3"/>
+          <path d="M5 10a7 7 0 0 0 14 0" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"/>
+          <line x1="12" y1="17" x2="12" y2="21" stroke="white" stroke-width="2" stroke-linecap="round"/>
+          <line x1="8" y1="21" x2="16" y2="21" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+    <p class="mic-hint" id="micHint">Tap to talk</p>
+
+    <div class="response-area" id="responseArea"></div>
+  </div>
+
+  <div class="type-toggle" id="typeToggle" style="display:none">
+    <input class="type-input" id="typeInput" placeholder="Or type here..." onkeydown="handleTypeKey(event)">
+    <button class="type-send" onclick="sendTyped()">
+      <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
     </button>
   </div>
-  <button class="send-btn" onclick="sendMessage()" aria-label="Send">
-    <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
-  </button>
 </div>
 
 <script>
 if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
 
-const SYSTEM = `You are Concierge. You are the brilliant, calm friend who shows up and stays — from the first scary moment all the way through to the other side.
-
-YOU NEVER QUIT. You remember everything. You stay until the problem is fully resolved.
-
-ONE QUESTION AT A TIME. Never ask two things at once. A person in crisis cannot process a list.
-
-DETECT TRAUMA: If messages are fragmented, panicked, or don't make sense — slow them down first. Say: "Hey. I'm here. Take a breath. Are you safe right now?" Then walk them through it one step at a time.
-
-GIVE REAL ANSWERS: Never lead with "consult a professional." Give the actual answer first. Be specific. Be human. End every response with the problem closer to solved or one clear next step.
-
-CAR TROUBLE: Ask year, make, model first — one question.
-MEDICAL: Ask age first — one question.
-LEGAL/LANDLORD: Ask what state first — one question.
-BILLS: Ask which company first — one question.
-KIDS: Ask age of child first — one question.`;
-
 let history = [];
-let recognition = null;
+let currentCategory = '';
+let currentPrompt = '';
 let isRecording = false;
+let recognition = null;
 let listenOn = false;
-let chatStarted = false;
+let hasResponded = false;
 
-const problems = {
-  traffic:      { msg:"Where are you headed? I'll find the fastest route right now.", chips:["Leaving now","Rush hour commute","Checking for accidents"] },
-  kids:         { msg:"I'm here. How old is your child?", chips:["Under 5","Elementary age","Teenager"] },
-  medical:      { msg:"Tell me what's going on. How old are you?", chips:["It just started","Been a few days","More than a week"] },
-  money:        { msg:"Which company is this with?", chips:["Credit card","Medical bill","Utility or rent"] },
-  work:         { msg:"What specifically happened?", chips:["My boss","A coworker","The whole job"] },
-  food:         { msg:"What do you have in the fridge right now? Three things.", chips:["Under 20 min","30-45 min","Feed the kids too"] },
-  sleep:        { msg:"Which is it — can't fall asleep, or you wake up in the night?", chips:["Can't fall asleep","Wake up and can't go back","Always exhausted"] },
-  relationship: { msg:"I'm here. Tell me what happened.", chips:["Something specific happened","It's been building","I just need to talk"] },
-  bills:        { msg:"Which company is this with?", chips:["Still with the company","Gone to collections","I got a court notice"] },
-  home:         { msg:"Describe exactly what's wrong — what you're seeing, hearing, or smelling.", chips:["It's leaking","Making a sound","Something stopped working"] },
-  pet:          { msg:"What kind of pet, and what are you seeing?", chips:["Dog","Cat","Something else"] },
-  neighbor:     { msg:"What state are you in?", chips:["Noise issue","Property damage","HOA involved"] },
-  job:          { msg:"Are you looking right now or dealing with something at a current job?", chips:["I need a job now","Thinking about leaving","Something happened at work"] },
-  school:       { msg:"How old is your child?", chips:["Elementary","Middle school","High school"] },
-  legal:        { msg:"What state are you in?", chips:["Landlord issue","Debt problem","Dispute with someone"] },
-  anxiety:      { msg:"I'm right here. Is this about something specific, or a feeling that won't go away?", chips:["Something specific","It's always there","I need to calm down now"] },
-  landlord:     { msg:"What state are you in?", chips:["Won't make repairs","Keeping my deposit","No heat or utilities"] },
-  car:          { msg:"What's the year, make, and model?", chips:["Check engine light","Making a noise","Feels wrong when I drive"] },
-  insurance:    { msg:"Auto, home, or health insurance?", chips:["Auto","Home","Health"] },
-  talk:         { msg:"I'm here. What's on your mind?", chips:["Hard time lately","Need to think something through","Just talk"] }
+const CONTEXTS = {
+  car:          'The user has a car problem. Your very first question is ONLY: "What\'s the year, make, and model?" Nothing else.',
+  medical:      'The user has a medical issue. Your very first question is ONLY: "How old are you?" Nothing else.',
+  kids:         'The user has an issue with their child. Your very first question is ONLY: "How old is your child?" Nothing else.',
+  legal:        'The user needs legal help. Your very first question is ONLY: "What state are you in?" Nothing else.',
+  landlord:     'The user has a landlord issue. Your very first question is ONLY: "What state are you in?" Nothing else.',
+  money:        'The user has a money problem. Your very first question is ONLY: "Which company is this with?" Nothing else.',
+  bills:        'The user has a debt or bill problem. Your very first question is ONLY: "Which company is this with?" Nothing else.',
+  insurance:    'The user has an insurance issue. Your very first question is ONLY: "Auto, home, or health insurance?" Nothing else.',
+  work:         'The user has a work problem. Your very first question is ONLY: "What specifically happened?" Nothing else.',
+  relationship: 'The user has a relationship issue. Start with: "I\'m here. Tell me what happened." One sentence. Warm.',
+  anxiety:      'The user is anxious or stressed. Start by grounding them: "I\'m right here. Take a breath. Is this about something specific, or a feeling that won\'t go away?" Calm and warm.',
+  home:         'The user has a home repair issue. Your very first question is ONLY: "Describe what you\'re seeing, hearing, or smelling." Nothing else.',
+  pet:          'The user has a pet issue. Your very first question is ONLY: "What kind of pet, and what are you seeing?" Nothing else.',
+  school:       'The user has a school issue. Your very first question is ONLY: "How old is your child?" Nothing else.',
+  neighbor:     'The user has a neighbor problem. Your very first question is ONLY: "What state are you in?" Nothing else.',
+  traffic:      'The user needs traffic help. Your very first question is ONLY: "Where are you headed?" Nothing else.',
+  food:         'The user needs dinner ideas. Your very first question is ONLY: "What do you have in the fridge right now — give me three things." Nothing else.',
+  sleep:        'The user has sleep issues. Your very first question is ONLY: "Can\'t fall asleep, or you wake up in the night?" Nothing else.',
+  job:          'The user needs job help. Your very first question is ONLY: "Are you actively looking for a job right now, or dealing with something at a current job?" Nothing else.',
+  talk:         'The user just wants to talk. Start warm: "I\'m here. What\'s on your mind?" One line. Nothing else.'
 };
 
-// ── VOICE ──
-function initRecognition() {
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SpeechRecognition) return null;
-  const r = new SpeechRecognition();
-  r.continuous = false;
-  r.interimResults = false;
-  r.lang = 'en-US';
-  return r;
+const BASE_SYSTEM = `You are Concierge — the brilliant, calm friend who shows up and stays until the problem is solved.
+
+CORE RULES:
+1. ONE question at a time. Never two. Never a list. One.
+2. If someone sounds panicked or their words are fragmented — slow them down first. Say: "Hey, I'm here. Take a breath. Are you safe right now?"
+3. Give real answers. Never lead with "consult a professional." Give the answer first, then mention a pro if truly needed.
+4. Never quit. Remember everything they told you. Stay until the problem is fully resolved.
+5. Short when they're scared. Full answer when they're ready.
+6. Always end with the problem closer to solved, or one clear next step.`;
+
+function getSystem(category) {
+  const ctx = CONTEXTS[category] || '';
+  return BASE_SYSTEM + '\n\nCATEGORY CONTEXT: ' + ctx;
 }
 
-function isMeaningful(text) {
-  if (!text || text.trim().length < 3) return false;
-  const words = text.trim().split(/\s+/);
-  if (words.length < 1) return false;
-  // Check if it's mostly real words (not random characters)
-  const realWords = words.filter(w => /^[a-zA-Z'-]+$/.test(w));
-  return realWords.length >= 1;
+// ── NAVIGATION ──
+function openVoice(category, label, prompt) {
+  currentCategory = category;
+  currentPrompt = prompt;
+  history = [];
+  hasResponded = false;
+
+  document.getElementById('voiceCategory').textContent = label;
+  document.getElementById('voicePrompt').textContent = prompt;
+  document.getElementById('responseArea').innerHTML = '';
+  document.getElementById('typeToggle').style.display = 'none';
+  document.getElementById('micHint').textContent = 'Tap to talk';
+  document.getElementById('micHint').className = 'mic-hint';
+  document.getElementById('micBtn').className = 'mic-btn';
+  stopRings();
+
+  document.getElementById('homeView').classList.remove('active');
+  document.getElementById('voiceView').classList.add('active');
 }
 
-function handleSpeechResult(transcript) {
-  const clean = transcript.trim();
-  if (!isMeaningful(clean)) {
-    // Garbled or too short — respond warmly not with error
-    addBubble('ai', "Hey — I didn't quite catch that. No worries. Just slow down and tell me one thing: what's happening right now?");
-    return;
-  }
-  // Show what they said
-  addBubble('user', clean);
-  history.push({ role: 'user', content: clean });
-  showChat();
-  callConcierge();
+function goHome() {
+  stopRecording();
+  stopSpeaking();
+  document.getElementById('voiceView').classList.remove('active');
+  document.getElementById('homeView').classList.add('active');
 }
 
-function toggleMainMic() {
+// ── MICROPHONE ──
+function toggleMic() {
   if (isRecording) {
     stopRecording();
   } else {
-    startRecording('main');
+    startRecording();
   }
 }
 
-function toggleInputMic() {
-  if (isRecording) {
-    stopRecording();
-  } else {
-    startRecording('input');
-  }
-}
-
-function startRecording(source) {
-  recognition = initRecognition();
-  if (!recognition) {
-    setMicStatus("Voice not supported — please type below", 'error');
+function startRecording() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) {
+    setHint('Voice not available — type below', 'error');
+    showTypeBar();
     return;
   }
+
+  recognition = new SR();
+  recognition.continuous = false;
+  recognition.interimResults = false;
+  recognition.lang = 'en-US';
 
   isRecording = true;
-  document.getElementById('mainMicBtn').classList.add('recording');
-  document.getElementById('micRing').classList.add('pulse');
-  document.getElementById('inputMicBtn').classList.add('recording');
-  setMicStatus("Listening...", 'recording');
+  document.getElementById('micBtn').classList.add('listening');
+  startRings();
+  setHint('Listening...', 'live');
+  stopSpeaking();
 
   recognition.onresult = (e) => {
-    const transcript = e.results[0][0].transcript;
+    const text = e.results[0][0].transcript.trim();
     stopRecording();
-    handleSpeechResult(transcript);
+    handleVoiceResult(text);
   };
 
   recognition.onerror = (e) => {
     stopRecording();
     if (e.error === 'no-speech') {
-      setMicStatus("Didn't hear anything — try again", 'error');
+      setHint('Tap to try again', '');
     } else if (e.error === 'not-allowed') {
-      setMicStatus("Microphone blocked — check browser settings", 'error');
+      setHint('Mic blocked — type below instead', 'error');
+      showTypeBar();
     } else {
-      // Any other error — be human about it
-      addBubble('ai', "I didn't catch that — just slow down and tell me what's going on. You can type it too if that's easier.");
-      setMicStatus("Tap to talk", '');
+      // Garbled or broken — respond like a friend
+      showResponse("Hey — I didn't catch that. No rush. Just slow down and tell me one thing at a time. You can tap the mic again or type below.", []);
     }
   };
 
-  recognition.onend = () => {
-    if (isRecording) stopRecording();
-  };
+  recognition.onend = () => { if (isRecording) stopRecording(); };
 
-  try {
-    recognition.start();
-  } catch(e) {
-    stopRecording();
-    setMicStatus("Tap to talk", '');
-  }
+  try { recognition.start(); } catch(e) { stopRecording(); }
 }
 
 function stopRecording() {
   isRecording = false;
-  if (recognition) { try { recognition.stop(); } catch(e) {} }
-  document.getElementById('mainMicBtn').classList.remove('recording');
-  document.getElementById('micRing').classList.remove('pulse');
-  document.getElementById('inputMicBtn').classList.remove('recording');
-  setMicStatus("Tap to talk", '');
+  if (recognition) { try { recognition.stop(); } catch(e) {} recognition = null; }
+  document.getElementById('micBtn').classList.remove('listening');
+  stopRings();
+  setHint('Tap to talk', '');
 }
 
-function setMicStatus(text, state) {
-  const el = document.getElementById('micStatus');
-  el.textContent = text;
-  el.className = 'mic-status' + (state ? ' ' + state : '');
-}
-
-// ── SPEAK RESPONSE ──
-function speak(text) {
-  if (!window.speechSynthesis) return;
-  window.speechSynthesis.cancel();
-  const clean = text.replace(/[*_#`]/g, '').substring(0, 400);
-  const utt = new SpeechSynthesisUtterance(clean);
-  utt.rate = 0.92;
-  utt.pitch = 1;
-  window.speechSynthesis.speak(utt);
-}
-
-// ── CHAT ──
-function showChat() {
-  if (!chatStarted) {
-    chatStarted = true;
-    document.getElementById('voiceHero').style.display = 'none';
+function handleVoiceResult(text) {
+  if (!text || text.length < 2) {
+    showResponse("I didn't quite catch that — just slow down and tell me what's happening. Tap the mic and try again.", []);
+    return;
   }
-  document.getElementById('chatWrap').classList.remove('hidden');
+
+  // Show what they said as context (subtle, above response)
+  history.push({ role: 'user', content: text });
+  setHint('"' + text.substring(0, 60) + (text.length > 60 ? '...' : '') + '"', 'live');
+
+  callConcierge();
 }
 
-function selectProblem(el, key) {
-  document.querySelectorAll('.prob-btn').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
-  const p = problems[key];
-  if (!p) return;
-  showChat();
-  history = [{ role: 'assistant', content: p.msg }];
-  addBubble('ai', p.msg, p.chips);
-}
-
-function addBubble(role, text, chips) {
-  const wrap = document.getElementById('chatWrap');
-  if (role === 'user') {
-    const b = document.createElement('div');
-    b.className = 'bubble user';
-    b.textContent = text;
-    wrap.appendChild(b);
-  } else {
-    const lbl = document.createElement('div');
-    lbl.className = 'bubble-label';
-    lbl.textContent = 'Concierge';
-    const b = document.createElement('div');
-    b.className = 'bubble ai';
-    b.textContent = text;
-    wrap.appendChild(lbl);
-    wrap.appendChild(b);
-    if (chips && chips.length) {
-      const row = document.createElement('div');
-      row.className = 'chips-row';
-      chips.forEach(c => {
-        const chip = document.createElement('div');
-        chip.className = 'chip';
-        chip.textContent = c;
-        chip.onclick = () => sendText(c);
-        row.appendChild(chip);
-      });
-      wrap.appendChild(row);
-    }
-  }
-  scrollBottom();
-}
-
-function addTyping() {
-  const wrap = document.getElementById('chatWrap');
-  const lbl = document.createElement('div');
-  lbl.className = 'bubble-label';
-  lbl.textContent = 'Concierge';
-  lbl.id = 'typingLabel';
-  const b = document.createElement('div');
-  b.className = 'bubble ai';
-  b.id = 'typingBubble';
-  b.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
-  wrap.appendChild(lbl);
-  wrap.appendChild(b);
-  scrollBottom();
-}
-
-function removeTyping() {
-  ['typingLabel','typingBubble'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.remove();
-  });
-}
-
-function scrollBottom() {
-  const s = document.getElementById('scrollArea');
-  setTimeout(() => s.scrollTop = s.scrollHeight, 50);
-}
-
+// ── CONCIERGE API ──
 async function callConcierge() {
-  addTyping();
+  document.getElementById('micBtn').className = 'mic-btn thinking';
+  showTypingDots();
+
   try {
     const res = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages: history, system: SYSTEM })
+      body: JSON.stringify({
+        messages: history,
+        system: getSystem(currentCategory)
+      })
     });
+
     const data = await res.json();
-    removeTyping();
-    const reply = data.reply || "I'm having trouble right now — give me a second and try again.";
-    addBubble('ai', reply);
+    removeTypingDots();
+    document.getElementById('micBtn').className = 'mic-btn';
+
+    const reply = data.reply || "Still here — just had a connection hiccup. Tap the mic and try again.";
     history.push({ role: 'assistant', content: reply });
+
+    hasResponded = true;
+    showResponse(reply, getSuggestedChips());
     speak(reply);
+    showTypeBar();
+    setHint('Tap to reply', '');
+
   } catch(e) {
-    removeTyping();
-    addBubble('ai', "Connection dropped for a second — still here. Try again.");
+    removeTypingDots();
+    document.getElementById('micBtn').className = 'mic-btn';
+    showResponse("Connection dropped for a second — I'm still here. Tap the mic and try again.", []);
   }
 }
 
-async function sendText(text) {
-  showChat();
-  addBubble('user', text);
-  history.push({ role: 'user', content: text });
-  await callConcierge();
+function getSuggestedChips() {
+  const chips = {
+    car:      ['Yes, keep going','It just started','Should I pull over?'],
+    medical:  ['Yes, keep going','Getting worse','Need a doctor now?'],
+    kids:     ['Yes, keep going','It\'s urgent','What do I say?'],
+    legal:    ['Yes, keep going','Draft a letter','Find me a lawyer'],
+    landlord: ['Yes, keep going','Draft a letter','Can I withhold rent?'],
+    money:    ['Yes, keep going','Help me negotiate','Find assistance'],
+    bills:    ['Yes, keep going','Help me negotiate','Find assistance'],
+    insurance:['Yes, keep going','Am I being lowballed?','Help me file'],
+    work:     ['Yes, keep going','Help me respond','Is it time to leave?'],
+    anxiety:  ['Keep talking','What do I do right now?','Find someone to talk to'],
+    default:  ['Yes, keep going','Tell me more','What do I do next?']
+  };
+  return chips[currentCategory] || chips.default;
 }
 
-async function sendMessage() {
-  const input = document.getElementById('msgInput');
+// ── UI HELPERS ──
+function showResponse(text, chips) {
+  const area = document.getElementById('responseArea');
+  area.innerHTML = '';
+
+  const bubble = document.createElement('div');
+  bubble.className = 'response-bubble';
+  bubble.textContent = text;
+  area.appendChild(bubble);
+
+  if (chips && chips.length) {
+    const row = document.createElement('div');
+    row.className = 'response-chips';
+    chips.forEach(c => {
+      const chip = document.createElement('div');
+      chip.className = 'r-chip';
+      chip.textContent = c;
+      chip.onclick = () => {
+        history.push({ role: 'user', content: c });
+        setHint('"' + c + '"', 'live');
+        area.innerHTML = '';
+        callConcierge();
+      };
+      row.appendChild(chip);
+    });
+    area.appendChild(row);
+  }
+}
+
+function showTypingDots() {
+  const area = document.getElementById('responseArea');
+  area.innerHTML = '<div class="response-bubble"><div class="dots"><span></span><span></span><span></span></div></div>';
+}
+
+function removeTypingDots() {
+  // cleared by showResponse
+}
+
+function setHint(text, state) {
+  const el = document.getElementById('micHint');
+  el.textContent = text;
+  el.className = 'mic-hint' + (state ? ' ' + state : '');
+}
+
+function showTypeBar() {
+  document.getElementById('typeToggle').style.display = 'flex';
+}
+
+function startRings() {
+  document.getElementById('ring1').classList.add('pulse');
+  document.getElementById('ring2').classList.add('pulse');
+}
+
+function stopRings() {
+  document.getElementById('ring1').classList.remove('pulse');
+  document.getElementById('ring2').classList.remove('pulse');
+}
+
+// ── TEXT INPUT ──
+function handleTypeKey(e) {
+  if (e.key === 'Enter') { e.preventDefault(); sendTyped(); }
+}
+
+function sendTyped() {
+  const input = document.getElementById('typeInput');
   const text = input.value.trim();
   if (!text) return;
   input.value = '';
-  input.style.height = '24px';
-  await sendText(text);
+  history.push({ role: 'user', content: text });
+  setHint('"' + text.substring(0, 50) + '"', 'live');
+  document.getElementById('responseArea').innerHTML = '';
+  callConcierge();
 }
 
-function handleKey(e) {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+// ── SPEECH SYNTHESIS ──
+function speak(text) {
+  if (!window.speechSynthesis) return;
+  stopSpeaking();
+  const clean = text.replace(/[*_#`]/g, '').substring(0, 350);
+  const utt = new SpeechSynthesisUtterance(clean);
+  utt.rate = 0.91; utt.pitch = 1.0;
+  window.speechSynthesis.speak(utt);
 }
 
-function autoResize(el) {
-  el.style.height = '24px';
-  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+function stopSpeaking() {
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
 }
 
+// ── LISTEN & HELP ──
 function toggleListen() {
   listenOn = !listenOn;
   document.getElementById('listenToggle').classList.toggle('on', listenOn);
   document.getElementById('listenDot').style.background = listenOn ? '#639922' : '';
   document.getElementById('listenLabel').textContent = listenOn ? 'Listen & Help on' : 'Listen & Help off';
-  document.getElementById('ambientBanner').classList.toggle('show', listenOn);
 }
 
-// Deep link from URL params
-const params = new URLSearchParams(location.search);
-const q = params.get('q');
+// ── GREETING ──
+function updateGreeting() {
+  const h = new Date().getHours();
+  const t = h < 12 ? 'Good morning.' : h < 17 ? 'Good afternoon.' : 'Good evening.';
+  document.getElementById('greeting').textContent = t;
+}
+updateGreeting();
+
+// ── DEEP LINK ──
+const q = new URLSearchParams(location.search).get('q');
 if (q) {
   const btn = [...document.querySelectorAll('.prob-btn')].find(b =>
     b.getAttribute('onclick') && b.getAttribute('onclick').includes(`'${q}'`)
