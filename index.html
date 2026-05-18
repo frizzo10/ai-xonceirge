@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="They know everything about you. So do we. Difference is — we're on your side.">
-<meta property="og:title" content="They know everything about you. So do we.">
-<meta property="og:description" content="Difference is — we're on your side.">
+<meta name="description" content="A solution that never existed for the public. They had it. They used it for themselves. Now it's yours.">
+<meta property="og:title" content="They know everything about you. So do we. Difference is — we're on your side.">
+<meta property="og:description" content="A solution that never existed for the public. Now it's yours.">
 <meta name="twitter:card" content="summary_large_image">
-<title>Concierge — Finally on your side.</title>
+<title>Concierge — Now it's yours.</title>
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <meta name="theme-color" content="#0A0A08">
@@ -29,129 +29,142 @@ html{scroll-behavior:smooth}
 body{font-family:'DM Sans',sans-serif;background:var(--black);color:var(--white);-webkit-font-smoothing:antialiased}
 
 /* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:20px 48px;display:flex;align-items:center;justify-content:space-between;background:rgba(10,10,8,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--dim)}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:20px 48px;display:flex;align-items:center;justify-content:space-between;background:rgba(10,10,8,0.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--dim)}
 .nav-brand{font-family:'DM Serif Display',serif;font-size:20px;color:var(--white);letter-spacing:-0.3px}
 .nav-links{display:flex;gap:36px}
-.nav-links a{font-size:13px;color:var(--gray);text-decoration:none;letter-spacing:0.2px}
+.nav-links a{font-size:13px;color:var(--gray);text-decoration:none}
 .nav-links a:hover{color:var(--white)}
-.nav-cta{background:var(--white);color:var(--black);padding:10px 24px;border-radius:24px;font-size:13px;font-weight:700;text-decoration:none;letter-spacing:0.2px}
+.nav-cta{background:var(--white);color:var(--black);padding:10px 24px;border-radius:4px;font-size:13px;font-weight:700;text-decoration:none}
 .nav-cta:hover{opacity:0.88}
 
-/* ── SECTION 1: ACCUSATION ── */
-.accusation{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:140px 48px 100px;border-bottom:1px solid var(--dim)}
-.accusation-inner{max-width:1000px}
-.acc-line{font-family:'DM Serif Display',serif;font-size:clamp(52px,8vw,120px);line-height:1.0;letter-spacing:-4px;display:block;margin-bottom:8px;opacity:0;transform:translateY(30px);transition:opacity 0.8s ease,transform 0.8s ease}
-.acc-line.show{opacity:1;transform:translateY(0)}
-.acc-line.dim{color:rgba(255,255,255,0.18)}
-.acc-line.bright{color:var(--white)}
-.acc-line.blue{color:var(--blue);font-style:italic}
-.acc-sub{font-size:clamp(16px,2vw,22px);color:rgba(255,255,255,0.35);line-height:1.7;max-width:560px;margin-top:56px;margin-bottom:52px;opacity:0;transition:opacity 1s ease 0.6s}
-.acc-sub.show{opacity:1}
-.btn-raw{display:inline-block;background:var(--white);color:var(--black);padding:18px 48px;border-radius:4px;font-size:16px;font-weight:700;text-decoration:none;letter-spacing:-0.3px;transition:opacity 0.2s}
+.btn-raw{display:inline-block;background:var(--white);color:var(--black);padding:18px 48px;border-radius:4px;font-size:16px;font-weight:700;text-decoration:none;transition:opacity 0.2s}
 .btn-raw:hover{opacity:0.88}
-.btn-ghost-raw{display:inline-block;border:1px solid var(--dim2);color:rgba(255,255,255,0.55);padding:18px 48px;border-radius:4px;font-size:16px;font-weight:500;text-decoration:none;margin-left:16px;transition:all 0.2s}
-.btn-ghost-raw:hover{border-color:rgba(255,255,255,0.4);color:var(--white)}
+.btn-ghost{display:inline-block;border:1px solid var(--dim2);color:rgba(255,255,255,0.5);padding:18px 48px;border-radius:4px;font-size:16px;font-weight:500;text-decoration:none;transition:all 0.2s;margin-left:16px}
+.btn-ghost:hover{border-color:rgba(255,255,255,0.35);color:var(--white)}
 
-/* ── SECTION 2: BETRAYAL ── */
-.betrayal{padding:0;border-bottom:1px solid var(--dim)}
-.betrayal-intro{padding:120px 48px 80px;max-width:900px}
-.betrayal-intro h2{font-family:'DM Serif Display',serif;font-size:clamp(36px,5vw,72px);line-height:1.08;letter-spacing:-2px;margin-bottom:24px}
-.betrayal-intro h2 em{font-style:italic;color:rgba(255,255,255,0.25)}
-.betrayal-intro p{font-size:clamp(17px,2vw,22px);color:rgba(255,255,255,0.35);line-height:1.75;max-width:640px}
+/* ── 1. OPEN ── */
+.open{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:160px 48px 120px;border-bottom:1px solid var(--dim)}
+.open-inner{max-width:1000px}
+.open-pre{font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--gray);margin-bottom:52px;display:block}
+.open h1{font-family:'DM Serif Display',serif;font-size:clamp(48px,8vw,120px);line-height:1.0;letter-spacing:-4px;margin-bottom:0}
+.open h1 .l1{color:rgba(255,255,255,0.2);display:block;opacity:0;transform:translateY(24px);transition:all 0.7s ease}
+.open h1 .l2{color:var(--white);display:block;opacity:0;transform:translateY(24px);transition:all 0.7s ease 0.15s}
+.open h1 .l3{color:var(--blue);font-style:italic;display:block;opacity:0;transform:translateY(24px);transition:all 0.7s ease 0.3s}
+.open h1 .l4{color:var(--white);display:block;opacity:0;transform:translateY(24px);transition:all 0.7s ease 0.45s}
+.open h1 .show{opacity:1;transform:translateY(0)}
+.open-divider{width:60px;height:2px;background:var(--dim2);margin:56px 0}
+.open-sub{font-size:clamp(18px,2vw,24px);color:rgba(255,255,255,0.32);line-height:1.75;max-width:600px;margin-bottom:52px}
+.open-sub strong{color:rgba(255,255,255,0.7);font-weight:500}
+.open-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
 
-.b-card{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--dim);min-height:500px}
-.b-left{padding:72px 48px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid var(--dim)}
-.b-num{font-size:120px;font-weight:700;line-height:1;color:rgba(255,255,255,0.04);letter-spacing:-6px;margin-bottom:-20px}
-.b-tag{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--red);margin-bottom:28px}
-.b-moment{font-family:'DM Serif Display',serif;font-size:clamp(24px,3vw,42px);line-height:1.15;letter-spacing:-0.8px;color:var(--white);margin-bottom:20px}
-.b-what{font-size:15px;color:rgba(255,255,255,0.32);line-height:1.8}
-.b-right{padding:72px 48px;display:flex;flex-direction:column;justify-content:center;background:rgba(255,255,255,0.02)}
-.b-right-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--blue);margin-bottom:20px}
-.b-response{font-size:clamp(16px,1.8vw,20px);color:rgba(255,255,255,0.7);line-height:1.75;font-style:italic;margin-bottom:24px;padding-left:20px;border-left:2px solid var(--blue)}
-.b-chips{display:flex;gap:10px;flex-wrap:wrap}
-.b-chip{font-size:12px;padding:8px 16px;border:1px solid var(--dim2);border-radius:4px;color:rgba(255,255,255,0.45)}
+/* ── 2. NEVER EXISTED ── */
+.never{padding:160px 48px;border-bottom:1px solid var(--dim)}
+.never-inner{max-width:1000px;margin:0 auto}
+.never h2{font-family:'DM Serif Display',serif;font-size:clamp(36px,5.5vw,80px);line-height:1.06;letter-spacing:-2.5px;margin-bottom:64px}
+.never h2 em{font-style:italic;color:rgba(255,255,255,0.22)}
+.never-blocks{display:flex;flex-direction:column;gap:0}
+.nb{padding:52px 0;border-top:1px solid var(--dim);display:grid;grid-template-columns:1fr 2fr;gap:64px;align-items:start}
+.nb:last-child{border-bottom:1px solid var(--dim)}
+.nb-who{font-family:'DM Serif Display',serif;font-size:clamp(22px,2.5vw,36px);line-height:1.2;letter-spacing:-0.5px;color:rgba(255,255,255,0.25)}
+.nb-what{font-size:clamp(16px,1.8vw,20px);color:rgba(255,255,255,0.38);line-height:1.8}
+.nb-what strong{color:rgba(255,255,255,0.72);font-weight:500}
+.never-close{margin-top:100px;padding:80px;background:rgba(55,138,221,0.06);border:1px solid rgba(55,138,221,0.15);border-radius:4px;text-align:center}
+.never-close h3{font-family:'DM Serif Display',serif;font-size:clamp(32px,5vw,72px);line-height:1.08;letter-spacing:-2px;color:var(--white);margin-bottom:24px}
+.never-close h3 em{font-style:italic;color:var(--blue)}
+.never-close p{font-size:clamp(16px,1.8vw,20px);color:rgba(255,255,255,0.35);line-height:1.75;max-width:560px;margin:0 auto 40px}
 
-/* ── SECTION 3: THE FIGHT ── */
-.fight{padding:140px 48px;border-bottom:1px solid var(--dim);max-width:1100px;margin:0 auto}
-.fight-intro{max-width:700px;margin-bottom:100px}
-.fight-intro h2{font-family:'DM Serif Display',serif;font-size:clamp(36px,5vw,72px);line-height:1.08;letter-spacing:-2px;margin-bottom:24px}
-.fight-intro p{font-size:18px;color:rgba(255,255,255,0.32);line-height:1.75}
+/* ── 3. THE MOMENTS ── */
+.moments{border-bottom:1px solid var(--dim)}
+.moments-intro{padding:120px 48px 72px;max-width:860px}
+.moments-intro h2{font-family:'DM Serif Display',serif;font-size:clamp(36px,5vw,72px);line-height:1.08;letter-spacing:-2px;margin-bottom:24px}
+.moments-intro p{font-size:clamp(17px,2vw,21px);color:rgba(255,255,255,0.32);line-height:1.75;max-width:620px}
 
-.f-row{padding:52px 0;border-top:1px solid var(--dim);display:grid;grid-template-columns:200px 1fr 1fr;gap:48px;align-items:center}
-.f-row:last-child{border-bottom:1px solid var(--dim)}
-.f-company{font-size:clamp(36px,4vw,56px);font-weight:700;letter-spacing:-2px;color:rgba(255,255,255,0.08)}
-.f-fact{font-family:'DM Serif Display',serif;font-size:clamp(18px,2.2vw,28px);line-height:1.25;letter-spacing:-0.3px;color:var(--white)}
-.f-source{font-size:11px;color:rgba(255,255,255,0.2);font-style:italic;margin-top:10px}
-.f-flip{font-size:15px;color:rgba(255,255,255,0.4);line-height:1.7;padding-left:24px;border-left:1px solid var(--dim2)}
+.m-card{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--dim);min-height:520px}
+.m-left{padding:72px 48px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid var(--dim)}
+.m-tag{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:28px;display:inline-block;padding:6px 14px;border-radius:2px}
+.m-left h3{font-family:'DM Serif Display',serif;font-size:clamp(26px,3.2vw,48px);line-height:1.1;letter-spacing:-1px;margin-bottom:20px}
+.m-left p{font-size:15px;color:rgba(255,255,255,0.3);line-height:1.85}
+.m-right{padding:72px 48px;background:rgba(255,255,255,0.015);display:flex;flex-direction:column;justify-content:center;gap:24px}
+.m-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gray)}
+.m-bubble{background:rgba(255,255,255,0.06);border:1px solid var(--dim2);border-radius:20px;border-bottom-left-radius:3px;padding:22px 26px;font-size:clamp(14px,1.6vw,17px);line-height:1.75;color:rgba(255,255,255,0.82)}
+.m-chips{display:flex;gap:8px;flex-wrap:wrap}
+.m-chip{font-size:12px;padding:8px 16px;border:1px solid var(--dim2);border-radius:4px;color:rgba(255,255,255,0.38);cursor:pointer;transition:all 0.15s;text-decoration:none}
+.m-chip:hover{border-color:var(--blue);color:var(--blue)}
 
-.fight-close{margin-top:100px;text-align:center}
-.fight-close h3{font-family:'DM Serif Display',serif;font-size:clamp(36px,6vw,84px);line-height:1.06;letter-spacing:-2.5px;color:var(--white);margin-bottom:0}
-.fight-close h3 em{font-style:italic;color:var(--blue)}
+.mc-health .m-left{background:rgba(160,50,30,0.07)}
+.mc-health .m-tag{background:rgba(160,50,30,0.18);color:#F5A090}
+.mc-accident .m-left{background:rgba(150,110,10,0.07)}
+.mc-accident .m-tag{background:rgba(150,110,10,0.18);color:#FAD080}
+.mc-fever .m-left{background:rgba(70,50,170,0.07)}
+.mc-fever .m-tag{background:rgba(70,50,170,0.18);color:#C0B8F8}
+.mc-legal .m-left{background:rgba(10,130,90,0.07)}
+.mc-legal .m-tag{background:rgba(10,130,90,0.18);color:#80DDB8}
+.mc-car .m-left{background:rgba(30,110,30,0.07)}
+.mc-car .m-tag{background:rgba(30,110,30,0.18);color:#90D890}
 
-/* ── SECTION 4: THE PRODUCT ── */
-.product{border-bottom:1px solid var(--dim)}
-.product-intro{padding:120px 48px 80px;max-width:900px}
-.product-intro h2{font-family:'DM Serif Display',serif;font-size:clamp(36px,5vw,72px);line-height:1.08;letter-spacing:-2px;margin-bottom:24px}
-.product-intro p{font-size:18px;color:rgba(255,255,255,0.32);line-height:1.75;max-width:600px}
+/* ── 4. THE TRUTH ── */
+.truth{padding:160px 48px;border-bottom:1px solid var(--dim);text-align:center}
+.truth-inner{max-width:900px;margin:0 auto}
+.truth-eyebrow{font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--gray);margin-bottom:48px;display:block}
+.truth-them{margin-bottom:0}
+.truth-num{font-family:'DM Serif Display',serif;font-size:clamp(52px,9vw,130px);line-height:1;letter-spacing:-5px;color:var(--white);margin-bottom:12px}
+.truth-who{font-family:'DM Serif Display',serif;font-size:clamp(26px,4vw,52px);line-height:1.1;letter-spacing:-1.5px;color:rgba(255,255,255,0.2);margin-bottom:72px}
+.truth-divider{height:1px;background:var(--dim2);max-width:80px;margin:0 auto 72px;position:relative}
+.truth-divider::after{content:'vs';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--black);padding:0 16px;font-size:11px;font-weight:700;color:var(--gray);letter-spacing:2px}
+.truth-us-num{font-family:'DM Serif Display',serif;font-size:clamp(52px,9vw,130px);line-height:1;letter-spacing:-5px;color:var(--white);margin-bottom:12px}
+.truth-us-who{font-family:'DM Serif Display',serif;font-size:clamp(26px,4vw,52px);line-height:1.1;letter-spacing:-1.5px;color:rgba(255,255,255,0.2);margin-bottom:80px}
+.truth-verdict{font-family:'DM Serif Display',serif;font-size:clamp(32px,5vw,72px);line-height:1.1;letter-spacing:-2px;color:var(--white);margin-bottom:80px}
+.truth-verdict em{font-style:italic;color:var(--blue)}
+.truth-punch{display:grid;grid-template-columns:repeat(2,1fr);gap:2px;text-align:left;border:1px solid var(--dim);border-radius:4px;overflow:hidden;margin-bottom:80px}
+.tp-item{padding:36px 32px;background:rgba(255,255,255,0.02)}
+.tp-status{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+.tp-status.yes{color:var(--green)}
+.tp-status.no{color:var(--red)}
+.tp-title{font-size:16px;font-weight:600;color:var(--white);margin-bottom:8px;line-height:1.3}
+.tp-body{font-size:13px;color:rgba(255,255,255,0.3);line-height:1.75}
 
-.p-card{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--dim);min-height:480px}
-.p-left{padding:64px 48px;display:flex;flex-direction:column;justify-content:center}
-.p-tag{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:24px;display:inline-block;padding:5px 14px;border-radius:2px}
-.p-left h3{font-family:'DM Serif Display',serif;font-size:clamp(24px,3vw,44px);line-height:1.15;letter-spacing:-1px;margin-bottom:16px}
-.p-left p{font-size:15px;color:rgba(255,255,255,0.35);line-height:1.8}
-.p-right{padding:64px 48px;border-left:1px solid var(--dim);background:rgba(255,255,255,0.015);display:flex;flex-direction:column;justify-content:center;gap:20px}
-.p-right-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gray)}
-.p-bubble{background:rgba(255,255,255,0.06);border:1px solid var(--dim2);border-radius:16px;border-bottom-left-radius:3px;padding:20px 24px;font-size:15px;line-height:1.7;color:rgba(255,255,255,0.82)}
-.p-chips{display:flex;gap:8px;flex-wrap:wrap}
-.p-chip{font-size:12px;padding:7px 14px;border:1px solid var(--dim2);border-radius:4px;color:rgba(255,255,255,0.4);cursor:pointer;transition:all 0.15s}
-.p-chip:hover{border-color:var(--blue);color:var(--blue)}
+/* ── 5. OPEN SOURCE ── */
+.opensource{padding:160px 48px;border-bottom:1px solid var(--dim);background:rgba(255,255,255,0.01)}
+.opensource-inner{max-width:900px;margin:0 auto}
+.os-eyebrow{font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--gray);margin-bottom:48px;display:block}
+.os-h2{font-family:'DM Serif Display',serif;font-size:clamp(36px,5vw,72px);line-height:1.08;letter-spacing:-2px;color:var(--white);margin-bottom:72px}
+.os-h2 em{font-style:italic;color:rgba(255,255,255,0.22)}
+.os-blocks{display:flex;flex-direction:column;gap:0;margin-bottom:80px}
+.os-block{padding:48px 0;border-top:1px solid var(--dim)}
+.os-block:last-child{border-bottom:1px solid var(--dim)}
+.os-block p{font-size:clamp(17px,2vw,22px);color:rgba(255,255,255,0.32);line-height:1.85;max-width:760px}
+.os-block p+p{margin-top:20px}
+.os-block p strong{color:rgba(255,255,255,0.72);font-weight:500}
+.os-block p em{font-style:italic;color:rgba(255,255,255,0.6)}
+.os-moment{text-align:center;padding:80px 0}
+.os-moment h3{font-family:'DM Serif Display',serif;font-size:clamp(36px,6vw,84px);line-height:1.06;letter-spacing:-2.5px;color:var(--white)}
+.os-moment h3 em{font-style:italic;color:var(--blue)}
+.os-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;border:1px solid var(--dim);border-radius:4px;overflow:hidden}
+.og-item{padding:36px 28px;background:rgba(255,255,255,0.02)}
+.og-num{font-family:'DM Serif Display',serif;font-size:48px;line-height:1;letter-spacing:-2px;color:rgba(255,255,255,0.06);margin-bottom:12px}
+.og-title{font-size:15px;font-weight:600;color:var(--white);margin-bottom:10px;line-height:1.3}
+.og-body{font-size:13px;color:rgba(255,255,255,0.3);line-height:1.7}
 
-.p-medical .p-left{background:rgba(180,60,40,0.06)}
-.p-medical .p-tag{background:rgba(180,60,40,0.15);color:#F5A090}
-.p-accident .p-left{background:rgba(160,120,20,0.06)}
-.p-accident .p-tag{background:rgba(160,120,20,0.15);color:#FAD080}
-.p-fever .p-left{background:rgba(80,60,180,0.06)}
-.p-fever .p-tag{background:rgba(80,60,180,0.15);color:#C0B8F8}
-.p-landlord .p-left{background:rgba(20,140,100,0.06)}
-.p-landlord .p-tag{background:rgba(20,140,100,0.15);color:#80DDB8}
-.p-car .p-left{background:rgba(40,120,40,0.06)}
-.p-car .p-tag{background:rgba(40,120,40,0.15);color:#90D890}
+/* ── 6. ORIGIN ── */
+.origin{padding:160px 48px;border-bottom:1px solid var(--dim)}
+.origin-inner{max-width:900px;margin:0 auto}
+.origin h2{font-family:'DM Serif Display',serif;font-size:clamp(36px,5vw,72px);line-height:1.08;letter-spacing:-2px;margin-bottom:48px}
+.origin h2 em{font-style:italic;color:rgba(255,255,255,0.22)}
+.origin-body{font-size:clamp(17px,2vw,22px);color:rgba(255,255,255,0.32);line-height:1.85;max-width:760px}
+.origin-body p{margin-bottom:28px}
+.origin-body p:last-child{margin-bottom:0}
+.origin-body strong{color:rgba(255,255,255,0.72);font-weight:500}
 
-/* ── SECTION 5: BUSINESS MODEL ── */
-.model{padding:160px 48px;border-bottom:1px solid var(--dim);text-align:center}
-.model-inner{max-width:860px;margin:0 auto}
-.model-them{margin-bottom:0}
-.model-num{font-family:'DM Serif Display',serif;font-size:clamp(48px,8vw,120px);line-height:1;letter-spacing:-4px;color:var(--white);margin-bottom:12px}
-.model-who{font-family:'DM Serif Display',serif;font-size:clamp(28px,4vw,56px);line-height:1.1;letter-spacing:-1.5px;color:rgba(255,255,255,0.22);margin-bottom:64px}
-.model-divider{height:1px;background:var(--dim2);margin:0 auto 64px;max-width:120px;position:relative}
-.model-divider::after{content:'vs';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--black);padding:0 16px;font-size:12px;font-weight:700;color:var(--gray);letter-spacing:2px}
-.model-us-num{font-family:'DM Serif Display',serif;font-size:clamp(48px,8vw,120px);line-height:1;letter-spacing:-4px;color:var(--white);margin-bottom:12px}
-.model-us-who{font-family:'DM Serif Display',serif;font-size:clamp(28px,4vw,56px);line-height:1.1;letter-spacing:-1.5px;color:rgba(255,255,255,0.22);margin-bottom:80px}
-.model-verdict{font-family:'DM Serif Display',serif;font-size:clamp(32px,5vw,72px);line-height:1.1;letter-spacing:-2px;color:var(--white);margin-bottom:80px}
-.model-verdict em{font-style:italic;color:var(--blue)}
-.model-facts{display:grid;grid-template-columns:repeat(2,1fr);gap:2px;text-align:left;border:1px solid var(--dim);border-radius:4px;overflow:hidden;margin-bottom:80px}
-.mf-item{padding:36px 32px;background:rgba(255,255,255,0.02)}
-.mf-status{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
-.mf-status.yes{color:var(--green)}
-.mf-status.no{color:var(--red)}
-.mf-title{font-size:16px;font-weight:600;color:var(--white);margin-bottom:8px;line-height:1.3}
-.mf-body{font-size:13px;color:rgba(255,255,255,0.35);line-height:1.7}
-
-/* ── ORIGIN ── */
-.origin{padding:140px 48px;border-bottom:1px solid var(--dim);max-width:900px;margin:0 auto}
-.origin h2{font-family:'DM Serif Display',serif;font-size:clamp(36px,5vw,68px);line-height:1.1;letter-spacing:-2px;margin-bottom:36px}
-.origin h2 em{font-style:italic;color:rgba(255,255,255,0.25)}
-.origin-body{font-size:clamp(17px,2vw,22px);color:rgba(255,255,255,0.35);line-height:1.8;max-width:720px}
-.origin-body strong{color:rgba(255,255,255,0.75);font-weight:500}
-
-/* ── CLOSING ── */
-.closing{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:120px 48px}
-.closing h2{font-family:'DM Serif Display',serif;font-size:clamp(48px,8vw,120px);line-height:1.0;letter-spacing:-4px;color:var(--white);max-width:1000px;margin-bottom:48px}
+/* ── 7. CLOSING ── */
+.closing{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:120px 48px;border-bottom:1px solid var(--dim)}
+.closing h2{font-family:'DM Serif Display',serif;font-size:clamp(52px,9vw,130px);line-height:1.0;letter-spacing:-4px;color:var(--white);max-width:900px;margin-bottom:48px}
 .closing h2 em{font-style:italic;color:var(--blue)}
-.closing p{font-size:clamp(16px,1.8vw,20px);color:rgba(255,255,255,0.32);max-width:520px;margin:0 auto 56px;line-height:1.8}
+.closing-sub{font-size:clamp(17px,2vw,22px);color:rgba(255,255,255,0.28);max-width:540px;margin:0 auto 56px;line-height:1.8}
 .closing-note{font-size:13px;color:var(--gray);margin-top:16px;font-style:italic}
+.share-row{display:flex;gap:12px;justify-content:center;margin-top:48px;flex-wrap:wrap}
+.share-btn{padding:11px 22px;border-radius:4px;border:1px solid var(--dim2);font-size:13px;font-weight:500;color:rgba(255,255,255,0.45);background:none;cursor:pointer;text-decoration:none;transition:all 0.2s;display:inline-block}
+.share-btn:hover{border-color:rgba(255,255,255,0.3);color:var(--white)}
 
-/* FOOTER */
 footer{padding:40px 48px;border-top:1px solid var(--dim);display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--gray);flex-wrap:wrap;gap:12px;max-width:1400px;margin:0 auto}
 footer a{color:var(--gray);text-decoration:none}
 footer a:hover{color:var(--white)}
@@ -159,48 +172,20 @@ footer a:hover{color:var(--white)}
 @media(max-width:768px){
   nav{padding:14px 20px}
   .nav-links{display:none}
-  .accusation{padding:120px 24px 80px}
-  .acc-line{letter-spacing:-2px}
-  .betrayal-intro,.product-intro,.fight{padding:80px 24px}
-  .b-card,.p-card{grid-template-columns:1fr}
-  .b-right,.p-right{border-left:none;border-top:1px solid var(--dim)}
-  .b-left,.b-right,.p-left,.p-right{padding:48px 24px}
-  .f-row{grid-template-columns:1fr;gap:16px;padding:40px 0}
-  .f-company{font-size:48px}
-  .fight-intro{margin-bottom:60px}
-  .model{padding:100px 24px}
-  .model-facts{grid-template-columns:1fr}
-  .origin{padding:80px 24px}
+  .open{padding:120px 24px 80px}
+  .open h1{letter-spacing:-2px}
+  .never,.truth,.opensource,.origin{padding:80px 24px}
+  .never-close{padding:48px 24px}
+  .nb{grid-template-columns:1fr;gap:20px}
+  .moments-intro{padding:80px 24px 48px}
+  .m-card{grid-template-columns:1fr}
+  .m-right{border-top:1px solid var(--dim)}
+  .m-left,.m-right{padding:48px 24px}
+  .truth-punch{grid-template-columns:1fr}
+  .os-grid{grid-template-columns:1fr}
   .closing{padding:80px 24px;min-height:auto}
+  .btn-ghost{margin-left:0;margin-top:12px;display:block;text-align:center}
   footer{padding:32px 20px}
-  .btn-ghost-raw{margin-left:0;margin-top:12px;display:block}
-}
-
-/* SECRET SECTION */
-.secret{padding:160px 48px;border-bottom:1px solid var(--dim);background:rgba(255,255,255,0.015)}
-.secret-inner{max-width:900px;margin:0 auto}
-.secret-eyebrow{font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--red);margin-bottom:48px;display:block}
-.secret h2{font-family:'DM Serif Display',serif;font-size:clamp(36px,5vw,72px);line-height:1.08;letter-spacing:-2px;color:var(--white);margin-bottom:80px}
-.secret h2 em{font-style:italic;color:rgba(255,255,255,0.22)}
-.secret-body{display:flex;flex-direction:column;gap:0}
-.secret-block{padding:48px 0;border-top:1px solid var(--dim)}
-.secret-block:last-of-type{border-bottom:1px solid var(--dim)}
-.secret-block p{font-size:clamp(17px,2vw,22px);color:rgba(255,255,255,0.35);line-height:1.85;max-width:780px}
-.secret-block p strong{color:var(--white);font-weight:500}
-.secret-block p em{font-style:italic;color:rgba(255,255,255,0.65)}
-.secret-moment{padding:64px 0;text-align:center}
-.secret-moment h3{font-family:'DM Serif Display',serif;font-size:clamp(32px,5vw,72px);line-height:1.1;letter-spacing:-2px;color:var(--white);margin-bottom:0}
-.secret-moment h3 em{font-style:italic;color:var(--blue)}
-.secret-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:64px;border:1px solid var(--dim);border-radius:4px;overflow:hidden}
-.sg-item{padding:36px 28px;background:rgba(255,255,255,0.02)}
-.sg-item:hover{background:rgba(255,255,255,0.04)}
-.sg-num{font-family:'DM Serif Display',serif;font-size:48px;line-height:1;letter-spacing:-2px;color:rgba(255,255,255,0.08);margin-bottom:12px}
-.sg-title{font-size:15px;font-weight:600;color:var(--white);margin-bottom:8px;line-height:1.3}
-.sg-body{font-size:13px;color:rgba(255,255,255,0.32);line-height:1.7}
-@media(max-width:768px){
-  .secret{padding:80px 24px}
-  .secret-grid{grid-template-columns:1fr}
-  .secret-moment h3{font-size:clamp(28px,8vw,52px)}
 }
 </style>
 </head>
@@ -209,314 +194,188 @@ footer a:hover{color:var(--white)}
 <nav>
   <div class="nav-brand">Concierge</div>
   <div class="nav-links">
-    <a href="#betrayal">The betrayal</a>
-    <a href="#fight">The fight</a>
-    <a href="#product">The product</a>
-    <a href="/honest.html">Our business model</a>
+    <a href="#moments">See it work</a>
+    <a href="#truth">Our business model</a>
+    <a href="/fight.html">The truth about them</a>
   </div>
   <a href="/app.html" class="nav-cta">Try it free</a>
 </nav>
 
-<!-- ── 1. ACCUSATION ── -->
-<section class="accusation">
-  <div class="accusation-inner">
-    <span class="acc-line dim" id="al1">They know everything about you.</span>
-    <span class="acc-line bright" id="al2">So do we.</span>
-    <span class="acc-line blue" id="al3">Difference is —</span>
-    <span class="acc-line bright" id="al4">we're on your side.</span>
-    <p class="acc-sub" id="al5">Every search. Every click. Every fear you Googled at midnight. They heard all of it. They built trillion dollar empires on it. And not one dollar went to making your life easier.</p>
-    <div style="display:flex;flex-wrap:wrap;gap:0;margin-top:8px">
-      <a href="/app.html" class="btn-raw">Try it free — no catch</a>
-      <a href="#betrayal" class="btn-ghost-raw">See what they did with it</a>
+<!-- ── 1. OPEN ── -->
+<section class="open">
+  <div class="open-inner">
+    <span class="open-pre">Introducing Concierge</span>
+    <h1>
+      <span class="l1">They know everything about you.</span>
+      <span class="l2">So do we.</span>
+      <span class="l3">Difference is —</span>
+      <span class="l4">we're on your side.</span>
+    </h1>
+    <div class="open-divider"></div>
+    <p class="open-sub">For twenty years the most powerful problem-solving intelligence ever built existed. <strong>You were never allowed to have it.</strong> Until now.</p>
+    <div class="open-actions">
+      <a href="/app.html" class="btn-raw">Get the answer — it's free</a>
+      <a href="#moments" class="btn-ghost">See it in action</a>
     </div>
   </div>
 </section>
 
-<!-- ── 2. BETRAYAL ── -->
-<section id="betrayal">
-  <div class="betrayal-intro">
-    <h2>They heard everything.<br><em>Here's what they did with it.</em></h2>
-    <p>Three moments. Every one of them happened to someone you know. Probably to you.</p>
-  </div>
+<!-- ── 2. NEVER EXISTED ── -->
+<section class="never" id="never">
+  <div class="never-inner">
+    <h2>A solution that never existed<br>for the public.<br><em>They had it. They used it for themselves.</em></h2>
 
-  <div class="b-card">
-    <div class="b-left">
-      <div class="b-num">01</div>
-      <div class="b-tag">Annoying</div>
-      <p class="b-moment">You mentioned a black dress for a dinner party.</p>
-      <p class="b-what">For three weeks every app you opened was selling you black dresses. Shoes. Jewelry. Spanx. You said it once. To find something you needed. They turned it into a month-long ambush across every screen you own.</p>
-    </div>
-    <div class="b-right">
-      <p class="b-right-label">What we do instead</p>
-      <p class="b-response">"Found it. $89, 2 miles away, your size, fits Nobu's dress code. Weather Saturday is 58° — the one with sleeves. Done. We won't mention it again."</p>
-      <div class="b-chips">
-        <span class="b-chip">Find it near me</span>
-        <span class="b-chip">Different budget</span>
-        <span class="b-chip">What shoes work?</span>
+    <div class="never-blocks">
+      <div class="nb">
+        <div class="nb-who">Doctors had it.</div>
+        <div class="nb-what">Medical intelligence that could triage any symptom, cross-reference any drug, flag any interaction. <strong>Your doctor had access to tools that told them exactly what to do.</strong> When you Googled your symptoms at midnight you got WebMD and a panic attack.</div>
+      </div>
+      <div class="nb">
+        <div class="nb-who">Lawyers had it.</div>
+        <div class="nb-what">Legal research tools that could scan every relevant case, every statute, every precedent in seconds. <strong>Your lawyer had the answer before you finished the sentence.</strong> You didn't know your rights. You couldn't afford to find out.</div>
+      </div>
+      <div class="nb">
+        <div class="nb-who">Financial advisors had it.</div>
+        <div class="nb-what">Intelligence that could model every scenario, flag every risk, find every opportunity. <strong>Wealthy people had advisors who knew what to do with their money.</strong> You got a 401k brochure and a customer service line.</div>
+      </div>
+      <div class="nb">
+        <div class="nb-who">Big tech had it.</div>
+        <div class="nb-what">Google. Facebook. Amazon. Apple. They built the most powerful intelligence in human history — trained on everything ever written, everything ever known. <strong>They used every bit of it to make money from you.</strong> Not one dollar went to actually solving your problems.</div>
       </div>
     </div>
-  </div>
 
-  <div class="b-card">
-    <div class="b-left">
-      <div class="b-num">02</div>
-      <div class="b-tag">Invasive</div>
-      <p class="b-moment">You Googled a chest pain symptom. Midnight. Alone. Scared.</p>
-      <p class="b-what">Within 24 hours life insurance ads were following you across every device you own. Your fear at midnight — your most vulnerable moment — was sold to companies you've never heard of before you even knew if you were okay.</p>
-    </div>
-    <div class="b-right">
-      <p class="b-right-label">What we do instead</p>
-      <p class="b-response">"Not an emergency right now. Watch for radiating pain, shortness of breath, or sweating — those mean call 911. Otherwise see a doctor this week. Nearest urgent care is 2 miles, open now, 15 minute wait."</p>
-      <div class="b-chips">
-        <span class="b-chip">Get directions</span>
-        <span class="b-chip">Should I call 911?</span>
-        <span class="b-chip">Book a doctor</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="b-card">
-    <div class="b-left">
-      <div class="b-num">03</div>
-      <div class="b-tag">Violating</div>
-      <p class="b-moment">You quietly searched for a divorce lawyer. You weren't ready to tell anyone.</p>
-      <p class="b-what">Three days later the ads appeared on the shared family iPad. On your spouse's suggested content. The algorithm didn't know your situation. It didn't care. Your most private moment became inventory.</p>
-    </div>
-    <div class="b-right">
-      <p class="b-right-label">What we do instead</p>
-      <p class="b-response">"In your state you're entitled to half of all marital assets acquired during the marriage. Here's what to document before you do anything else. And here's a family law attorney 3 miles away with a free first consultation."</p>
-      <div class="b-chips">
-        <span class="b-chip">Know my rights</span>
-        <span class="b-chip">What do I document?</span>
-        <span class="b-chip">Find a lawyer</span>
-      </div>
+    <div class="never-close">
+      <h3>Not because your problems<br>didn't matter.<br><em>Nobody built it for you.</em></h3>
+      <p>Until the code got out. Until open source changed everything. Until a guy with a laptop could point the same intelligence they hoarded for themselves — entirely at you.</p>
+      <a href="/app.html" class="btn-raw">Try it now — it's free</a>
     </div>
   </div>
 </section>
 
-<!-- ── 3. THE FIGHT ── -->
-<section id="fight">
-  <div class="fight">
-    <div class="fight-intro">
-      <h2>They are fat. They are happy. And they got there on your back.</h2>
-      <p>These are not opinions. These are court documents, congressional testimony, and internal memos. Every word provably true.</p>
-    </div>
-
-    <div class="f-row">
-      <div class="f-company">Google</div>
-      <div>
-        <p class="f-fact">Paid Apple $18 billion in one year to make sure you could never find anything else.</p>
-        <p class="f-source">U.S. v. Google LLC, Antitrust Trial, 2023. Admitted in open court.</p>
-      </div>
-      <p class="f-flip">Not $18 billion to be better. To block the door. That money came from selling everything they knew about you. We have no door to block. We have one job — give you the right answer.</p>
-    </div>
-
-    <div class="f-row">
-      <div class="f-company">Facebook</div>
-      <div>
-        <p class="f-fact">Knew their app was making teenage girls hate themselves. Kept going.</p>
-        <p class="f-source">The Facebook Papers, WSJ 2021. Internal Meta research documents.</p>
-      </div>
-      <p class="f-flip">They weighed the mental health of a generation against engagement metrics and chose the metrics. Every time. We make money when your problem is solved. Those are completely different incentives.</p>
-    </div>
-
-    <div class="f-row">
-      <div class="f-company">Amazon</div>
-      <div>
-        <p class="f-fact">Replaced honest search results with whoever paid most. Called it shopping.</p>
-        <p class="f-source">FTC v. Amazon, 2023. Internal documents entered into evidence.</p>
-      </div>
-      <p class="f-flip">Their own employees called it "a river of junk." You thought you were seeing the best product. You were seeing the highest bidder. We find the best one. Nobody pays us to recommend them.</p>
-    </div>
-
-    <div class="f-row">
-      <div class="f-company">Apple</div>
-      <div>
-        <p class="f-fact">Built the most intimate computer in human history. Gave you Siri.</p>
-        <p class="f-source">Siri launched 2011. Still cannot answer a complex personal question in 2026.</p>
-      </div>
-      <p class="f-flip">Your iPhone knows your face, your heart rate, your location every minute of your life. The potential was always there. The will to use it for you never was. We use everything your phone knows — for you.</p>
-    </div>
-
-    <div class="fight-close">
-      <h3>Same intelligence.<br><em>None of their agenda.</em></h3>
-    </div>
-  </div>
-</section>
-
-
-<!-- ── THE SECRET ── -->
-<section class="secret" id="secret">
-  <div class="secret-inner">
-    <span class="secret-eyebrow">The secret they don't want you to know</span>
-    <h2>For twenty years the intelligence was locked up.<br><em>Then the code got out.</em></h2>
-
-    <div class="secret-body">
-
-      <div class="secret-block">
-        <p>Google spent <strong>$500 million</strong> building it. OpenAI raised <strong>$10 billion</strong> to train it. Meta spent more than either of them. The intelligence that could answer any question, solve any problem, know anything about anything — was theirs. Behind walls. Behind billion dollar moats. Inaccessible to anyone who couldn't write a nine figure check.</p>
-      </div>
-
-      <div class="secret-block">
-        <p>Then something happened that <em>they didn't plan for.</em></p>
-        <p style="margin-top:24px">Brilliant researchers — not corporations, not shareholders, not anyone with a financial stake in keeping it locked — published the models. Shared the weights. Released the intelligence into the world. <strong>Free. For anyone.</strong> The open source AI revolution didn't ask for permission. It just happened.</p>
-      </div>
-
-      <div class="secret-block">
-        <p>The same intelligence that powers Google's products <strong>now runs on a laptop in Costa Rica for $20 a month.</strong> The same training data. The same capability. The same answers to the same questions.</p>
-        <p style="margin-top:24px">They still have the distribution. The brand. Billions of users locked into their ecosystem. But they lost the one thing that made them untouchable.</p>
-      </div>
-
-    </div>
-
-    <div class="secret-moment">
-      <h3>The monopoly on<br>knowing things<br><em>is over.</em></h3>
-    </div>
-
-    <div class="secret-grid">
-      <div class="sg-item">
-        <div class="sg-num">01</div>
-        <p class="sg-title">Same intelligence as Google</p>
-        <p class="sg-body">Every open source model has read the same internet Google indexed. The knowledge is identical. The difference is who it works for.</p>
-      </div>
-      <div class="sg-item">
-        <div class="sg-num">02</div>
-        <p class="sg-title">Same training data as OpenAI</p>
-        <p class="sg-body">GPT-4 didn't read the internet exclusively. The same books, articles, research, and human knowledge lives in every open model. Democratized. Forever.</p>
-      </div>
-      <div class="sg-item">
-        <div class="sg-num">03</div>
-        <p class="sg-title">Zero of their agenda</p>
-        <p class="sg-body">They built their intelligence to make money from you. We built ours to make your life easier. Same capability. Completely opposite incentive.</p>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<!-- ── 4. THE PRODUCT ── -->
-<section id="product">
-  <div class="product-intro">
-    <h2>When it happens we're already there.</h2>
-    <p>You don't search. You don't prompt. You don't figure out what to type. You just tell us what's happening. We have the answer.</p>
+<!-- ── 3. THE MOMENTS ── -->
+<section class="moments" id="moments">
+  <div class="moments-intro">
+    <h2>This is what it looks like when it works for you.</h2>
+    <p>No searching. No prompting. No figuring out what to type. Just tell us what's happening. We have the answer.</p>
   </div>
 
-  <div class="p-card p-medical">
-    <div class="p-left">
-      <span class="p-tag">Health</span>
-      <h3>You found a lump.<br>7am. Alone.<br>Terrified.</h3>
-      <p>You don't know if it's serious. You don't know who to call. You don't know if you should panic. You just need someone calm who knows what to do.</p>
+  <div class="m-card mc-health">
+    <div class="m-left">
+      <span class="m-tag">Health · 7am</span>
+      <h3>You found a lump in the shower. Alone. Terrified.</h3>
+      <p>You don't know if it's serious. You don't know who to call. You just need someone calm who knows exactly what to do right now.</p>
     </div>
-    <div class="p-right">
-      <p class="p-right-label">Concierge — immediately</p>
-      <div class="p-bubble">Most lumps are benign but this needs to be checked — not the ER today, a doctor within two weeks. I found three breast health clinics within 4 miles that take your insurance. Earliest appointment is tomorrow at 11am. Want me to book it?</div>
-      <div class="p-chips">
-        <span class="p-chip">Book the appointment</span>
-        <span class="p-chip">What do I tell the doctor?</span>
-        <span class="p-chip">Warning signs to watch</span>
+    <div class="m-right">
+      <p class="m-label">Concierge — immediately</p>
+      <div class="m-bubble">Most lumps are benign but this needs to be checked — not the ER today, a doctor within two weeks. I found three breast health clinics within 4 miles that take your insurance. Earliest appointment is tomorrow at 11am. Want me to book it?</div>
+      <div class="m-chips">
+        <a class="m-chip" href="/app.html?q=medical">Book the appointment</a>
+        <a class="m-chip" href="/app.html?q=medical">What do I tell the doctor?</a>
+        <a class="m-chip" href="/app.html?q=medical">Warning signs to watch</a>
       </div>
     </div>
   </div>
 
-  <div class="p-card p-accident">
-    <div class="p-left">
-      <span class="p-tag">Accident</span>
-      <h3>Fender bender.<br>Side of the road.<br>Hands shaking.</h3>
-      <p>You don't know what to say. What to photograph. What not to admit. What your insurance needs. Everything feels wrong.</p>
+  <div class="m-card mc-fever">
+    <div class="m-left">
+      <span class="m-tag">Parenting · Midnight</span>
+      <h3>104° fever. Your kid. Midnight. Is it serious?</h3>
+      <p>The pediatrician is closed. You don't know if you ride it out or drive to the ER. Every minute feels like a decision you might get wrong.</p>
     </div>
-    <div class="p-right">
-      <p class="p-right-label">Concierge — immediately</p>
-      <div class="p-bubble">Stay calm. Do not apologize or admit fault — even casually. Photograph both cars, the plates, and the intersection sign right now. Get their insurance card. I'll walk you through exactly what to say and what to send your insurer. Need a tow?</div>
-      <div class="p-chips">
-        <span class="p-chip">Call a tow truck</span>
-        <span class="p-chip">File my claim</span>
-        <span class="p-chip">What do I say to them?</span>
+    <div class="m-right">
+      <p class="m-label">Concierge — immediately</p>
+      <div class="m-bubble">104°F is high but not automatically an emergency. Three things mean go now: difficulty breathing, a rash that won't fade when pressed, or a seizure. None of those? Tylenol, keep cool, fluids. Nearest pediatric urgent care is 2 miles, open until 2am, 20 minute wait.</div>
+      <div class="m-chips">
+        <a class="m-chip" href="/app.html?q=kids">Get directions now</a>
+        <a class="m-chip" href="/app.html?q=kids">Right Tylenol dose?</a>
+        <a class="m-chip" href="/app.html?q=kids">When do I call 911?</a>
       </div>
     </div>
   </div>
 
-  <div class="p-card p-fever">
-    <div class="p-left">
-      <span class="p-tag">Parenting</span>
-      <h3>104° fever.<br>Midnight.<br>Is it serious?</h3>
-      <p>Your child is burning up. The pediatrician is closed. Every minute feels like a decision you might get wrong.</p>
+  <div class="m-card mc-accident">
+    <div class="m-left">
+      <span class="m-tag">Accident · Side of the road</span>
+      <h3>Fender bender. Hands shaking. Don't know what to say.</h3>
+      <p>You don't know what to photograph. What not to admit. What your insurance needs. Everything feels wrong and you have to make decisions right now.</p>
     </div>
-    <div class="p-right">
-      <p class="p-right-label">Concierge — immediately</p>
-      <div class="p-bubble">104°F is high but not automatically an emergency. Three things mean go now: difficulty breathing, a rash that won't fade when pressed, or a seizure. None of those? Tylenol, keep cool, fluids. Nearest pediatric urgent care is 2 miles, open until 2am, 20 minute wait.</div>
-      <div class="p-chips">
-        <span class="p-chip">Get directions</span>
-        <span class="p-chip">Right Tylenol dose?</span>
-        <span class="p-chip">When do I call 911?</span>
+    <div class="m-right">
+      <p class="m-label">Concierge — immediately</p>
+      <div class="m-bubble">Stay calm. Do not apologize or admit fault — even casually. Photograph both cars, the plates, and the intersection sign right now. Get their insurance card. I'll walk you through exactly what to say and what to send your insurer. Need a tow?</div>
+      <div class="m-chips">
+        <a class="m-chip" href="/app.html?q=car">Call a tow truck</a>
+        <a class="m-chip" href="/app.html?q=insurance">File my claim</a>
+        <a class="m-chip" href="/app.html?q=legal">What do I say?</a>
       </div>
     </div>
   </div>
 
-  <div class="p-card p-landlord">
-    <div class="p-left">
-      <span class="p-tag">Legal</span>
-      <h3>No heat.<br>Three weeks.<br>Landlord ghosts you.</h3>
-      <p>You've called. You've texted. Nothing. It's winter. You have kids. You can't afford a lawyer to find out what you're allowed to do.</p>
+  <div class="m-card mc-legal">
+    <div class="m-left">
+      <span class="m-tag">Legal · Three weeks in</span>
+      <h3>No heat. Landlord won't respond. You have kids.</h3>
+      <p>You've called. You've texted. Nothing. It's winter. You don't know your rights and you can't afford a lawyer to find out.</p>
     </div>
-    <div class="p-right">
-      <p class="p-right-label">Concierge — immediately</p>
-      <div class="p-bubble">In your state a landlord must restore heat within 24 hours of written notice — you're in clear legal violation territory. I've drafted the demand letter with exact legal language that triggers their liability. Send it certified mail today. No response in 72 hours — you can legally withhold rent.</div>
-      <div class="p-chips">
-        <span class="p-chip">Send the letter</span>
-        <span class="p-chip">Find a tenant lawyer</span>
-        <span class="p-chip">File a housing complaint</span>
+    <div class="m-right">
+      <p class="m-label">Concierge — immediately</p>
+      <div class="m-bubble">In your state a landlord must restore heat within 24 hours of written notice — you're in clear legal violation territory. I've drafted the demand letter with exact legal language that triggers their liability. Send certified mail today. No response in 72 hours — you can legally withhold rent.</div>
+      <div class="m-chips">
+        <a class="m-chip" href="/app.html?q=landlord">Send the letter</a>
+        <a class="m-chip" href="/app.html?q=legal">Know my rights</a>
+        <a class="m-chip" href="/app.html?q=legal">File a complaint</a>
       </div>
     </div>
   </div>
 
-  <div class="p-card p-car">
-    <div class="p-left">
-      <span class="p-tag">Car trouble</span>
-      <h3>Check engine light.<br>200 miles from home.<br>Alone.</h3>
-      <p>You're on a highway you don't know. Your car is making a sound it didn't make this morning. You don't know if you can make it.</p>
+  <div class="m-card mc-car">
+    <div class="m-left">
+      <span class="m-tag">Car trouble · 200 miles from home</span>
+      <h3>Check engine light. Alone. Don't know if you can make it.</h3>
+      <p>You're on a highway you don't know. Your car is making a sound it didn't make this morning. You don't know if stopping is necessary or if you'll be fine.</p>
     </div>
-    <div class="p-right">
-      <p class="p-right-label">Concierge — immediately</p>
-      <div class="p-bubble">Based on your 2019 Civic and what you're describing — O2 sensor or loose gas cap. Neither is stop-now. Stay under 60mph, avoid hard acceleration. Highly rated mechanic 4 miles ahead at the next exit, open 2 more hours, reads the code free. Directions?</div>
-      <div class="p-chips">
-        <span class="p-chip">Get directions</span>
-        <span class="p-chip">Safe to keep driving?</span>
-        <span class="p-chip">Call roadside assistance</span>
+    <div class="m-right">
+      <p class="m-label">Concierge — immediately</p>
+      <div class="m-bubble">Based on your 2019 Civic and what you're describing — O2 sensor or loose gas cap. Neither is stop-now. Stay under 60mph, avoid hard acceleration. Highly rated mechanic 4 miles at the next exit, open 2 more hours, reads the code free. Directions?</div>
+      <div class="m-chips">
+        <a class="m-chip" href="/app.html?q=car">Get directions</a>
+        <a class="m-chip" href="/app.html?q=car">Safe to keep driving?</a>
+        <a class="m-chip" href="/app.html?q=car">Roadside assistance</a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── 5. BUSINESS MODEL ── -->
-<section class="model">
-  <div class="model-inner">
-    <p class="model-num">$280,000,000,000</p>
-    <p class="model-who">You are the product.</p>
-    <div class="model-divider"></div>
-    <p class="model-us-num">$4.99</p>
-    <p class="model-us-who">You are the customer.</p>
-    <h2 class="model-verdict">Those are <em>completely different</em> relationships.</h2>
+<!-- ── 4. THE TRUTH ── -->
+<section class="truth" id="truth">
+  <div class="truth-inner">
+    <span class="truth-eyebrow">Two businesses. Two relationships.</span>
+    <p class="truth-num">$280,000,000,000</p>
+    <p class="truth-who">You are the product.</p>
+    <div class="truth-divider"></div>
+    <p class="truth-us-num">$4.99</p>
+    <p class="truth-us-who">You are the customer.</p>
+    <h2 class="truth-verdict">Those are <em>completely different</em> relationships.</h2>
 
-    <div class="model-facts">
-      <div class="mf-item">
-        <p class="mf-status yes">✓ How we make money</p>
-        <p class="mf-title">$4.99 a month from people who want everything</p>
-        <p class="mf-body">Free tier is genuinely free. Pro means we watch the world for you. Cancel anytime. No questions.</p>
+    <div class="truth-punch">
+      <div class="tp-item">
+        <p class="tp-status yes">✓ How we make money</p>
+        <p class="tp-title">$4.99 a month from people who want everything</p>
+        <p class="tp-body">Free tier is genuinely free forever. Pro means we watch the world for you — your calendar, local news, Reddit, alerts that affect your life. Cancel anytime.</p>
       </div>
-      <div class="mf-item">
-        <p class="mf-status yes">✓ How we make money</p>
-        <p class="mf-title">Local businesses found at the exact moment you need them</p>
-        <p class="mf-body">A plumber pays to appear when you have a burst pipe. Not to follow you. Not when you're searching for something else. Only when you need exactly what they do.</p>
+      <div class="tp-item">
+        <p class="tp-status yes">✓ How we make money</p>
+        <p class="tp-title">Local businesses found at the exact moment you need them</p>
+        <p class="tp-body">A plumber pays to appear when you have a burst pipe. Not to follow you. Only when you need exactly what they do. You always know when a business is suggested.</p>
       </div>
-      <div class="mf-item">
-        <p class="mf-status no">✗ Never. Not once. Not ever.</p>
-        <p class="mf-title">Ads</p>
-        <p class="mf-body">The moment we run ads we work for advertisers instead of you. Those are mutually exclusive. We will never run ads.</p>
+      <div class="tp-item">
+        <p class="tp-status no">✗ Never. Not once. Not ever.</p>
+        <p class="tp-title">Ads</p>
+        <p class="tp-body">The moment we run ads we work for advertisers instead of you. Those are mutually exclusive. We will never run ads. If we ever change this we'll tell you before it happens.</p>
       </div>
-      <div class="mf-item">
-        <p class="mf-status no">✗ Never. Not once. Not ever.</p>
-        <p class="mf-title">Your data. To anyone.</p>
-        <p class="mf-body">Your midnight health search. Your divorce question. Your financial situation. That is yours. It is not inventory. It will never be sold.</p>
+      <div class="tp-item">
+        <p class="tp-status no">✗ Never. Not once. Not ever.</p>
+        <p class="tp-title">Your data. Sold to anyone. For any reason.</p>
+        <p class="tp-body">Your midnight health search. Your divorce question. Your financial situation. That is yours. It lives to serve you. It will never be sold, shared, or used for anything else.</p>
       </div>
     </div>
 
@@ -524,18 +383,75 @@ footer a:hover{color:var(--white)}
   </div>
 </section>
 
-<!-- ── ORIGIN ── -->
-<section class="origin">
-  <h2>Built by one person.<br><em>With a laptop.</em><br>In Costa Rica.</h2>
-  <p class="origin-body">Not long ago this was impossible. You needed developers, infrastructure, enterprise contracts, and millions in funding just to challenge the giants. You needed to already be powerful to challenge the powerful.<br><br><strong>That changed.</strong><br><br>The same AI that Google spent $500 million building runs for $20 a month. The intelligence is the same. What's different is who it works for. They built theirs for shareholders. We built ours for you.<br><br><strong>A guy with a laptop in Costa Rica just built what Google should have built 20 years ago.</strong><br><br>Same intelligence. Zero of their agenda. No permission needed. No VC. No team. No compromise. Just the truth and nothing to lose by telling it.</p>
+<!-- ── 5. OPEN SOURCE ── -->
+<section class="opensource" id="opensource">
+  <div class="opensource-inner">
+    <span class="os-eyebrow">How this became possible</span>
+    <h2>The intelligence was locked up.<br><em>Then the code got out.</em></h2>
+
+    <div class="os-blocks">
+      <div class="os-block">
+        <p>Google spent <strong>$500 million</strong> building it. OpenAI raised <strong>$10 billion</strong> to train it. The intelligence that could answer any question, solve any problem — was theirs. Behind walls. Behind billion dollar moats. <em>Inaccessible to anyone who couldn't write a nine-figure check.</em></p>
+      </div>
+      <div class="os-block">
+        <p>Then brilliant researchers — not corporations, not shareholders, not anyone with a financial stake in keeping it locked — <strong>published the models. Shared the weights. Released the intelligence into the world. Free. For anyone.</strong></p>
+        <p>The open source AI revolution didn't ask for permission. It just happened.</p>
+      </div>
+      <div class="os-block">
+        <p>The same intelligence that powers Google's products <strong>now runs on a laptop in Costa Rica for $20 a month.</strong> Same training data. Same capability. Same answers.</p>
+        <p>They still have the distribution. The brand. Billions of users. But they lost the one thing that made them untouchable. <strong>The monopoly on knowing things is over.</strong></p>
+      </div>
+    </div>
+
+    <div class="os-moment">
+      <h3>Same smarts as Google.<br>Same data as OpenAI.<br><em>Finally working for you.</em></h3>
+    </div>
+
+    <div class="os-grid">
+      <div class="og-item">
+        <div class="og-num">01</div>
+        <p class="og-title">Same intelligence as Google</p>
+        <p class="og-body">Every open source model has read the same internet Google indexed. The knowledge is identical. What's different is who it works for.</p>
+      </div>
+      <div class="og-item">
+        <div class="og-num">02</div>
+        <p class="og-title">Same training data as OpenAI</p>
+        <p class="og-body">The same books, research, medical literature, legal precedents, and human knowledge. Democratized. Available to anyone. Forever.</p>
+      </div>
+      <div class="og-item">
+        <div class="og-num">03</div>
+        <p class="og-title">Zero of their agenda</p>
+        <p class="og-body">They built their intelligence to extract value from you. We built ours to deliver value to you. Same capability. Completely opposite incentive.</p>
+      </div>
+    </div>
+  </div>
 </section>
 
-<!-- ── CLOSING ── -->
+<!-- ── 6. ORIGIN ── -->
+<section class="origin" id="origin">
+  <div class="origin-inner">
+    <h2>Built by one person.<br>A laptop.<br><em>Costa Rica.</em></h2>
+    <div class="origin-body">
+      <p>Not long ago this was impossible. You needed developers, infrastructure, enterprise contracts, and millions in funding just to challenge the giants. <strong>You needed to already be powerful to challenge the powerful.</strong></p>
+      <p>That changed. The same AI that Google spent $500 million building runs for $20 a month. The intelligence is the same. What's different is who it works for.</p>
+      <p><strong>A guy with a laptop in Costa Rica just built what Google should have built 20 years ago.</strong> No VC. No team. No permission. No compromise. Just the truth and nothing to lose by telling it.</p>
+      <p>That's what open source did. It didn't just democratize the technology. It democratized the ability to use it honestly. To point it at the person who needs it instead of the shareholder who profits from it.</p>
+      <p><strong>The rebellion doesn't need permission anymore. And neither do you.</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- ── 7. CLOSING ── -->
 <section class="closing">
   <h2>Finally.<br><em>On your side.</em></h2>
-  <p>The expert only wealthy people could afford. The doctor who actually answers. The lawyer who takes your call. The advisor who knows your situation. For everyone. Free to start. Always there.</p>
+  <p class="closing-sub">The expert only wealthy people could afford. The doctor who actually answers. The lawyer who takes your call. The advisor who knows your situation. For everyone. Free to start. Always there.</p>
   <a href="/app.html" class="btn-raw">Get the answer — it's free</a>
   <p class="closing-note">No account. No credit card. No data harvested to sign up.</p>
+  <div class="share-row">
+    <a class="share-btn" href="https://twitter.com/intent/tweet?text=A+solution+that+never+existed+for+the+public.+They+had+it.+They+used+it+for+themselves.+Now+it%27s+yours.+aiconcerige.netlify.app" target="_blank">Share on X</a>
+    <a class="share-btn" href="https://www.facebook.com/sharer/sharer.php?u=https://aiconcerige.netlify.app" target="_blank">Share on Facebook</a>
+    <a class="share-btn" onclick="navigator.clipboard.writeText('https://aiconcerige.netlify.app');alert('Copied — share it everywhere.');" href="#">Copy link</a>
+  </div>
 </section>
 
 <footer>
@@ -550,35 +466,26 @@ footer a:hover{color:var(--white)}
 <script>
 if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
 
-// Animate accusation lines on load
 setTimeout(() => {
-  ['al1','al2','al3','al4'].forEach((id,i) => {
-    setTimeout(() => {
-      const el = document.getElementById(id);
-      if(el) el.classList.add('show');
-    }, i * 200);
+  document.querySelectorAll('.open h1 span').forEach((el,i) => {
+    setTimeout(() => el.classList.add('show'), i * 180);
   });
-  setTimeout(() => {
-    const sub = document.getElementById('al5');
-    if(sub) sub.classList.add('show');
-  }, 900);
-}, 200);
+},100);
 
-// Animate elements on scroll
-const observer = new IntersectionObserver(entries => {
+const obs = new IntersectionObserver(entries => {
   entries.forEach(e => {
     if(e.isIntersecting){
       e.target.style.opacity='1';
       e.target.style.transform='translateY(0)';
     }
   });
-}, {threshold:0.12});
+},{threshold:0.1});
 
-document.querySelectorAll('.b-moment,.f-fact,.p-bubble,.model-num,.model-us-num,.model-verdict,.origin-body').forEach(el => {
+document.querySelectorAll('.nb-what,.m-bubble,.truth-num,.truth-us-num,.truth-verdict,.os-moment h3,.origin-body p,.never-close h3').forEach(el => {
   el.style.opacity='0';
   el.style.transform='translateY(20px)';
   el.style.transition='opacity 0.7s ease, transform 0.7s ease';
-  observer.observe(el);
+  obs.observe(el);
 });
 </script>
 </body>
