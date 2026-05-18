@@ -135,6 +135,60 @@ Return ONLY valid JSON array, no other text. Maximum 5 items.`;
   }
 }
 
+// ── PROFILE EXTRACTOR ──
+async function extractAndSaveProfile(userId, category, messages) {
+  const prompt = `From this conversation extract any personal facts learned about the user.
+Return ONLY a JSON object with these fields if mentioned (skip fields not mentioned):
+{
+  "car_year": "",
+  "car_make": "",
+  "car_model": "",
+  "state": "",
+  "zip_code": "",
+  "has_kids": null,
+  "num_kids": null,
+  "kids_ages": [],
+  "rents_or_owns": "",
+  "insurance_provider": "",
+  "insurance_types": [],
+  "medications": [],
+  "employer_situation": "",
+  "landlord_name": "",
+  "financial_situation": ""
+}
+Conversation: ${JSON.stringify(messages)}
+Return ONLY valid JSON. No markdown. No explanation.`;
+
+  try {
+    const response = await callGroq(
+      [{ role: 'user', content: prompt }],
+      'You are a profile extractor. Return only valid JSON objects.'
+    );
+    const clean = response.replace(/```json|```/g, '').trim();
+    const extracted = JSON.parse(clean);
+
+    // Remove empty/null fields
+    const filtered = {};
+    for (const [k, v] of Object.entries(extracted)) {
+      if (v !== null && v !== '' && !(Array.isArray(v) && v.length === 0)) {
+        filtered[k] = v;
+      }
+    }
+
+    if (Object.keys(filtered).length > 0) {
+      // Merge with existing profile
+      const existing = await sbRequest('GET', `users?id=eq.${userId}&select=profile`);
+      const users = JSON.parse(existing.body);
+      const currentProfile = users?.[0]?.profile || {};
+      const merged = { ...currentProfile, ...filtered };
+
+      await sbRequest('PATCH', `users?id=eq.${userId}`, { profile: merged });
+    }
+  } catch(e) {
+    console.error('Profile extraction error (non-fatal):', e.message);
+  }
+}
+
 // ── THE ADVISOR SYSTEM PROMPT ──
 const ADVISOR_SYSTEM = `You are Concierge — not a chatbot, not a search engine, not an information service.
 
@@ -260,8 +314,26 @@ exports.handler = async (event) => {
       }
     }
 
-    const systemPrompt = system || ADVISOR_SYSTEM;
+    // Load user profile for context
+    let profileContext = '';
+    if (deviceId) {
+      try {
+        const profileRes = await sbRequest('GET', `users?device_id=eq.${encodeURIComponent(deviceId)}&select=profile`);
+        const profileData = JSON.parse(profileRes.body);
+        const profile = profileData?.[0]?.profile;
+        if (profile && Object.keys(profile).length > 0) {
+          profileContext = `\n\nWHAT WE ALREADY KNOW ABOUT THIS USER — do not ask for any of this again, you already have it:\n${JSON.stringify(profile, null, 2)}`;
+        }
+      } catch(e) {}
+    }
+
+    const systemPrompt = (system || ADVISOR_SYSTEM) + profileContext;
     const reply = await callGroq(messages, systemPrompt);
+
+    // Extract profile facts after every 4th exchange
+    if (userId && messages.length >= 4 && messages.length % 4 === 0) {
+      extractAndSaveProfile(userId, category, messages).catch(() => {});
+    }
 
     return {
       statusCode: 200,
