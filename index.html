@@ -175,6 +175,33 @@ footer a:hover{color:var(--white)}
   footer{padding:32px 20px}
   .btn-ghost-raw{margin-left:0;margin-top:12px;display:block}
 }
+
+/* SECRET SECTION */
+.secret{padding:160px 48px;border-bottom:1px solid var(--dim);background:rgba(255,255,255,0.015)}
+.secret-inner{max-width:900px;margin:0 auto}
+.secret-eyebrow{font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--red);margin-bottom:48px;display:block}
+.secret h2{font-family:'DM Serif Display',serif;font-size:clamp(36px,5vw,72px);line-height:1.08;letter-spacing:-2px;color:var(--white);margin-bottom:80px}
+.secret h2 em{font-style:italic;color:rgba(255,255,255,0.22)}
+.secret-body{display:flex;flex-direction:column;gap:0}
+.secret-block{padding:48px 0;border-top:1px solid var(--dim)}
+.secret-block:last-of-type{border-bottom:1px solid var(--dim)}
+.secret-block p{font-size:clamp(17px,2vw,22px);color:rgba(255,255,255,0.35);line-height:1.85;max-width:780px}
+.secret-block p strong{color:var(--white);font-weight:500}
+.secret-block p em{font-style:italic;color:rgba(255,255,255,0.65)}
+.secret-moment{padding:64px 0;text-align:center}
+.secret-moment h3{font-family:'DM Serif Display',serif;font-size:clamp(32px,5vw,72px);line-height:1.1;letter-spacing:-2px;color:var(--white);margin-bottom:0}
+.secret-moment h3 em{font-style:italic;color:var(--blue)}
+.secret-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:64px;border:1px solid var(--dim);border-radius:4px;overflow:hidden}
+.sg-item{padding:36px 28px;background:rgba(255,255,255,0.02)}
+.sg-item:hover{background:rgba(255,255,255,0.04)}
+.sg-num{font-family:'DM Serif Display',serif;font-size:48px;line-height:1;letter-spacing:-2px;color:rgba(255,255,255,0.08);margin-bottom:12px}
+.sg-title{font-size:15px;font-weight:600;color:var(--white);margin-bottom:8px;line-height:1.3}
+.sg-body{font-size:13px;color:rgba(255,255,255,0.32);line-height:1.7}
+@media(max-width:768px){
+  .secret{padding:80px 24px}
+  .secret-grid{grid-template-columns:1fr}
+  .secret-moment h3{font-size:clamp(28px,8vw,52px)}
+}
 </style>
 </head>
 <body>
@@ -314,6 +341,56 @@ footer a:hover{color:var(--white)}
     <div class="fight-close">
       <h3>Same intelligence.<br><em>None of their agenda.</em></h3>
     </div>
+  </div>
+</section>
+
+
+<!-- ── THE SECRET ── -->
+<section class="secret" id="secret">
+  <div class="secret-inner">
+    <span class="secret-eyebrow">The secret they don't want you to know</span>
+    <h2>For twenty years the intelligence was locked up.<br><em>Then the code got out.</em></h2>
+
+    <div class="secret-body">
+
+      <div class="secret-block">
+        <p>Google spent <strong>$500 million</strong> building it. OpenAI raised <strong>$10 billion</strong> to train it. Meta spent more than either of them. The intelligence that could answer any question, solve any problem, know anything about anything — was theirs. Behind walls. Behind billion dollar moats. Inaccessible to anyone who couldn't write a nine figure check.</p>
+      </div>
+
+      <div class="secret-block">
+        <p>Then something happened that <em>they didn't plan for.</em></p>
+        <p style="margin-top:24px">Brilliant researchers — not corporations, not shareholders, not anyone with a financial stake in keeping it locked — published the models. Shared the weights. Released the intelligence into the world. <strong>Free. For anyone.</strong> The open source AI revolution didn't ask for permission. It just happened.</p>
+      </div>
+
+      <div class="secret-block">
+        <p>The same intelligence that powers Google's products <strong>now runs on a laptop in Costa Rica for $20 a month.</strong> The same training data. The same capability. The same answers to the same questions.</p>
+        <p style="margin-top:24px">They still have the distribution. The brand. Billions of users locked into their ecosystem. But they lost the one thing that made them untouchable.</p>
+      </div>
+
+    </div>
+
+    <div class="secret-moment">
+      <h3>The monopoly on<br>knowing things<br><em>is over.</em></h3>
+    </div>
+
+    <div class="secret-grid">
+      <div class="sg-item">
+        <div class="sg-num">01</div>
+        <p class="sg-title">Same intelligence as Google</p>
+        <p class="sg-body">Every open source model has read the same internet Google indexed. The knowledge is identical. The difference is who it works for.</p>
+      </div>
+      <div class="sg-item">
+        <div class="sg-num">02</div>
+        <p class="sg-title">Same training data as OpenAI</p>
+        <p class="sg-body">GPT-4 didn't read the internet exclusively. The same books, articles, research, and human knowledge lives in every open model. Democratized. Forever.</p>
+      </div>
+      <div class="sg-item">
+        <div class="sg-num">03</div>
+        <p class="sg-title">Zero of their agenda</p>
+        <p class="sg-body">They built their intelligence to make money from you. We built ours to make your life easier. Same capability. Completely opposite incentive.</p>
+      </div>
+    </div>
+
   </div>
 </section>
 
