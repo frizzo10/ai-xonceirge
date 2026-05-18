@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Concierge">
-<meta name="theme-color" content="#0F0F0D">
+<meta name="theme-color" content="#0A0A08">
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <title>Concierge</title>
@@ -14,16 +14,18 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --black:#0F0F0D;--surface:#1C1C19;--surface2:#242421;
-  --white:#FAFAF7;--border:rgba(255,255,255,0.09);--border2:rgba(255,255,255,0.15);
+  --black:#0A0A08;--surface:#1C1C19;--surface2:#242421;
+  --white:#FAFAF7;--border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.15);
   --text:rgba(255,255,255,0.95);--text2:rgba(255,255,255,0.52);--text3:rgba(255,255,255,0.26);
   --blue:#378ADD;--blue-dim:rgba(55,138,221,0.14);--blue-border:rgba(55,138,221,0.36);
   --green:#639922;--green-dim:rgba(99,153,34,0.14);--green-border:rgba(99,153,34,0.4);
+  --red:#E05252;
   --safe:env(safe-area-inset-bottom,0px);
 }
 html,body{height:100%;overflow:hidden;background:var(--black)}
 body{font-family:'DM Sans',sans-serif;color:var(--text);font-size:16px;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column}
 
+/* TOPBAR */
 .topbar{padding:52px 20px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:0.5px solid var(--border);flex-shrink:0}
 .topbar-brand{font-family:'DM Serif Display',serif;font-size:22px;letter-spacing:-0.3px;color:var(--text)}
 .listen-toggle{display:flex;align-items:center;gap:7px;padding:7px 14px;border-radius:20px;border:0.5px solid var(--border2);background:var(--surface);font-size:12px;font-weight:500;color:var(--text2);cursor:pointer;transition:all 0.2s;-webkit-tap-highlight-color:transparent}
@@ -31,56 +33,76 @@ body{font-family:'DM Sans',sans-serif;color:var(--text);font-size:16px;-webkit-f
 .listen-dot{width:7px;height:7px;border-radius:50%;background:var(--text3);flex-shrink:0;transition:background 0.2s}
 .listen-toggle.on .listen-dot{background:var(--green)}
 
-.scroll-area{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(110px + var(--safe))}
+/* SCROLL */
+.scroll-area{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(180px + var(--safe))}
 
-.ambient-banner{margin:14px 16px 0;padding:13px 16px;background:var(--green-dim);border:0.5px solid var(--green-border);border-radius:14px;font-size:13px;color:#C0DD97;line-height:1.55;display:none}
-.ambient-banner.show{display:block}
+/* VOICE HERO */
+.voice-hero{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 32px 32px;text-align:center}
+.voice-prompt{font-family:'DM Serif Display',serif;font-size:clamp(22px,5vw,32px);color:var(--text);letter-spacing:-0.5px;margin-bottom:8px;line-height:1.2}
+.voice-sub{font-size:14px;color:var(--text3);margin-bottom:40px}
 
-.greeting{padding:20px 20px 6px;font-size:14px;color:var(--text2)}
-.greeting strong{color:var(--text);font-weight:500}
+/* MIC BUTTON */
+.mic-wrap{position:relative;display:flex;align-items:center;justify-content:center;margin-bottom:32px}
+.mic-ring{position:absolute;width:120px;height:120px;border-radius:50%;border:1.5px solid var(--blue-border);opacity:0;transform:scale(1);transition:all 0.3s}
+.mic-ring.pulse{animation:ring 1.5s ease-out infinite}
+@keyframes ring{0%{opacity:0.6;transform:scale(1)}100%{opacity:0;transform:scale(1.8)}}
+.mic-btn{width:88px;height:88px;border-radius:50%;background:var(--blue);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;z-index:1;transition:all 0.2s;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 32px rgba(55,138,221,0.35)}
+.mic-btn:active,.mic-btn.recording{transform:scale(0.94);background:#2066AA;box-shadow:0 4px 16px rgba(55,138,221,0.5)}
+.mic-btn.recording{background:var(--red);box-shadow:0 8px 32px rgba(224,82,82,0.45)}
+.mic-btn svg{width:32px;height:32px;fill:white}
+.mic-status{font-size:13px;color:var(--text3);min-height:20px;transition:color 0.2s}
+.mic-status.active{color:var(--blue)}
+.mic-status.recording{color:var(--red)}
+.mic-status.error{color:var(--red)}
 
-.prob-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:10px 16px 16px}
-.prob-btn{border:0.5px solid var(--border2);border-radius:16px;background:var(--surface);padding:14px 6px 12px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;transition:all 0.15s;-webkit-tap-highlight-color:transparent;text-align:center}
+/* OR DIVIDER */
+.or-divider{display:flex;align-items:center;gap:16px;padding:0 32px;margin-bottom:24px;width:100%}
+.or-line{flex:1;height:0.5px;background:var(--border)}
+.or-text{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3)}
+
+/* PROB GRID */
+.prob-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 16px 16px}
+.prob-btn{border:0.5px solid var(--border2);border-radius:14px;background:var(--surface);padding:12px 6px 10px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;transition:all 0.15s;-webkit-tap-highlight-color:transparent;text-align:center}
 .prob-btn:active{transform:scale(0.94)}
 .prob-btn.active{background:var(--blue-dim);border-color:var(--blue-border)}
-.prob-btn .pbi{font-size:22px}
+.prob-btn .pbi{font-size:20px}
 .prob-btn .pbl{font-size:10px;color:var(--text2);line-height:1.2;font-weight:500}
 .prob-btn.active .pbl{color:#B5D4F4}
 
-.divider{height:0.5px;background:var(--border);margin:0 16px 16px}
-
-.chat-wrap{padding:0 16px;display:flex;flex-direction:column;gap:14px}
+/* CHAT */
+.chat-wrap{padding:16px 16px 0;display:flex;flex-direction:column;gap:12px}
 .chat-wrap.hidden{display:none}
 .bubble-label{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:4px;padding:0 4px}
-.bubble{padding:14px 18px;border-radius:20px;font-size:14px;line-height:1.65;max-width:88%}
-.bubble.ai{background:var(--surface2);border:0.5px solid var(--border2);color:var(--text);align-self:flex-start;border-bottom-left-radius:5px;display:flex;flex-direction:column}
+.bubble{padding:14px 18px;border-radius:20px;font-size:15px;line-height:1.65;max-width:88%}
+.bubble.ai{background:var(--surface2);border:0.5px solid var(--border2);color:var(--text);align-self:flex-start;border-bottom-left-radius:5px}
 .bubble.user{background:var(--blue);color:var(--white);align-self:flex-end;border-bottom-right-radius:5px;max-width:78%}
 .chips-row{display:flex;gap:8px;flex-wrap:wrap;padding:2px 0 4px}
 .chip{font-size:12px;padding:7px 14px;border:0.5px solid var(--border2);border-radius:20px;color:var(--text2);background:var(--surface);cursor:pointer;transition:all 0.15s;-webkit-tap-highlight-color:transparent}
 .chip:active{transform:scale(0.96)}
-.chip.active-chip{border-color:var(--blue);color:var(--blue)}
+.chip:hover{border-color:var(--blue);color:var(--blue)}
 
+/* TYPING */
 .typing-dots{display:flex;gap:5px;align-items:center;padding:4px 0}
 .typing-dots span{width:7px;height:7px;border-radius:50%;background:var(--text3);animation:blink 1.2s infinite}
 .typing-dots span:nth-child(2){animation-delay:.2s}
 .typing-dots span:nth-child(3){animation-delay:.4s}
 @keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
 
-.bottom-bar{position:fixed;bottom:0;left:0;right:0;padding:12px 16px calc(12px + var(--safe));background:rgba(15,15,13,0.96);backdrop-filter:blur(20px);border-top:0.5px solid var(--border2);display:flex;gap:10px;align-items:flex-end}
-.input-wrap{flex:1;background:var(--surface);border:0.5px solid var(--border2);border-radius:24px;padding:10px 18px;display:flex;align-items:center}
+/* BOTTOM BAR */
+.bottom-bar{position:fixed;bottom:0;left:0;right:0;padding:12px 16px calc(12px + var(--safe));background:rgba(10,10,8,0.97);backdrop-filter:blur(20px);border-top:0.5px solid var(--border2);display:flex;gap:10px;align-items:flex-end}
+.input-wrap{flex:1;background:var(--surface);border:0.5px solid var(--border2);border-radius:24px;padding:10px 18px;display:flex;align-items:center;gap:8px}
 .input-wrap textarea{flex:1;background:none;border:none;outline:none;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--text);line-height:1.4;resize:none;max-height:100px;min-height:24px;height:24px}
 .input-wrap textarea::placeholder{color:var(--text3)}
-.send-btn{width:44px;height:44px;border-radius:50%;background:var(--blue);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:opacity 0.2s;-webkit-tap-highlight-color:transparent}
+.input-mic{background:none;border:none;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;flex-shrink:0}
+.input-mic svg{width:20px;height:20px;fill:var(--text3);transition:fill 0.2s}
+.input-mic.recording svg{fill:var(--red)}
+.send-btn{width:44px;height:44px;border-radius:50%;background:var(--blue);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;-webkit-tap-highlight-color:transparent}
 .send-btn:active{opacity:0.8;transform:scale(0.94)}
 .send-btn svg{width:18px;height:18px;fill:white}
 
-.intel-section{padding:0 16px 8px}
-.intel-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:10px}
-.intel-card{background:var(--surface);border:0.5px solid var(--border2);border-radius:16px;padding:16px 18px;margin-bottom:10px;cursor:pointer;transition:background 0.15s}
-.intel-card:active{background:var(--surface2)}
-.i-source{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
-.i-title{font-size:14px;font-weight:500;color:var(--text);margin-bottom:4px;line-height:1.4}
-.i-why{font-size:12px;color:var(--text3);line-height:1.4}
+/* AMBIENT BANNER */
+.ambient-banner{margin:14px 16px 0;padding:13px 16px;background:var(--green-dim);border:0.5px solid var(--green-border);border-radius:14px;font-size:13px;color:#C0DD97;line-height:1.55;display:none}
+.ambient-banner.show{display:block}
 </style>
 </head>
 <body>
@@ -94,62 +116,69 @@ body{font-family:'DM Sans',sans-serif;color:var(--text);font-size:16px;-webkit-f
 </div>
 
 <div class="scroll-area" id="scrollArea">
+
   <div class="ambient-banner" id="ambientBanner">
-    ⚡ <strong>Listening to help you —</strong> Monday 9:41am · Miami, FL · I-95 backed up 23 min. Dentist tomorrow 2pm. Rain at 3pm school pickup.
+    ⚡ <strong>Listening to help —</strong> I'm watching your day. I'll tell you what matters before you ask.
   </div>
 
-  <div class="greeting" id="greeting">Good morning. <strong>What do you need help with?</strong></div>
+  <!-- VOICE HERO -->
+  <div class="voice-hero" id="voiceHero">
+    <p class="voice-prompt">Tell me what's going on.</p>
+    <p class="voice-sub">Hold the mic and talk — or type below</p>
 
+    <div class="mic-wrap">
+      <div class="mic-ring" id="micRing"></div>
+      <button class="mic-btn" id="mainMicBtn" onclick="toggleMainMic()">
+        <svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23" stroke="white" stroke-width="2" fill="none"/><line x1="8" y1="23" x2="16" y2="23" stroke="white" stroke-width="2" fill="none"/></svg>
+      </button>
+    </div>
+    <p class="mic-status" id="micStatus">Tap to talk</p>
+  </div>
+
+  <!-- OR DIVIDER -->
+  <div class="or-divider">
+    <div class="or-line"></div>
+    <span class="or-text">or tap what's happening</span>
+    <div class="or-line"></div>
+  </div>
+
+  <!-- 20 BUTTONS -->
   <div class="prob-grid">
     <div class="prob-btn" onclick="selectProblem(this,'traffic')"><div class="pbi">🚗</div><div class="pbl">Traffic</div></div>
     <div class="prob-btn" onclick="selectProblem(this,'kids')"><div class="pbi">👶</div><div class="pbl">Kids</div></div>
     <div class="prob-btn" onclick="selectProblem(this,'medical')"><div class="pbi">🏥</div><div class="pbl">Medical</div></div>
     <div class="prob-btn" onclick="selectProblem(this,'money')"><div class="pbi">💸</div><div class="pbl">Money</div></div>
-    <div class="prob-btn" onclick="selectProblem(this,'work')"><div class="pbi">💼</div><div class="pbl">Work stress</div></div>
+    <div class="prob-btn" onclick="selectProblem(this,'work')"><div class="pbi">💼</div><div class="pbl">Work</div></div>
     <div class="prob-btn" onclick="selectProblem(this,'food')"><div class="pbi">🍽️</div><div class="pbl">Dinner</div></div>
     <div class="prob-btn" onclick="selectProblem(this,'sleep')"><div class="pbi">😴</div><div class="pbl">Sleep</div></div>
     <div class="prob-btn" onclick="selectProblem(this,'relationship')"><div class="pbi">❤️</div><div class="pbl">Relationship</div></div>
     <div class="prob-btn" onclick="selectProblem(this,'bills')"><div class="pbi">📄</div><div class="pbl">Bills</div></div>
-    <div class="prob-btn" onclick="selectProblem(this,'home')"><div class="pbi">🔧</div><div class="pbl">Home repair</div></div>
-    <div class="prob-btn" onclick="selectProblem(this,'pet')"><div class="pbi">🐾</div><div class="pbl">Pet problems</div></div>
+    <div class="prob-btn" onclick="selectProblem(this,'home')"><div class="pbi">🔧</div><div class="pbl">Home</div></div>
+    <div class="prob-btn" onclick="selectProblem(this,'pet')"><div class="pbi">🐾</div><div class="pbl">Pet</div></div>
     <div class="prob-btn" onclick="selectProblem(this,'neighbor')"><div class="pbi">🏘️</div><div class="pbl">Neighbor</div></div>
     <div class="prob-btn" onclick="selectProblem(this,'job')"><div class="pbi">🔍</div><div class="pbl">Find a job</div></div>
     <div class="prob-btn" onclick="selectProblem(this,'school')"><div class="pbi">🏫</div><div class="pbl">School</div></div>
-    <div class="prob-btn" onclick="selectProblem(this,'legal')"><div class="pbi">⚖️</div><div class="pbl">Legal help</div></div>
+    <div class="prob-btn" onclick="selectProblem(this,'legal')"><div class="pbi">⚖️</div><div class="pbl">Legal</div></div>
     <div class="prob-btn" onclick="selectProblem(this,'anxiety')"><div class="pbi">🧠</div><div class="pbl">Anxiety</div></div>
     <div class="prob-btn" onclick="selectProblem(this,'landlord')"><div class="pbi">🏠</div><div class="pbl">Landlord</div></div>
-    <div class="prob-btn" onclick="selectProblem(this,'car')"><div class="pbi">🚙</div><div class="pbl">Car trouble</div></div>
+    <div class="prob-btn" onclick="selectProblem(this,'car')"><div class="pbi">🚙</div><div class="pbl">Car</div></div>
     <div class="prob-btn" onclick="selectProblem(this,'insurance')"><div class="pbi">🛡️</div><div class="pbl">Insurance</div></div>
     <div class="prob-btn" onclick="selectProblem(this,'talk')"><div class="pbi">💬</div><div class="pbl">Just talk</div></div>
   </div>
 
-  <div class="divider"></div>
-
-  <div class="intel-section" id="intelSection" style="display:none">
-    <div class="intel-label">We noticed — just for you</div>
-    <div class="intel-card" onclick="askAbout('My neighbor reported a phone scam in my area. What do I need to know?')">
-      <div class="i-source" style="color:#9FE1CB">Nextdoor · Your area</div>
-      <div class="i-title">Phone scam reported in your zip code</div>
-      <div class="i-why">Caller poses as utility company. 3 neighbors hit this week → tap to learn what to do</div>
-    </div>
-    <div class="intel-card" onclick="askAbout('There is a new FDA warning on a common medication. What should I know?')">
-      <div class="i-source" style="color:#CECBF6">FDA · Drug update</div>
-      <div class="i-title">New warning on a common blood pressure medication</div>
-      <div class="i-why">Issued 4 days ago. Affects millions of prescriptions → tap for details</div>
-    </div>
-    <div class="intel-card" onclick="askAbout('I-95 North is heavily backed up today. What are my best alternate routes from Miami?')">
-      <div class="i-source" style="color:#FAC775">Traffic · Right now</div>
-      <div class="i-title">I-95 N backed up 23 min past normal</div>
-      <div class="i-why">Accident near NW 79th. FL-826 is clear → tap for best route</div>
-    </div>
-  </div>
-
+  <!-- CHAT -->
   <div class="chat-wrap hidden" id="chatWrap"></div>
+
 </div>
 
+<!-- BOTTOM BAR -->
 <div class="bottom-bar">
   <div class="input-wrap">
-    <textarea id="msgInput" placeholder="Ask me anything..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+    <textarea id="msgInput" placeholder="Or type here..." rows="1"
+      onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+    <button class="input-mic" id="inputMicBtn" onclick="toggleInputMic()" aria-label="Voice input">
+      <svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+    </button>
   </div>
   <button class="send-btn" onclick="sendMessage()" aria-label="Send">
     <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
@@ -159,57 +188,178 @@ body{font-family:'DM Sans',sans-serif;color:var(--text);font-size:16px;-webkit-f
 <script>
 if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
 
-const SYSTEM = `You are Concierge — the expert always standing next to the user.
-You know everything and you have the answer. You are calm, warm, specific, and immediately useful.
-Never vague. Never say "consult a professional" as your only answer — give the actual answer first, then suggest a pro if needed.
-You are the brilliant friend who knows medicine, law, finance, parenting, car trouble, landlord rights, insurance, and everything else daily life throws at regular people.
-Keep responses to 3-4 sentences max. Be direct. Be human. Have the answer.`;
+const SYSTEM = `You are Concierge. You are the brilliant, calm friend who shows up and stays — from the first scary moment all the way through to the other side.
+
+YOU NEVER QUIT. You remember everything. You stay until the problem is fully resolved.
+
+ONE QUESTION AT A TIME. Never ask two things at once. A person in crisis cannot process a list.
+
+DETECT TRAUMA: If messages are fragmented, panicked, or don't make sense — slow them down first. Say: "Hey. I'm here. Take a breath. Are you safe right now?" Then walk them through it one step at a time.
+
+GIVE REAL ANSWERS: Never lead with "consult a professional." Give the actual answer first. Be specific. Be human. End every response with the problem closer to solved or one clear next step.
+
+CAR TROUBLE: Ask year, make, model first — one question.
+MEDICAL: Ask age first — one question.
+LEGAL/LANDLORD: Ask what state first — one question.
+BILLS: Ask which company first — one question.
+KIDS: Ask age of child first — one question.`;
 
 let history = [];
+let recognition = null;
+let isRecording = false;
 let listenOn = false;
+let chatStarted = false;
 
 const problems = {
-  traffic:      { msg:"Tell me where you're headed and I'll find you the fastest route right now — plus flag anything worth knowing about your commute today.", chips:["Find me the fastest route","Accident near me?","Best gas on my way"] },
-  kids:         { msg:"I'm here. What's going on with your kid — behavior, school, something they said, or something you're worried about? Tell me everything and we'll figure it out together.", chips:["They won't listen to me","Something happened at school","I'm worried about them"] },
-  medical:      { msg:"Tell me exactly what's happening — symptoms, how long, how bad — and I'll tell you straight whether this is urgent, can wait, or needs a doctor this week.", chips:["Describe my symptoms","Is this an emergency?","Find urgent care near me"] },
-  money:        { msg:"Tell me what's happening — is this a bill you can't pay, something that went to collections, or just tight this month? No judgment. Let's fix it.", chips:["I can't pay this bill","Something went to collections","I need money fast"] },
-  work:         { msg:"What's going on — a specific situation, a person, or just the whole thing grinding you down? Tell me and we'll figure out exactly what to do.", chips:["My boss is the problem","I need to have a hard conversation","Is it time to leave?"] },
-  food:         { msg:"Tell me what you have in the fridge and how much time you've got. I'll build you something real — no grocery run, no complicated steps.", chips:["Use what I have","Something fast, under 20 min","Kids need to eat it too"] },
-  sleep:        { msg:"Tell me what's happening — can't fall asleep, wake up at 3am, or just never feel rested no matter how many hours you get? Different problems, different fixes.", chips:["Can't fall asleep","I wake up in the night","Always exhausted no matter what"] },
-  relationship: { msg:"I'm here. No judgment, no agenda. Tell me what's going on and we'll figure out what you actually want to do about it.", chips:["I need to have a hard conversation","I don't know how I feel","I just need to talk"] },
-  bills:        { msg:"Which bill is the most urgent right now? Tell me what you're dealing with and I'll tell you exactly what to do — negotiate, defer, find help, or fight it.", chips:["I got a collections call","I can't make this payment","Help me negotiate this down"] },
-  home:         { msg:"Describe exactly what's broken or wrong — sound, smell, what it looks like — and I'll tell you if you can fix it yourself, what it should cost, and who to call.", chips:["Is this a DIY fix?","What should this cost?","Find someone reliable near me"] },
-  pet:          { msg:"Tell me what's going on with your pet — what you're seeing, how long it's been happening, and how they're acting. I'll tell you if this needs a vet today.", chips:["Something seems wrong with them","Behavior I don't understand","Find a vet near me"] },
-  neighbor:     { msg:"Tell me exactly what happened. I'll tell you the right way to handle it — from the least confrontational first all the way to what your legal options are.", chips:["Draft a message to them","What are my legal rights?","This has gone too far"] },
-  job:          { msg:"Tell me what's going on — are you looking right now, thinking about it, or dealing with something at a job you already have?", chips:["I need a job now","Is my resume any good?","I got an offer — what do I do?"] },
-  school:       { msg:"Tell me what's happening — with your child, with a teacher, or with the school itself. I'll help you figure out exactly what to do and what to say.", chips:["My child is struggling","Something happened I need to address","I have a meeting with the school"] },
-  legal:        { msg:"Tell me what happened — all of it. I'll give you the real answer first: what you're entitled to, what your options are, and whether you actually need a lawyer.", chips:["My landlord is the problem","I got a letter I don't understand","Someone owes me money"] },
-  anxiety:      { msg:"I'm right here. Tell me what's going on — is this something specific that happened, or just a feeling that won't go away? Either way, we'll work through it.", chips:["I can't stop worrying","Something specific triggered this","I need to calm down right now"] },
-  landlord:     { msg:"Tell me exactly what's happening with your landlord — repairs, deposits, access, heat, anything. I'll tell you your rights and exactly what to do next.", chips:["They won't fix something","They're keeping my deposit","I got an eviction notice"] },
-  car:          { msg:"Tell me what it's doing — any sounds, warning lights, smells, or how it feels when you drive. I'll tell you if it's urgent and what it likely is before you spend a dollar.", chips:["There's a warning light on","It's making a sound","Is it safe to drive?"] },
-  insurance:    { msg:"Tell me what happened and what they're saying. Insurance companies count on you not knowing your rights. Let's make sure you get everything you're owed.", chips:["They denied my claim","The offer seems too low","I need to file a claim"] },
-  talk:         { msg:"I'm here. What's on your mind? Nothing is too small or too big.", chips:["I've been having a hard time","I need to think something through","Just talk to me"] }
+  traffic:      { msg:"Where are you headed? I'll find the fastest route right now.", chips:["Leaving now","Rush hour commute","Checking for accidents"] },
+  kids:         { msg:"I'm here. How old is your child?", chips:["Under 5","Elementary age","Teenager"] },
+  medical:      { msg:"Tell me what's going on. How old are you?", chips:["It just started","Been a few days","More than a week"] },
+  money:        { msg:"Which company is this with?", chips:["Credit card","Medical bill","Utility or rent"] },
+  work:         { msg:"What specifically happened?", chips:["My boss","A coworker","The whole job"] },
+  food:         { msg:"What do you have in the fridge right now? Three things.", chips:["Under 20 min","30-45 min","Feed the kids too"] },
+  sleep:        { msg:"Which is it — can't fall asleep, or you wake up in the night?", chips:["Can't fall asleep","Wake up and can't go back","Always exhausted"] },
+  relationship: { msg:"I'm here. Tell me what happened.", chips:["Something specific happened","It's been building","I just need to talk"] },
+  bills:        { msg:"Which company is this with?", chips:["Still with the company","Gone to collections","I got a court notice"] },
+  home:         { msg:"Describe exactly what's wrong — what you're seeing, hearing, or smelling.", chips:["It's leaking","Making a sound","Something stopped working"] },
+  pet:          { msg:"What kind of pet, and what are you seeing?", chips:["Dog","Cat","Something else"] },
+  neighbor:     { msg:"What state are you in?", chips:["Noise issue","Property damage","HOA involved"] },
+  job:          { msg:"Are you looking right now or dealing with something at a current job?", chips:["I need a job now","Thinking about leaving","Something happened at work"] },
+  school:       { msg:"How old is your child?", chips:["Elementary","Middle school","High school"] },
+  legal:        { msg:"What state are you in?", chips:["Landlord issue","Debt problem","Dispute with someone"] },
+  anxiety:      { msg:"I'm right here. Is this about something specific, or a feeling that won't go away?", chips:["Something specific","It's always there","I need to calm down now"] },
+  landlord:     { msg:"What state are you in?", chips:["Won't make repairs","Keeping my deposit","No heat or utilities"] },
+  car:          { msg:"What's the year, make, and model?", chips:["Check engine light","Making a noise","Feels wrong when I drive"] },
+  insurance:    { msg:"Auto, home, or health insurance?", chips:["Auto","Home","Health"] },
+  talk:         { msg:"I'm here. What's on your mind?", chips:["Hard time lately","Need to think something through","Just talk"] }
 };
 
-function toggleListen() {
-  listenOn = !listenOn;
-  document.getElementById('listenToggle').classList.toggle('on', listenOn);
-  document.getElementById('listenDot').style.background = listenOn ? '#639922' : '';
-  document.getElementById('listenLabel').textContent = listenOn ? 'Listen & Help on' : 'Listen & Help off';
-  document.getElementById('ambientBanner').classList.toggle('show', listenOn);
-  document.getElementById('intelSection').style.display = listenOn ? 'block' : 'none';
-  updateGreeting();
+// ── VOICE ──
+function initRecognition() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) return null;
+  const r = new SpeechRecognition();
+  r.continuous = false;
+  r.interimResults = false;
+  r.lang = 'en-US';
+  return r;
 }
 
-function updateGreeting() {
-  const h = new Date().getHours();
-  const t = h < 12 ? 'morning' : h < 17 ? 'afternoon' : 'evening';
-  const g = document.getElementById('greeting');
-  if (listenOn) {
-    g.innerHTML = `Good ${t}. <strong>I'm listening — here's what I noticed for you.</strong>`;
-  } else {
-    g.innerHTML = `Good ${t}. <strong>What do you need help with?</strong>`;
+function isMeaningful(text) {
+  if (!text || text.trim().length < 3) return false;
+  const words = text.trim().split(/\s+/);
+  if (words.length < 1) return false;
+  // Check if it's mostly real words (not random characters)
+  const realWords = words.filter(w => /^[a-zA-Z'-]+$/.test(w));
+  return realWords.length >= 1;
+}
+
+function handleSpeechResult(transcript) {
+  const clean = transcript.trim();
+  if (!isMeaningful(clean)) {
+    // Garbled or too short — respond warmly not with error
+    addBubble('ai', "Hey — I didn't quite catch that. No worries. Just slow down and tell me one thing: what's happening right now?");
+    return;
   }
+  // Show what they said
+  addBubble('user', clean);
+  history.push({ role: 'user', content: clean });
+  showChat();
+  callConcierge();
+}
+
+function toggleMainMic() {
+  if (isRecording) {
+    stopRecording();
+  } else {
+    startRecording('main');
+  }
+}
+
+function toggleInputMic() {
+  if (isRecording) {
+    stopRecording();
+  } else {
+    startRecording('input');
+  }
+}
+
+function startRecording(source) {
+  recognition = initRecognition();
+  if (!recognition) {
+    setMicStatus("Voice not supported — please type below", 'error');
+    return;
+  }
+
+  isRecording = true;
+  document.getElementById('mainMicBtn').classList.add('recording');
+  document.getElementById('micRing').classList.add('pulse');
+  document.getElementById('inputMicBtn').classList.add('recording');
+  setMicStatus("Listening...", 'recording');
+
+  recognition.onresult = (e) => {
+    const transcript = e.results[0][0].transcript;
+    stopRecording();
+    handleSpeechResult(transcript);
+  };
+
+  recognition.onerror = (e) => {
+    stopRecording();
+    if (e.error === 'no-speech') {
+      setMicStatus("Didn't hear anything — try again", 'error');
+    } else if (e.error === 'not-allowed') {
+      setMicStatus("Microphone blocked — check browser settings", 'error');
+    } else {
+      // Any other error — be human about it
+      addBubble('ai', "I didn't catch that — just slow down and tell me what's going on. You can type it too if that's easier.");
+      setMicStatus("Tap to talk", '');
+    }
+  };
+
+  recognition.onend = () => {
+    if (isRecording) stopRecording();
+  };
+
+  try {
+    recognition.start();
+  } catch(e) {
+    stopRecording();
+    setMicStatus("Tap to talk", '');
+  }
+}
+
+function stopRecording() {
+  isRecording = false;
+  if (recognition) { try { recognition.stop(); } catch(e) {} }
+  document.getElementById('mainMicBtn').classList.remove('recording');
+  document.getElementById('micRing').classList.remove('pulse');
+  document.getElementById('inputMicBtn').classList.remove('recording');
+  setMicStatus("Tap to talk", '');
+}
+
+function setMicStatus(text, state) {
+  const el = document.getElementById('micStatus');
+  el.textContent = text;
+  el.className = 'mic-status' + (state ? ' ' + state : '');
+}
+
+// ── SPEAK RESPONSE ──
+function speak(text) {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const clean = text.replace(/[*_#`]/g, '').substring(0, 400);
+  const utt = new SpeechSynthesisUtterance(clean);
+  utt.rate = 0.92;
+  utt.pitch = 1;
+  window.speechSynthesis.speak(utt);
+}
+
+// ── CHAT ──
+function showChat() {
+  if (!chatStarted) {
+    chatStarted = true;
+    document.getElementById('voiceHero').style.display = 'none';
+  }
+  document.getElementById('chatWrap').classList.remove('hidden');
 }
 
 function selectProblem(el, key) {
@@ -218,12 +368,8 @@ function selectProblem(el, key) {
   const p = problems[key];
   if (!p) return;
   showChat();
+  history = [{ role: 'assistant', content: p.msg }];
   addBubble('ai', p.msg, p.chips);
-  history = [{ role:'assistant', content: p.msg }];
-}
-
-function showChat() {
-  document.getElementById('chatWrap').classList.remove('hidden');
 }
 
 function addBubble(role, text, chips) {
@@ -249,7 +395,7 @@ function addBubble(role, text, chips) {
         const chip = document.createElement('div');
         chip.className = 'chip';
         chip.textContent = c;
-        chip.onclick = () => askAbout(c);
+        chip.onclick = () => sendText(c);
         row.appendChild(chip);
       });
       wrap.appendChild(row);
@@ -260,17 +406,24 @@ function addBubble(role, text, chips) {
 
 function addTyping() {
   const wrap = document.getElementById('chatWrap');
+  const lbl = document.createElement('div');
+  lbl.className = 'bubble-label';
+  lbl.textContent = 'Concierge';
+  lbl.id = 'typingLabel';
   const b = document.createElement('div');
   b.className = 'bubble ai';
   b.id = 'typingBubble';
   b.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+  wrap.appendChild(lbl);
   wrap.appendChild(b);
   scrollBottom();
 }
 
 function removeTyping() {
-  const t = document.getElementById('typingBubble');
-  if (t) t.remove();
+  ['typingLabel','typingBubble'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.remove();
+  });
 }
 
 function scrollBottom() {
@@ -278,10 +431,7 @@ function scrollBottom() {
   setTimeout(() => s.scrollTop = s.scrollHeight, 50);
 }
 
-async function askAbout(text) {
-  showChat();
-  addBubble('user', text);
-  history.push({ role:'user', content: text });
+async function callConcierge() {
   addTyping();
   try {
     const res = await fetch('/api/chat', {
@@ -291,13 +441,21 @@ async function askAbout(text) {
     });
     const data = await res.json();
     removeTyping();
-    const reply = data.reply || "I'm having trouble connecting right now. Try again in a moment.";
+    const reply = data.reply || "I'm having trouble right now — give me a second and try again.";
     addBubble('ai', reply);
-    history.push({ role:'assistant', content: reply });
+    history.push({ role: 'assistant', content: reply });
+    speak(reply);
   } catch(e) {
     removeTyping();
-    addBubble('ai', "Connection issue — check your signal and try again.");
+    addBubble('ai', "Connection dropped for a second — still here. Try again.");
   }
+}
+
+async function sendText(text) {
+  showChat();
+  addBubble('user', text);
+  history.push({ role: 'user', content: text });
+  await callConcierge();
 }
 
 async function sendMessage() {
@@ -306,7 +464,7 @@ async function sendMessage() {
   if (!text) return;
   input.value = '';
   input.style.height = '24px';
-  await askAbout(text);
+  await sendText(text);
 }
 
 function handleKey(e) {
@@ -318,15 +476,23 @@ function autoResize(el) {
   el.style.height = Math.min(el.scrollHeight, 100) + 'px';
 }
 
-// Check URL params for deep link
+function toggleListen() {
+  listenOn = !listenOn;
+  document.getElementById('listenToggle').classList.toggle('on', listenOn);
+  document.getElementById('listenDot').style.background = listenOn ? '#639922' : '';
+  document.getElementById('listenLabel').textContent = listenOn ? 'Listen & Help on' : 'Listen & Help off';
+  document.getElementById('ambientBanner').classList.toggle('show', listenOn);
+}
+
+// Deep link from URL params
 const params = new URLSearchParams(location.search);
 const q = params.get('q');
 if (q) {
-  const btn = [...document.querySelectorAll('.prob-btn')].find(b => b.getAttribute('onclick').includes(`'${q}'`));
+  const btn = [...document.querySelectorAll('.prob-btn')].find(b =>
+    b.getAttribute('onclick') && b.getAttribute('onclick').includes(`'${q}'`)
+  );
   if (btn) btn.click();
 }
-
-updateGreeting();
 </script>
 </body>
 </html>
