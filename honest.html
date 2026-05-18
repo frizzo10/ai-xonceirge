@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Google makes $280 billion a year and you're the product. We make enough to keep the lights on and you're the customer. Those are completely different relationships.">
+<meta property="og:title" content="How we make money. We think you deserve to know.">
+<meta property="og:description" content="Google makes $280 billion a year. You are the product. We make enough to keep the lights on. You are the customer.">
+<meta name="twitter:card" content="summary_large_image">
+<title>How we make money — Concierge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --black: #0A0A08;
+  --white: #FAFAF7;
+  --gray: #888780;
+  --dim: rgba(255,255,255,0.08);
+  --dim2: rgba(255,255,255,0.14);
+  --blue: #378ADD;
+  --blue-dim: rgba(55,138,221,0.12);
+  --blue-border: rgba(55,138,221,0.25);
+  --green: #639922;
+  --green-dim: rgba(99,153,34,0.12);
+  --green-border: rgba(99,153,34,0.3);
+  --red-dim: rgba(220,60,60,0.1);
+  --red-border: rgba(220,60,60,0.25);
+  --red: #E05252;
+}
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--black); color: var(--white);
+  font-size: 16px; line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* OPEN */
+.open {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  text-align: center; padding: 80px 48px;
+  border-bottom: 1px solid var(--dim);
+}
+.eyebrow {
+  font-size: 11px; font-weight: 600; letter-spacing: 2.5px;
+  text-transform: uppercase; color: var(--gray); margin-bottom: 48px;
+}
+.open h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(36px, 6vw, 84px);
+  line-height: 1.06; letter-spacing: -2.5px;
+  max-width: 820px; margin-bottom: 32px;
+}
+.open h1 em { font-style: italic; color: var(--gray); }
+.open-sub {
+  font-size: clamp(16px, 1.8vw, 21px);
+  color: rgba(255,255,255,0.38);
+  max-width: 540px; line-height: 1.8;
+}
+
+/* THE COMPARISON */
+.comparison {
+  padding: 140px 48px;
+  max-width: 900px; margin: 0 auto;
+  border-bottom: 1px solid var(--dim);
+}
+.comparison-them {
+  margin-bottom: 80px;
+}
+.them-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--red);
+  margin-bottom: 32px; display: block;
+}
+.them-stat {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(32px, 5vw, 72px);
+  line-height: 1.1; letter-spacing: -2px;
+  color: var(--white); margin-bottom: 16px;
+}
+.them-truth {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(24px, 3.5vw, 52px);
+  line-height: 1.15; letter-spacing: -1px;
+  color: rgba(255,255,255,0.28);
+}
+
+.divider-line {
+  height: 1px; background: var(--dim2);
+  margin: 64px 0; position: relative;
+}
+.divider-line::after {
+  content: 'vs';
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--black);
+  padding: 0 20px;
+  font-size: 13px; font-weight: 600;
+  color: var(--gray); letter-spacing: 2px;
+}
+
+.us-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--green);
+  margin-bottom: 32px; display: block;
+}
+.us-stat {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(32px, 5vw, 72px);
+  line-height: 1.1; letter-spacing: -2px;
+  color: var(--white); margin-bottom: 16px;
+}
+.us-truth {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(24px, 3.5vw, 52px);
+  line-height: 1.15; letter-spacing: -1px;
+  color: rgba(255,255,255,0.28);
+}
+
+.verdict {
+  margin-top: 80px; padding-top: 80px;
+  border-top: 1px solid var(--dim);
+  text-align: center;
+}
+.verdict h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(28px, 4vw, 60px);
+  line-height: 1.1; letter-spacing: -1.5px;
+  color: var(--white); margin-bottom: 0;
+}
+.verdict h2 em { font-style: italic; color: var(--blue); }
+
+/* HOW WE MAKE MONEY */
+.money {
+  padding: 140px 48px;
+  max-width: 900px; margin: 0 auto;
+  border-bottom: 1px solid var(--dim);
+}
+.money h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(30px, 4vw, 60px);
+  line-height: 1.1; letter-spacing: -1.5px;
+  color: var(--white); margin-bottom: 16px;
+}
+.money-sub {
+  font-size: 18px; color: rgba(255,255,255,0.35);
+  margin-bottom: 72px; font-style: italic;
+}
+
+.money-item {
+  padding: 44px 0;
+  border-bottom: 1px solid var(--dim);
+  display: grid; grid-template-columns: 1fr 2fr; gap: 48px;
+  align-items: start;
+}
+.money-item:last-child { border-bottom: none; }
+.money-item-label {
+  font-size: 13px; font-weight: 600; letter-spacing: 0.5px;
+  padding-top: 4px;
+}
+.money-item-label.yes { color: var(--green); }
+.money-item-label.no { color: var(--red); }
+.money-item-body h3 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(20px, 2.5vw, 32px);
+  line-height: 1.2; letter-spacing: -0.5px;
+  color: var(--white); margin-bottom: 16px;
+}
+.money-item-body p {
+  font-size: 16px; color: rgba(255,255,255,0.42);
+  line-height: 1.8;
+}
+.money-item-body p strong { color: rgba(255,255,255,0.75); font-weight: 500; }
+
+/* THE PROMISE */
+.promise {
+  padding: 140px 48px;
+  max-width: 900px; margin: 0 auto;
+  border-bottom: 1px solid var(--dim);
+  text-align: center;
+}
+.promise h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(30px, 5vw, 72px);
+  line-height: 1.08; letter-spacing: -2px;
+  color: var(--white); margin-bottom: 32px;
+}
+.promise h2 em { font-style: italic; color: var(--blue); }
+.promise p {
+  font-size: clamp(16px, 1.8vw, 21px);
+  color: rgba(255,255,255,0.4);
+  max-width: 600px; margin: 0 auto 20px;
+  line-height: 1.8;
+}
+.promise p strong { color: rgba(255,255,255,0.78); font-weight: 500; }
+
+/* CLOSING CTA */
+.cta {
+  min-height: 60vh;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  text-align: center; padding: 120px 48px;
+}
+.cta h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(36px, 6vw, 84px);
+  line-height: 1.06; letter-spacing: -2.5px;
+  color: var(--white); max-width: 760px; margin-bottom: 48px;
+}
+.cta h2 em { font-style: italic; color: var(--blue); }
+.btn-white {
+  background: var(--white); color: var(--black);
+  padding: 20px 56px; border-radius: 30px;
+  font-size: 17px; font-weight: 700; text-decoration: none;
+  display: inline-block; margin-bottom: 16px;
+}
+.btn-white:hover { opacity: 0.88; }
+.cta-note { font-size: 13px; color: var(--gray); font-style: italic; }
+
+.share-row {
+  display: flex; gap: 16px; justify-content: center;
+  margin-top: 48px; flex-wrap: wrap;
+}
+.share-btn {
+  padding: 12px 24px; border-radius: 24px;
+  border: 1px solid var(--dim2);
+  font-size: 14px; font-weight: 500;
+  color: rgba(255,255,255,0.55);
+  background: none; cursor: pointer;
+  text-decoration: none; display: inline-block;
+  transition: all 0.2s;
+}
+.share-btn:hover { border-color: rgba(255,255,255,0.3); color: var(--white); }
+
+footer {
+  padding: 40px 48px; border-top: 1px solid var(--dim);
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 13px; color: var(--gray);
+  flex-wrap: wrap; gap: 12px;
+  max-width: 1100px; margin: 0 auto;
+}
+footer a { color: var(--gray); text-decoration: none; }
+footer a:hover { color: var(--white); }
+
+@media (max-width: 768px) {
+  .open, .cta { padding: 80px 24px; }
+  .comparison, .money, .promise { padding: 80px 24px; }
+  .money-item { grid-template-columns: 1fr; gap: 16px; }
+  footer { padding: 32px 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- OPEN -->
+<section class="open">
+  <p class="eyebrow">Total honesty</p>
+  <h1>How we make money.<br><em>We think you deserve to know.</em></h1>
+  <p class="open-sub">Every company that hides their business model does it because their business model is you. We hide nothing. Read everything.</p>
+</section>
+
+<!-- THE COMPARISON -->
+<section class="comparison">
+  <div class="comparison-them">
+    <span class="them-label">Every platform you use today</span>
+    <p class="them-stat">$280,000,000,000</p>
+    <p class="them-truth">You are the product.</p>
+  </div>
+
+  <div class="divider-line"></div>
+
+  <div class="comparison-us">
+    <span class="us-label">Concierge</span>
+    <p class="us-stat">$4.99 a month.</p>
+    <p class="us-truth">You are the customer.</p>
+  </div>
+
+  <div class="verdict">
+    <h2>Those are <em>completely different</em><br>relationships.</h2>
+  </div>
+</section>
+
+<!-- HOW WE MAKE MONEY -->
+<section class="money">
+  <h2>Here is every dollar we make.<br>All of it.</h2>
+  <p class="money-sub">No footnotes. No fine print. No exceptions.</p>
+
+  <div class="money-item">
+    <div class="money-item-label yes">✓ Yes</div>
+    <div class="money-item-body">
+      <h3>$4.99 a month from people who want everything.</h3>
+      <p>The free tier is genuinely free forever. No bait and switch. <strong>Pro gives you Listen & Help — we watch the world for you, learn your life, and tell you what matters before you ask.</strong> That's worth $4.99. If it's not, cancel anytime. No questions.</p>
+    </div>
+  </div>
+
+  <div class="money-item">
+    <div class="money-item-label yes">✓ Yes</div>
+    <div class="money-item-body">
+      <h3>Local businesses who want to be found when you genuinely need them.</h3>
+      <p>A plumber pays us to appear when you have a burst pipe. A mechanic pays us to appear when your check engine light comes on. <strong>Not to follow you around the internet. Not to show up when you're searching for something else. Only at the exact moment you need exactly what they do.</strong> You'll always know when a local business is being suggested. Always.</p>
+    </div>
+  </div>
+
+  <div class="money-item">
+    <div class="money-item-label no">✗ Never</div>
+    <div class="money-item-body">
+      <h3>Ads. Not now. Not ever.</h3>
+      <p>The moment we run ads we start working for advertisers instead of you. <strong>Those are mutually exclusive.</strong> You cannot serve two masters. Google tried. You know how that ended. We will never run ads. If we ever change this — which we won't — we'll tell you before it happens.</p>
+    </div>
+  </div>
+
+  <div class="money-item">
+    <div class="money-item-label no">✗ Never</div>
+    <div class="money-item-body">
+      <h3>Your data. To anyone. For any reason.</h3>
+      <p>Your midnight health search. Your divorce question. Your financial situation. Your location history. Your patterns. <strong>That is yours.</strong> It lives to serve you and only you. It is not inventory. It is not an asset on our balance sheet. It will never be sold, shared, or used for anything other than making your life easier. This is not a policy that changes in a terms-of-service update. This is the business.</p>
+    </div>
+  </div>
+
+  <div class="money-item">
+    <div class="money-item-label no">✗ Never</div>
+    <div class="money-item-body">
+      <h3>Engagement optimization. We don't want you addicted.</h3>
+      <p>Facebook, TikTok, Instagram — they make more money the longer you stay. So they built machines to keep you there. Outrage. Comparison. Fear. Whatever works. <strong>We make money when your problem is solved. That means we win when you close the app.</strong> We are the only product that succeeds by getting you out of it faster.</p>
+    </div>
+  </div>
+</section>
+
+<!-- THE PROMISE -->
+<section class="promise">
+  <h2>We know everything.<br><em>We work for you.</em><br>That's the whole deal.</h2>
+  <p>Every large language model has read the entire internet. The intelligence is the same across all of them. <strong>What's different is who it works for.</strong></p>
+  <p>Google built theirs for $280 billion in ad revenue. Facebook built theirs for engagement. Amazon built theirs to sell you more things. Apple built theirs and called it Siri.</p>
+  <p><strong>We built ours for you. That is the only reason it exists.</strong></p>
+  <p>Same intelligence. Zero of their agenda. Finally working the way it always should have.</p>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <h2>Try it.<br>It costs nothing.<br><em>There is no catch.</em></h2>
+  <a href="/app.html" class="btn-white">Get the answer — it's free</a>
+  <p class="cta-note">No account. No credit card. No data harvested to sign up.</p>
+
+  <div class="share-row">
+    <a class="share-btn" href="https://twitter.com/intent/tweet?text=Google+makes+%24280+billion+a+year+and+you%27re+the+product.+Concierge+makes+enough+to+keep+the+lights+on+and+you%27re+the+customer.+Those+are+completely+different+relationships.+aiconceirge.netlify.app/honest" target="_blank">Share on X</a>
+    <a class="share-btn" href="https://www.facebook.com/sharer/sharer.php?u=https://aiconceirge.netlify.app/honest" target="_blank">Share on Facebook</a>
+    <a class="share-btn" onclick="copyLink()" href="#">Copy link</a>
+  </div>
+</section>
+
+<footer>
+  <div><strong>Concierge</strong> — We know everything. We have the answer.</div>
+  <div>
+    <a href="/index.html">Home</a> &nbsp;·&nbsp;
+    <a href="/fight.html">The truth about them</a> &nbsp;·&nbsp;
+    <a href="/app.html">Open the app</a>
+  </div>
+</footer>
+
+<script>
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
+
+function copyLink() {
+  navigator.clipboard.writeText('https://aiconceirge.netlify.app/honest').then(() => {
+    alert('Link copied — share it.');
+  });
+}
+
+// Animate on scroll
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.money-item, .them-stat, .us-stat, .verdict h2').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(20px)';
+  el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
