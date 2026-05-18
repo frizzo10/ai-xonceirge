@@ -285,6 +285,52 @@ footer a:hover{color:var(--white)}
   .ib-right{padding:48px 24px}
   .intuition-verdict{padding:64px 24px}
 }
+
+/* MATTER SECTION */
+.matter{padding:0;border-bottom:1px solid var(--dim)}
+.matter-top{padding:140px 48px;max-width:1100px;margin:0 auto}
+.matter-top h2{font-family:'DM Serif Display',serif;font-size:clamp(36px,6vw,88px);line-height:1.04;letter-spacing:-3px;color:var(--white);margin-bottom:0}
+.matter-top h2 .dim{color:rgba(255,255,255,0.18)}
+.matter-top h2 .bright{color:var(--white)}
+.matter-top h2 .blue{color:var(--blue);font-style:italic}
+.matter-proof{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--dim)}
+.mp-col{padding:52px 40px;border-right:1px solid var(--dim)}
+.mp-col:last-child{border-right:none}
+.mp-who{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gray);margin-bottom:20px;display:block}
+.mp-have{font-family:'DM Serif Display',serif;font-size:clamp(20px,2.5vw,32px);line-height:1.2;letter-spacing:-0.5px;color:var(--white);margin-bottom:16px}
+.mp-body{font-size:14px;color:rgba(255,255,255,0.3);line-height:1.75}
+.mp-body strong{color:rgba(255,255,255,0.65);font-weight:500}
+.matter-you{border-top:1px solid var(--dim);padding:80px 48px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;max-width:1100px;margin:0 auto}
+.my-left{}
+.my-left h3{font-family:'DM Serif Display',serif;font-size:clamp(28px,4vw,56px);line-height:1.1;letter-spacing:-1.5px;color:var(--white);margin-bottom:24px;font-weight:400}
+.my-left h3 em{font-style:italic;color:rgba(255,255,255,0.22)}
+.my-left p{font-size:clamp(16px,1.8vw,20px);color:rgba(255,255,255,0.32);line-height:1.8;margin-bottom:20px}
+.my-left p:last-child{margin-bottom:0}
+.my-left p strong{color:rgba(255,255,255,0.72);font-weight:500}
+.my-right{display:flex;flex-direction:column;gap:2px}
+.ticket{padding:24px 28px;background:rgba(255,255,255,0.02);border:1px solid var(--dim);border-radius:4px}
+.ticket-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.ticket-num{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray)}
+.ticket-status{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:20px}
+.ticket-status.open{background:rgba(224,82,82,0.12);color:var(--red);border:0.5px solid rgba(224,82,82,0.3)}
+.ticket-status.resolved{background:var(--green-dim);color:#C0DD97;border:0.5px solid var(--green-border)}
+.ticket-body{font-size:14px;color:rgba(255,255,255,0.45);line-height:1.6}
+.ticket-body strong{color:var(--white);font-weight:500;display:block;margin-bottom:4px}
+.ticket-body em{font-style:normal;font-size:12px;color:rgba(255,255,255,0.22)}
+.matter-close{border-top:1px solid var(--dim);padding:100px 48px;text-align:center}
+.matter-close h3{font-family:'DM Serif Display',serif;font-size:clamp(32px,5vw,72px);line-height:1.08;letter-spacing:-2px;color:var(--white);margin-bottom:24px;font-weight:400}
+.matter-close h3 em{font-style:italic;color:var(--blue)}
+.matter-close p{font-size:clamp(16px,1.8vw,20px);color:rgba(255,255,255,0.32);max-width:600px;margin:0 auto 48px;line-height:1.8}
+.matter-close p strong{color:rgba(255,255,255,0.72);font-weight:500}
+@media(max-width:768px){
+  .matter-top{padding:80px 24px}
+  .matter-top h2{letter-spacing:-2px}
+  .matter-proof{grid-template-columns:1fr}
+  .mp-col{border-right:none;border-bottom:1px solid var(--dim);padding:40px 24px}
+  .mp-col:last-child{border-bottom:none}
+  .matter-you{grid-template-columns:1fr;gap:40px;padding:60px 24px}
+  .matter-close{padding:80px 24px}
+}
 </style>
 </head>
 <body>
@@ -377,6 +423,89 @@ footer a:hover{color:var(--white)}
       <p>Until the code got out. Until open source changed everything. Until a guy with a laptop could point the same intelligence they hoarded for themselves — entirely at you.</p>
       <a href="/app.html" class="btn-raw">Try it now — it's free</a>
     </div>
+  </div>
+</section>
+
+
+<!-- ── YOU MATTER ── -->
+<section class="matter" id="matter">
+  <div class="matter-top">
+    <h2>
+      <span class="dim">You don't get remembered</span><br>
+      <span class="dim">unless you're paying</span><br>
+      <span class="dim">enough to</span> <span class="bright">matter.</span><br>
+      <span class="blue">Until now.</span>
+    </h2>
+  </div>
+
+  <div class="matter-proof">
+    <div class="mp-col">
+      <span class="mp-who">Your doctor</span>
+      <p class="mp-have">Has your chart.</p>
+      <p class="mp-body">Every visit. Every symptom. Every medication. Every test result. <strong>The doctor who knows your history doesn't make you repeat yourself.</strong> That relationship costs thousands of dollars a year to maintain. Most people don't have it.</p>
+    </div>
+    <div class="mp-col">
+      <span class="mp-who">Your lawyer</span>
+      <p class="mp-have">Has your file.</p>
+      <p class="mp-body">Every conversation. Every document. Every deadline. Every strategy discussed. <strong>The lawyer who knows your case picks up the phone.</strong> At $400 an hour most people can't afford the call. Let alone the file.</p>
+    </div>
+    <div class="mp-col">
+      <span class="mp-who">Your mechanic</span>
+      <p class="mp-have">Has your service history.</p>
+      <p class="mp-body">Every repair. Every part replaced. Every complaint logged. <strong>The mechanic who knows your car doesn't guess.</strong> If you can find one you trust and afford to keep going back — you're lucky. Most people can't.</p>
+    </div>
+  </div>
+
+  <div class="matter-you">
+    <div class="my-left">
+      <h3>Everyone else gets<br>a ticket number.<br><em>And starts over every time.</em></h3>
+      <p>You call back. Different person. <strong>"Can you tell me your account number? Can you describe the problem again? I'm sorry, I don't see any notes from your last call."</strong></p>
+      <p>Your problem has a history. You have a history. <strong>You matter enough to be remembered.</strong> You've just never had a system that did it.</p>
+      <p>Until now. Every interaction with Concierge opens a case. Your case. With everything in it. Permanently. So that when you come back — whether it's tomorrow or three weeks from now — we already know. We pick up exactly where we left off. <strong>No repeating. No starting over. No ticket number.</strong></p>
+    </div>
+    <div class="my-right">
+      <div class="ticket">
+        <div class="ticket-top">
+          <span class="ticket-num">Case #4471</span>
+          <span class="ticket-status open">Open</span>
+        </div>
+        <div class="ticket-body">
+          <strong>Car — 2019 Honda Civic</strong>
+          Check engine light on highway. O2 sensor suspected.<br>
+          Mechanic appointment Thursday 2pm.<br>
+          <em>Day 2 of 7 · Follow-up scheduled Thursday evening</em>
+        </div>
+      </div>
+      <div class="ticket">
+        <div class="ticket-top">
+          <span class="ticket-num">Case #4392</span>
+          <span class="ticket-status open">Open</span>
+        </div>
+        <div class="ticket-body">
+          <strong>Health — Lump found</strong>
+          Left breast. Discovered May 14. Doctor visit May 16.<br>
+          Mammogram scheduled May 21 at 11am.<br>
+          <em>Day 5 of 21 · We check in after results</em>
+        </div>
+      </div>
+      <div class="ticket">
+        <div class="ticket-top">
+          <span class="ticket-num">Case #4388</span>
+          <span class="ticket-status resolved">Resolved</span>
+        </div>
+        <div class="ticket-body">
+          <strong>Landlord — No heat · Miami, FL</strong>
+          Demand letter sent May 10. Heat restored May 12.<br>
+          <em>Closed in 2 days · Full deposit returned</em>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="matter-close">
+    <h3>Your case stays open<br>until your problem<br><em>is solved.</em></h3>
+    <p>Not until you hang up. Not until the chat ends. Not until we run out of things to say. <strong>Until the problem is fully resolved.</strong> The heat is back on. The claim is settled. The results came back clear. The letter worked. Done.</p>
+    <a href="/app.html" class="btn-raw">Open your first case — it's free</a>
   </div>
 </section>
 
