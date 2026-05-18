@@ -249,6 +249,42 @@ footer a:hover{color:var(--white)}
   .air-pillars { grid-template-columns: 1fr; }
   .air-built { letter-spacing: -2px; }
 }
+
+/* INTUITION SECTION */
+.intuition{padding:0;border-bottom:1px solid var(--dim)}
+.intuition-top{padding:140px 48px;background:var(--black);max-width:1100px;margin:0 auto}
+.intuition-top h2{font-family:'DM Serif Display',serif;font-size:clamp(36px,6vw,88px);line-height:1.04;letter-spacing:-3px;color:var(--white);margin-bottom:0}
+.intuition-top h2 em{font-style:italic;color:rgba(255,255,255,0.2)}
+.intuition-top h2 .bright{color:var(--white)}
+.intuition-top h2 .blue{color:var(--blue);font-style:italic}
+.intuition-body{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--dim)}
+.ib-left{padding:72px 48px;border-right:1px solid var(--dim)}
+.ib-right{padding:72px 48px;background:rgba(255,255,255,0.01)}
+.ib-eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gray);margin-bottom:32px;display:block}
+.ib-left p{font-size:clamp(17px,2vw,22px);color:rgba(255,255,255,0.32);line-height:1.85;margin-bottom:24px}
+.ib-left p:last-child{margin-bottom:0}
+.ib-left p strong{color:rgba(255,255,255,0.75);font-weight:500}
+.ib-left p em{font-style:italic;color:rgba(255,255,255,0.6)}
+.intuition-list{display:flex;flex-direction:column;gap:0}
+.il-item{padding:28px 0;border-bottom:1px solid var(--dim);display:flex;gap:20px;align-items:flex-start}
+.il-item:first-child{padding-top:0}
+.il-item:last-child{border-bottom:none;padding-bottom:0}
+.il-icon{font-size:22px;flex-shrink:0;margin-top:2px}
+.il-title{font-size:15px;font-weight:600;color:var(--white);margin-bottom:6px;line-height:1.3}
+.il-body{font-size:13px;color:rgba(255,255,255,0.32);line-height:1.7}
+.intuition-verdict{padding:80px 48px;border-top:1px solid var(--dim);text-align:center;background:rgba(255,255,255,0.01)}
+.intuition-verdict h3{font-family:'DM Serif Display',serif;font-size:clamp(28px,4vw,60px);line-height:1.1;letter-spacing:-1.5px;color:var(--white);margin-bottom:24px;font-weight:400}
+.intuition-verdict h3 em{font-style:italic;color:var(--blue)}
+.intuition-verdict p{font-size:clamp(16px,1.8vw,20px);color:rgba(255,255,255,0.32);max-width:640px;margin:0 auto 48px;line-height:1.8}
+.intuition-verdict p strong{color:rgba(255,255,255,0.72);font-weight:500}
+@media(max-width:768px){
+  .intuition-top{padding:80px 24px}
+  .intuition-top h2{letter-spacing:-2px}
+  .intuition-body{grid-template-columns:1fr}
+  .ib-left{border-right:none;border-bottom:1px solid var(--dim);padding:48px 24px}
+  .ib-right{padding:48px 24px}
+  .intuition-verdict{padding:64px 24px}
+}
 </style>
 </head>
 <body>
@@ -434,6 +470,69 @@ footer a:hover{color:var(--white)}
         <a class="m-chip" href="/app.html?q=car">Roadside assistance</a>
       </div>
     </div>
+  </div>
+</section>
+
+
+<!-- ── INTUITION ── -->
+<section class="intuition" id="intuition">
+  <div class="intuition-top">
+    <h2>
+      <span class="bright">We've seen this before.</span><br>
+      <span class="bright">Every time.</span><br>
+      <span class="blue">That's not confidence.</span><br>
+      <span class="bright">That's intuition.</span>
+    </h2>
+  </div>
+
+  <div class="intuition-body">
+    <div class="ib-left">
+      <span class="ib-eyebrow">Why we always know what to ask</span>
+      <p>Every car problem. Every fever. Every landlord dispute. Every IRS letter. Every divorce question. Every fender bender. <strong>We have seen it millions of times. In every variation. In every state. For every age.</strong></p>
+      <p>We don't have to fake the intuition. <em>We actually have it.</em></p>
+      <p>That's what makes the right question feel like magic. When we ask what year your car is — we already know the next four questions and the answer at the end of all of them. We're not gathering information. <strong>We're confirming what we already suspect.</strong></p>
+      <p>That's the difference between a great doctor and a bad one. Not knowledge — they both went to medical school. The great one asks better questions. Gets to the truth faster. Never skips a step. Never assumes. <strong>That's what we do. Every time. For everyone.</strong></p>
+    </div>
+
+    <div class="ib-right">
+      <span class="ib-eyebrow">The same tech they use against you</span>
+      <div class="intuition-list">
+        <div class="il-item">
+          <span class="il-icon">🧠</span>
+          <div>
+            <p class="il-title">Same AI as Google</p>
+            <p class="il-body">Google built their intelligence to predict what you'll click on next so they can sell that click to an advertiser. We use the same intelligence to predict what you need next so we can solve it.</p>
+          </div>
+        </div>
+        <div class="il-item">
+          <span class="il-icon">📊</span>
+          <div>
+            <p class="il-title">Same data as Facebook</p>
+            <p class="il-body">Facebook used behavioral data to keep you scrolling and feeling bad about yourself. We use behavioral patterns to understand your situation and get you out of it.</p>
+          </div>
+        </div>
+        <div class="il-item">
+          <span class="il-icon">⚡</span>
+          <div>
+            <p class="il-title">Same speed as OpenAI</p>
+            <p class="il-body">OpenAI built the fastest inference engine ever made. We run on Groq — faster than any of them. The answer arrives before you finish the question.</p>
+          </div>
+        </div>
+        <div class="il-item">
+          <span class="il-icon">🎯</span>
+          <div>
+            <p class="il-title">Zero of their agenda</p>
+            <p class="il-body">They pointed all of it at their shareholders. We pointed all of it at you. Same technology. Completely opposite direction. That's the only difference. And it changes everything.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="intuition-verdict">
+    <h3>We ask the right questions.<br>So we always have <em>the right answer.</em></h3>
+    <p>Not the general answer. Not the probably answer. Not the answer that applies to most people in most situations. <strong>The right answer for you. Right now. In this exact situation.</strong> Every time.</p>
+    <a href="/app.html" class="btn-raw">See it for yourself — it's free</a>
   </div>
 </section>
 
