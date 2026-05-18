@@ -270,13 +270,38 @@ function openVoice(category, label, prompt) {
   document.getElementById('voicePrompt').textContent = prompt;
   document.getElementById('responseArea').innerHTML = '';
   document.getElementById('typeToggle').style.display = 'none';
-  document.getElementById('micHint').textContent = 'Tap to talk';
-  document.getElementById('micHint').className = 'mic-hint';
+  document.getElementById('micHint').textContent = 'Listening...';
+  document.getElementById('micHint').className = 'mic-hint active';
   document.getElementById('micBtn').className = 'mic-btn';
   stopRings();
 
   document.getElementById('homeView').classList.remove('active');
   document.getElementById('voiceView').classList.add('active');
+
+  // Speak the opening question then auto-listen
+  speakThenListen(prompt);
+}
+
+function speakThenListen(text) {
+  stopSpeaking();
+  if (window.speechSynthesis) {
+    const utt = new SpeechSynthesisUtterance(text);
+    utt.rate = 0.88;
+    utt.pitch = 1.0;
+    utt.onend = () => {
+      // Auto-start listening after speaking
+      setTimeout(() => startRecording(), 300);
+    };
+    utt.onerror = () => {
+      // If speech fails just start listening
+      setTimeout(() => startRecording(), 500);
+    };
+    window.speechSynthesis.speak(utt);
+    startRings();
+  } else {
+    // No speech synthesis — just start listening
+    setTimeout(() => startRecording(), 800);
+  }
 }
 
 function goHome() {
@@ -392,9 +417,9 @@ async function callConcierge() {
 
     hasResponded = true;
     showResponse(reply, getSuggestedChips());
-    speak(reply);
+    speakThenListen(reply);
     showTypeBar();
-    setHint('Tap to reply', '');
+    setHint('Listening...', 'live');
 
   } catch(e) {
     removeTypingDots();
