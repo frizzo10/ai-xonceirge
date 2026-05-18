@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Google paid $18 billion last year to make sure you couldn't find us. Same intelligence. Finally on your side.">
+<meta property="og:title" content="They've been using it against you. We won't.">
+<meta property="og:description" content="Same intelligence. Finally on your side.">
+<meta property="og:image" content="/icons/share.png">
+<meta name="twitter:card" content="summary_large_image">
+<title>Finally on your side.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --black: #0A0A08;
+  --white: #FAFAF7;
+  --gray: #888780;
+  --dim: rgba(255,255,255,0.12);
+  --blue: #378ADD;
+}
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--black); color: var(--white);
+  font-size: 16px; line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* OPEN */
+.open {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  text-align: center; padding: 80px 48px;
+  border-bottom: 1px solid var(--dim);
+}
+.open-eyebrow {
+  font-size: 11px; font-weight: 600; letter-spacing: 2.5px;
+  text-transform: uppercase; color: var(--gray); margin-bottom: 48px;
+}
+.open h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(42px, 7vw, 96px);
+  line-height: 1.04; letter-spacing: -3px;
+  max-width: 900px; margin-bottom: 48px;
+}
+.open h1 em { font-style: italic; color: rgba(255,255,255,0.28); }
+.open-sub {
+  font-size: clamp(16px, 2vw, 22px);
+  color: rgba(255,255,255,0.42); max-width: 560px;
+  line-height: 1.75; margin-bottom: 56px;
+}
+.scroll-hint {
+  font-size: 12px; color: var(--gray); letter-spacing: 1px;
+  animation: bounce 2s infinite;
+}
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); opacity: 0.4; }
+  50% { transform: translateY(6px); opacity: 1; }
+}
+
+/* PUNCHES */
+.punch {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  justify-content: center;
+  padding: 120px 48px;
+  border-bottom: 1px solid var(--dim);
+  max-width: 1100px; margin: 0 auto;
+}
+.punch-number {
+  font-size: 11px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--gray);
+  margin-bottom: 48px;
+}
+.punch-company {
+  font-size: clamp(72px, 12vw, 160px);
+  font-weight: 600; letter-spacing: -5px; line-height: 0.9;
+  color: rgba(255,255,255,0.06);
+  margin-bottom: 48px; display: block;
+}
+.punch-fact {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(28px, 4vw, 58px);
+  line-height: 1.15; letter-spacing: -1px;
+  color: var(--white); max-width: 820px;
+  margin-bottom: 32px;
+}
+.punch-detail {
+  font-size: clamp(15px, 1.8vw, 19px);
+  color: rgba(255,255,255,0.38);
+  max-width: 680px; line-height: 1.8;
+  margin-bottom: 20px;
+}
+.punch-source {
+  font-size: 12px; color: rgba(255,255,255,0.2);
+  font-style: italic;
+}
+.punch-flip {
+  margin-top: 56px; padding-top: 56px;
+  border-top: 1px solid var(--dim);
+  max-width: 680px;
+}
+.punch-flip-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--blue); margin-bottom: 16px;
+}
+.punch-flip-body {
+  font-size: clamp(17px, 2vw, 22px);
+  color: rgba(255,255,255,0.72); line-height: 1.7;
+}
+
+/* VERDICT */
+.verdict {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  text-align: center; padding: 120px 48px;
+}
+.verdict-pre {
+  font-size: 11px; font-weight: 600; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--gray); margin-bottom: 48px;
+}
+.verdict h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(36px, 6vw, 88px);
+  line-height: 1.06; letter-spacing: -2.5px;
+  color: var(--white); max-width: 900px; margin-bottom: 48px;
+}
+.verdict h2 em { font-style: italic; color: var(--blue); }
+.verdict-body {
+  font-size: clamp(16px, 1.8vw, 21px);
+  color: rgba(255,255,255,0.4);
+  max-width: 600px; line-height: 1.8; margin-bottom: 72px;
+}
+.verdict-body strong { color: rgba(255,255,255,0.8); font-weight: 500; }
+
+.cta-block { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+.btn-white {
+  background: var(--white); color: var(--black);
+  padding: 20px 56px; border-radius: 30px;
+  font-size: 17px; font-weight: 700; text-decoration: none;
+  display: inline-block; transition: opacity 0.2s;
+  letter-spacing: -0.3px;
+}
+.btn-white:hover { opacity: 0.88; }
+.cta-note { font-size: 13px; color: var(--gray); font-style: italic; }
+
+.share-row {
+  display: flex; gap: 16px; justify-content: center;
+  margin-top: 48px; flex-wrap: wrap;
+}
+.share-btn {
+  padding: 12px 24px; border-radius: 24px;
+  border: 1px solid var(--dim);
+  font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.6);
+  background: none; cursor: pointer; text-decoration: none;
+  transition: all 0.2s; display: inline-block;
+}
+.share-btn:hover { border-color: rgba(255,255,255,0.3); color: var(--white); }
+
+/* FOOTER */
+footer {
+  padding: 40px 48px; border-top: 1px solid var(--dim);
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 13px; color: var(--gray); flex-wrap: wrap; gap: 12px;
+  max-width: 1100px; margin: 0 auto;
+}
+footer a { color: var(--gray); text-decoration: none; }
+footer a:hover { color: var(--white); }
+
+@media (max-width: 768px) {
+  .open, .verdict { padding: 80px 24px; }
+  .punch { padding: 80px 24px; min-height: auto; }
+  .punch-company { font-size: clamp(60px, 18vw, 100px); }
+  footer { padding: 32px 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- OPEN -->
+<section class="open">
+  <p class="open-eyebrow">A message to everyone with a smartphone</p>
+  <h1>They built empires<br><em>knowing everything</em><br>about you.</h1>
+  <p class="open-sub">Every search. Every click. Every symptom you Googled at midnight. Every fear. Every private moment. They heard all of it. They just never told you what they did with it — because what they did with it made them trillions.</p>
+  <p class="scroll-hint">↓ keep reading ↓</p>
+</section>
+
+<!-- PUNCH 1: GOOGLE -->
+<section class="punch">
+  <p class="punch-number">01 of 04</p>
+  <span class="punch-company">Google</span>
+  <h2 class="punch-fact">Google paid Apple $18 billion in a single year to make sure you could never find anything else.</h2>
+  <p class="punch-detail">Not $18 billion to build a better product. Not $18 billion to improve your results. $18 billion to be the default. To block the door. To make sure that no matter how good anything else got — you'd never see it. That money came from selling everything they knew about you to every advertiser willing to pay.</p>
+  <p class="punch-source">Source: U.S. v. Google LLC, Antitrust Trial, 2023. Admitted in open court.</p>
+  <div class="punch-flip">
+    <p class="punch-flip-label">We spent that money differently</p>
+    <p class="punch-flip-body">We have no default deal. No search monopoly. No advertiser to answer to. We have one job — give you the right answer. That's it. That's the whole business.</p>
+  </div>
+</section>
+
+<!-- PUNCH 2: FACEBOOK -->
+<section class="punch">
+  <p class="punch-number">02 of 04</p>
+  <span class="punch-company">Facebook</span>
+  <h2 class="punch-fact">Facebook's own research showed their platform made teenage girls hate themselves. They kept going anyway.</h2>
+  <p class="punch-detail">Internal documents — their documents, their researchers, their findings — showed that Instagram made body image issues worse for one in three teenage girls. They knew. The slide decks existed. The meetings happened. They weighed the mental health of an entire generation against the engagement metrics and chose the metrics. Every time.</p>
+  <p class="punch-source">Source: The Facebook Papers, Wall Street Journal, 2021. Internal Meta research documents.</p>
+  <div class="punch-flip">
+    <p class="punch-flip-label">We have no engagement metric</p>
+    <p class="punch-flip-body">We don't make money when you use us more. We make money when your life gets easier. Those are completely different incentives. Ours means we only win when you win.</p>
+  </div>
+</section>
+
+<!-- PUNCH 3: AMAZON -->
+<section class="punch">
+  <p class="punch-number">03 of 04</p>
+  <span class="punch-company">Amazon</span>
+  <h2 class="punch-fact">Amazon replaced its best search results with the highest bidder and called it shopping.</h2>
+  <p class="punch-detail">You searched for the best product. You thought you were seeing the best product. You were seeing whoever paid the most to appear first. Amazon's own employees called their search results "a river of junk." The organic results — the honest ones — got pushed down. Then further down. Then off the page entirely. Convenience became a con.</p>
+  <p class="punch-source">Source: FTC v. Amazon, 2023. Internal Amazon documents entered into evidence.</p>
+  <div class="punch-flip">
+    <p class="punch-flip-label">We find the best one. Period.</p>
+    <p class="punch-flip-body">Nobody pays us to recommend them. Nobody pays us to appear first. We find the best option for your situation, your budget, your location. Then we stop. We don't have a second agenda.</p>
+  </div>
+</section>
+
+<!-- PUNCH 4: APPLE -->
+<section class="punch">
+  <p class="punch-number">04 of 04</p>
+  <span class="punch-company">Apple</span>
+  <h2 class="punch-fact">Apple built the most powerful personal computer in human history. Then gave you Siri.</h2>
+  <p class="punch-detail">Your iPhone knows your face. Your voice. Your location every minute of every day. Your heart rate. Your sleep. Your closest relationships. Every thought you've typed. Every place you've been. It is the most intimate device ever built. And the best they did with all of that — after seventeen years — is a voice assistant that still can't tell you if your kid's fever is dangerous. The potential was always there. The will to use it for you never was.</p>
+  <p class="punch-source">Source: Siri launched 2011. Still cannot answer complex personal questions in 2026.</p>
+  <div class="punch-flip">
+    <p class="punch-flip-label">We use everything your phone knows — for you</p>
+    <p class="punch-flip-body">Your location. Your calendar. Your patterns. The news in your neighborhood. The recall on your car. The scam targeting your zip code. We read all of it. We tell you what matters. Before you ask. Because that's what all of this was always supposed to be for.</p>
+  </div>
+</section>
+
+<!-- VERDICT -->
+<section class="verdict">
+  <p class="verdict-pre">The point</p>
+  <h2>Same intelligence.<br><em>Finally on your side.</em></h2>
+  <p class="verdict-body">Every large language model has read the entire internet. The knowledge is the same. The intelligence is the same. What's different is <strong>who it works for.</strong> They built it for their shareholders. We built it for you. No ads. No data selling. No algorithm optimizing for your attention instead of your life. We have one motive. We always will.</p>
+
+  <div class="cta-block">
+    <a href="/app.html" class="btn-white">Try Concierge — it's free</a>
+    <p class="cta-note">No account needed. No credit card. No catch.</p>
+  </div>
+
+  <div class="share-row">
+    <a class="share-btn" href="https://twitter.com/intent/tweet?text=Google+paid+%2418+billion+to+make+sure+you+couldn%27t+find+anything+else.+Same+intelligence%2C+finally+on+your+side.+aiconceirge.netlify.app/fight" target="_blank">Share on X</a>
+    <a class="share-btn" href="https://www.facebook.com/sharer/sharer.php?u=https://aiconceirge.netlify.app/fight" target="_blank">Share on Facebook</a>
+    <a class="share-btn" onclick="copyLink()" href="#">Copy link</a>
+  </div>
+</section>
+
+<footer>
+  <div><strong>Concierge</strong> — We know everything. We have the answer.</div>
+  <div>
+    <a href="/index.html">Home</a> &nbsp;·&nbsp;
+    <a href="/app.html">Open the app</a> &nbsp;·&nbsp;
+    <a href="/index.html#pricing">Pricing</a>
+  </div>
+</footer>
+
+<script>
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
+
+function copyLink() {
+  navigator.clipboard.writeText('https://aiconceirge.netlify.app/fight').then(() => {
+    alert('Link copied — share it everywhere.');
+  });
+}
+
+// Animate punch facts on scroll
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.punch-fact, .punch-flip').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(24px)';
+  el.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
