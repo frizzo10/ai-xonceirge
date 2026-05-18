@@ -85,6 +85,28 @@ body{font-family:'DM Sans',sans-serif;color:var(--text);font-size:16px;-webkit-f
 .type-send svg{width:16px;height:16px;fill:white}
 .type-toggle-btn{font-size:12px;color:var(--text3);cursor:pointer;white-space:nowrap;-webkit-tap-highlight-color:transparent;background:none;border:none;padding:0}
 
+/* CASES TAB */
+.tab-bar{display:flex;border-top:0.5px solid var(--border);flex-shrink:0}
+.tab-btn{flex:1;padding:12px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;background:none;border:none;-webkit-tap-highlight-color:transparent;transition:background 0.15s}
+.tab-btn.active{background:var(--blue-dim)}
+.tab-btn svg{width:20px;height:20px;fill:var(--text3)}
+.tab-btn.active svg{fill:var(--blue)}
+.tab-btn span{font-size:10px;font-weight:600;letter-spacing:0.5px;color:var(--text3)}
+.tab-btn.active span{color:var(--blue)}
+#casesView{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:20px 16px calc(32px + var(--safe))}
+.cases-title{font-family:'DM Serif Display',serif;font-size:22px;letter-spacing:-0.5px;color:var(--text);margin-bottom:20px}
+.case-card{background:var(--surface);border:0.5px solid var(--border2);border-radius:16px;padding:18px 20px;margin-bottom:12px;cursor:pointer;transition:background 0.15s;-webkit-tap-highlight-color:transparent}
+.case-card:active{background:var(--surface2)}
+.case-card-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.case-icon{font-size:20px}
+.case-cat{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3)}
+.case-title{font-size:15px;font-weight:500;color:var(--text);margin-bottom:6px;line-height:1.3}
+.case-meta{font-size:12px;color:var(--text3)}
+.case-status{display:inline-block;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:20px;margin-left:8px}
+.case-status.active{background:var(--green-dim);color:#C0DD97;border:0.5px solid var(--green-border)}
+.case-empty{text-align:center;padding:60px 20px;color:var(--text3);font-size:15px;line-height:1.7}
+.case-empty strong{display:block;color:var(--text2);font-size:17px;margin-bottom:8px}
+
 /* TYPING DOTS */
 .dots{display:flex;gap:5px;align-items:center;padding:6px 2px}
 .dots span{width:7px;height:7px;border-radius:50%;background:var(--text3);animation:blink 1.2s infinite}
@@ -101,6 +123,18 @@ body{font-family:'DM Sans',sans-serif;color:var(--text);font-size:16px;-webkit-f
     <div class="listen-dot" id="listenDot"></div>
     <span id="listenLabel">Listen &amp; Help off</span>
   </div>
+</div>
+
+<!-- TAB BAR -->
+<div class="tab-bar">
+  <button class="tab-btn active" id="tabTalk" onclick="switchTab('talk')">
+    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    <span>Talk</span>
+  </button>
+  <button class="tab-btn" id="tabCases" onclick="switchTab('cases')">
+    <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10,9 9,9 8,9"/></svg>
+    <span>Cases</span>
+  </button>
 </div>
 
 <!-- HOME VIEW: 20 BUTTONS -->
@@ -131,6 +165,12 @@ body{font-family:'DM Sans',sans-serif;color:var(--text);font-size:16px;-webkit-f
     <div class="prob-btn" onclick="openVoice('job','Find a job','Are you looking now, or dealing with a current job?')"><div class="pbi">🔍</div><div class="pbl">Find a job</div></div>
     <div class="prob-btn" onclick="openVoice('talk','Just talk','I\'m here. What\'s on your mind?')"><div class="pbi">💬</div><div class="pbl">Just talk</div></div>
   </div>
+</div>
+
+<!-- CASES VIEW -->
+<div class="view" id="casesView">
+  <p class="cases-title">Your open cases</p>
+  <div id="casesList"><div class="case-empty"><strong>No active cases yet.</strong>Tap a button on the Talk tab to start your first case.</div></div>
 </div>
 
 <!-- VOICE VIEW -->
@@ -224,6 +264,7 @@ function openVoice(category, label, prompt) {
   currentPrompt = prompt;
   history = [];
   hasResponded = false;
+  currentCaseId = null;
 
   document.getElementById('voiceCategory').textContent = label;
   document.getElementById('voicePrompt').textContent = prompt;
@@ -241,6 +282,7 @@ function openVoice(category, label, prompt) {
 function goHome() {
   stopRecording();
   stopSpeaking();
+  currentCaseId = null;
   document.getElementById('voiceView').classList.remove('active');
   document.getElementById('homeView').classList.add('active');
 }
@@ -329,13 +371,21 @@ async function callConcierge() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         messages: history,
-        system: getSystem(currentCategory)
+        system: getSystem(currentCategory),
+        category: currentCategory,
+        deviceId: deviceId,
+        caseId: currentCaseId
       })
     });
 
     const data = await res.json();
     removeTypingDots();
     document.getElementById('micBtn').className = 'mic-btn';
+
+    // Save case ID for this session
+    if (data.caseId && !currentCaseId) {
+      currentCaseId = data.caseId;
+    }
 
     const reply = data.reply || "Still here — just had a connection hiccup. Tap the mic and try again.";
     history.push({ role: 'assistant', content: reply });
@@ -456,6 +506,86 @@ function speak(text) {
 
 function stopSpeaking() {
   if (window.speechSynthesis) window.speechSynthesis.cancel();
+}
+
+// ── TABS ──
+function switchTab(tab) {
+  document.getElementById('tabTalk').classList.toggle('active', tab === 'talk');
+  document.getElementById('tabCases').classList.toggle('active', tab === 'cases');
+  document.getElementById('homeView').classList.toggle('active', tab === 'talk');
+  document.getElementById('casesView').classList.toggle('active', tab === 'cases');
+  if (tab === 'cases') loadCases();
+}
+
+const categoryIcons = {
+  car:'🚙',medical:'🏥',kids:'👶',legal:'⚖️',landlord:'🏠',
+  money:'💸',bills:'📄',insurance:'🛡️',work:'💼',relationship:'❤️',
+  anxiety:'🧠',home:'🔧',pet:'🐾',school:'🏫',neighbor:'🏘️',
+  traffic:'🚗',food:'🍽️',sleep:'😴',job:'🔍',talk:'💬'
+};
+
+async function loadCases() {
+  const list = document.getElementById('casesList');
+  list.innerHTML = '<div class="case-empty"><strong>Loading your cases...</strong></div>';
+  try {
+    const res = await fetch(`https://erlfsyarkcsthrwrdenz.supabase.co/rest/v1/cases?user_id=eq.${deviceId}&status=eq.active&order=updated_at.desc`, {
+      headers: {
+        'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVybGZzeWFya2NzdGhyd3JkZW56Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkxMTk3NzQsImV4cCI6MjA5NDY5NTc3NH0.pB3TTg6zTHqmGrAOoQMB5ql0FxSvYUpOjesq2ZT6IeM',
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVybGZzeWFya2NzdGhyd3JkZW56Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkxMTk3NzQsImV4cCI6MjA5NDY5NTc3NH0.pB3TTg6zTHqmGrAOoQMB5ql0FxSvYUpOjesq2ZT6IeM'
+      }
+    });
+    const cases = await res.json();
+    if (!cases || cases.length === 0) {
+      list.innerHTML = '<div class="case-empty"><strong>No active cases yet.</strong>Tap Talk to start your first case. We'll track it here until it's resolved.</div>';
+      return;
+    }
+    list.innerHTML = '';
+    cases.forEach(c => {
+      const icon = categoryIcons[c.category] || '📋';
+      const date = new Date(c.created_at).toLocaleDateString('en-US', {month:'short',day:'numeric'});
+      const msgs = Array.isArray(c.context) ? Math.floor(c.context.length / 2) : 0;
+      const card = document.createElement('div');
+      card.className = 'case-card';
+      card.innerHTML = `
+        <div class="case-card-top">
+          <span class="case-icon">${icon}</span>
+          <span class="case-cat">${c.category}</span>
+          <span class="case-status active">Active</span>
+        </div>
+        <div class="case-title">${c.title || c.category}</div>
+        <div class="case-meta">Started ${date} · ${msgs} exchange${msgs !== 1 ? 's' : ''}</div>
+      `;
+      card.onclick = () => resumeCase(c);
+      list.appendChild(card);
+    });
+  } catch(e) {
+    list.innerHTML = '<div class="case-empty"><strong>Couldn't load cases.</strong>Check your connection and try again.</div>';
+  }
+}
+
+function resumeCase(c) {
+  currentCaseId = c.id;
+  currentCategory = c.category;
+  currentPrompt = c.title;
+  history = Array.isArray(c.context) ? c.context : [];
+  hasResponded = history.length > 0;
+
+  document.getElementById('voiceCategory').textContent = c.category;
+  document.getElementById('voicePrompt').textContent = history.length > 0 ? 'Picking up where we left off.' : c.title;
+  document.getElementById('responseArea').innerHTML = '';
+
+  // Show last AI message if exists
+  const lastAI = [...history].reverse().find(m => m.role === 'assistant');
+  if (lastAI) {
+    showResponse(lastAI.content, getSuggestedChips());
+  }
+
+  document.getElementById('typeToggle').style.display = history.length > 0 ? 'flex' : 'none';
+  document.getElementById('micHint').textContent = 'Tap to continue';
+
+  switchTab('talk');
+  document.getElementById('homeView').classList.remove('active');
+  document.getElementById('voiceView').classList.add('active');
 }
 
 // ── LISTEN & HELP ──
