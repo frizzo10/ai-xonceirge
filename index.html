@@ -187,6 +187,68 @@ footer a:hover{color:var(--white)}
   .btn-ghost{margin-left:0;margin-top:12px;display:block;text-align:center}
   footer{padding:32px 20px}
 }
+
+/* AIR SECTION */
+.air {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  text-align: center; padding: 120px 48px;
+  border-bottom: 1px solid var(--dim);
+  background: var(--black);
+}
+.air-quote {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(28px, 4.5vw, 68px);
+  line-height: 1.15; letter-spacing: -1.5px;
+  color: rgba(255,255,255,0.22);
+  max-width: 860px; margin-bottom: 32px;
+  font-style: italic;
+}
+.air-quote em { color: var(--white); font-style: italic; }
+.air-attribution {
+  font-size: 13px; font-weight: 600; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--gray);
+  margin-bottom: 120px;
+}
+.air-built {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(52px, 9vw, 130px);
+  line-height: 1.0; letter-spacing: -4px;
+  color: var(--white); margin-bottom: 24px;
+}
+.air-built em { font-style: italic; color: var(--blue); }
+.air-sub {
+  font-size: clamp(17px, 2vw, 22px);
+  color: rgba(255,255,255,0.28);
+  max-width: 600px; line-height: 1.8; margin-bottom: 64px;
+}
+.air-sub strong { color: rgba(255,255,255,0.65); font-weight: 500; }
+.air-pillars {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 2px; max-width: 900px; width: 100%;
+  border: 1px solid var(--dim); border-radius: 4px;
+  overflow: hidden; margin-bottom: 64px; text-align: left;
+}
+.air-pillar {
+  padding: 36px 28px;
+  background: rgba(255,255,255,0.02);
+}
+.ap-icon {
+  font-size: 28px; margin-bottom: 16px; display: block;
+}
+.ap-title {
+  font-size: 15px; font-weight: 600; color: var(--white);
+  margin-bottom: 8px; line-height: 1.3;
+}
+.ap-body {
+  font-size: 13px; color: rgba(255,255,255,0.3); line-height: 1.7;
+}
+@media(max-width:768px){
+  .air { padding: 80px 24px; min-height: auto; }
+  .air-pillars { grid-template-columns: 1fr; }
+  .air-built { letter-spacing: -2px; }
+}
 </style>
 </head>
 <body>
@@ -216,6 +278,38 @@ footer a:hover{color:var(--white)}
       <a href="#moments" class="btn-ghost">See it work</a>
     </div>
   </div>
+</section>
+
+
+<!-- ── AIR SECTION ── -->
+<section class="air" id="air">
+  <p class="air-quote">
+    <em>"Computers will best serve humanity</em><br>when they are like air."
+  </p>
+  <p class="air-attribution">Nicholas Negroponte &nbsp;·&nbsp; MIT Media Lab</p>
+
+  <h2 class="air-built">We built <em>that.</em></h2>
+  <p class="air-sub">Every other AI puts itself between you and the answer. A blank page. A prompt. A class teaching you how to talk to it. <strong>We built the AI that disappears.</strong> No interface to learn. No prompt to write. No course to take. Just your life — and the answer already there.</p>
+
+  <div class="air-pillars">
+    <div class="air-pillar">
+      <span class="ap-icon">🌬️</span>
+      <p class="ap-title">You don't open it.</p>
+      <p class="ap-body">It's already watching. Your calendar. Your location. The news in your neighborhood. The recall on your car. It knows before you ask.</p>
+    </div>
+    <div class="air-pillar">
+      <span class="ap-icon">🔇</span>
+      <p class="ap-title">You don't prompt it.</p>
+      <p class="ap-body">They offer classes teaching you how to talk to their AI. We built an AI that already speaks human. Tap what's wrong. We handle the rest.</p>
+    </div>
+    <div class="air-pillar">
+      <span class="ap-icon">👻</span>
+      <p class="ap-title">It disappears when it's done.</p>
+      <p class="ap-body">We don't optimize for engagement. We don't want you addicted. We solve your problem and get out of your way. We win when you close the app.</p>
+    </div>
+  </div>
+
+  <a href="/app.html" class="btn-raw">Try the AI that disappears</a>
 </section>
 
 <!-- ── 2. NEVER EXISTED ── -->
