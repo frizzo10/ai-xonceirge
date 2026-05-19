@@ -218,6 +218,39 @@ body{
 .empty-state strong{display:block;font-size:17px;color:var(--text2);margin-bottom:8px}
 .empty-state p{font-size:14px;color:var(--text3);line-height:1.6}
 
+/* VOICE SELECTOR */
+.voice-selector{
+  position:absolute;top:0;left:0;right:0;bottom:0;
+  background:rgba(10,10,8,0.96);backdrop-filter:blur(20px);
+  z-index:100;display:none;flex-direction:column;
+  padding:52px 24px 32px;
+}
+.voice-selector.open{display:flex}
+.vs-title{
+  font-family:'DM Serif Display',serif;font-size:24px;
+  letter-spacing:-0.5px;color:var(--text);margin-bottom:8px;
+}
+.vs-sub{font-size:14px;color:var(--text3);margin-bottom:32px}
+.vs-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px}
+.vs-item{
+  padding:14px 18px;border:0.5px solid var(--border2);
+  border-radius:12px;background:var(--surface);
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.vs-item:active{background:var(--blue-dim)}
+.vs-item.selected{border-color:var(--blue);background:var(--blue-dim)}
+.vs-item-name{font-size:14px;font-weight:500;color:var(--text)}
+.vs-item-lang{font-size:12px;color:var(--text3)}
+.vs-item-check{font-size:16px;opacity:0}
+.vs-item.selected .vs-item-check{opacity:1}
+.vs-close{
+  margin-top:20px;padding:14px;border-radius:12px;
+  background:var(--white);color:var(--black);
+  font-size:15px;font-weight:700;border:none;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+
 /* DOTS */
 .dots{display:flex;gap:5px;align-items:center;padding:4px}
 .dots span{width:7px;height:7px;border-radius:50%;background:var(--text3);animation:blink 1.2s infinite}
@@ -231,9 +264,12 @@ body{
 <!-- TOPBAR -->
 <div class="topbar">
   <div class="topbar-brand">Concierge</div>
+  <div style="display:flex;gap:8px;align-items:center">
+  <button onclick="openVoiceSelector()" style="background:var(--surface);border:0.5px solid var(--border2);border-radius:20px;padding:7px 12px;font-size:12px;color:var(--text2);cursor:pointer;-webkit-tap-highlight-color:transparent" title="Change voice">🔊 Voice</button>
   <div class="listen-toggle" id="listenToggle" onclick="toggleListen()">
     <div class="listen-dot" id="listenDot"></div>
     <span id="listenLabel">Listen &amp; Help off</span>
+  </div>
   </div>
 </div>
 
@@ -327,6 +363,14 @@ body{
   </button>
 </div>
 
+<!-- VOICE SELECTOR OVERLAY -->
+<div id="voiceSelector" class="voice-selector">
+  <p class="vs-title">Choose a voice</p>
+  <p class="vs-sub">Tap any voice to preview it</p>
+  <div class="vs-list" id="voiceList"></div>
+  <button class="vs-close" onclick="closeVoiceSelector()">Done</button>
+</div>
+
 <script>
 if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
 
@@ -337,6 +381,77 @@ let currentCaseId = null;
 let isRecording = false;
 let recognition = null;
 let listenOn = false;
+
+// VOICE
+let selectedVoice = null;
+let availableVoices = [];
+const SAVED_VOICE = localStorage.getItem('concierge_voice');
+
+function loadVoices() {
+  availableVoices = window.speechSynthesis.getVoices()
+    .filter(v => v.lang.startsWith('en'))
+    .sort((a,b) => {
+      // Prefer natural/enhanced voices
+      const aScore = a.name.includes('Enhanced') || a.name.includes('Premium') || a.name.includes('Neural') ? 1 : 0;
+      const bScore = b.name.includes('Enhanced') || b.name.includes('Premium') || b.name.includes('Neural') ? 1 : 0;
+      return bScore - aScore;
+    });
+
+  // Restore saved voice
+  if (SAVED_VOICE) {
+    selectedVoice = availableVoices.find(v => v.name === SAVED_VOICE) || availableVoices[0];
+  } else {
+    // Default to best available
+    selectedVoice = availableVoices.find(v =>
+      v.name.includes('Samantha') ||
+      v.name.includes('Enhanced') ||
+      v.name.includes('Premium') ||
+      v.name.includes('Neural')
+    ) || availableVoices[0];
+  }
+}
+
+if (window.speechSynthesis) {
+  loadVoices();
+  window.speechSynthesis.onvoiceschanged = loadVoices;
+}
+
+function openVoiceSelector() {
+  loadVoices();
+  const list = document.getElementById('voiceList');
+  list.innerHTML = '';
+  availableVoices.forEach(voice => {
+    const item = document.createElement('div');
+    item.className = 'vs-item' + (selectedVoice && voice.name === selectedVoice.name ? ' selected' : '');
+    item.innerHTML = `
+      <div>
+        <div class="vs-item-name">${voice.name.replace('com.apple.voice.compact.en-', '').replace('com.apple.ttsbundle.', '').replace('com.apple.eloquence.', '')}</div>
+        <div class="vs-item-lang">${voice.lang} ${voice.localService ? '· On device' : '· Online'}</div>
+      </div>
+      <span class="vs-item-check">✓</span>
+    `;
+    item.onclick = () => {
+      selectedVoice = voice;
+      localStorage.setItem('concierge_voice', voice.name);
+      // Preview it
+      stopSpeaking();
+      const utt = new SpeechSynthesisUtterance("Hi, I'm your Concierge. I'm here to help.");
+      utt.voice = voice;
+      utt.rate = 0.88;
+      window.speechSynthesis.speak(utt);
+      // Update UI
+      document.querySelectorAll('.vs-item').forEach(el => el.classList.remove('selected'));
+      item.classList.add('selected');
+    };
+    list.appendChild(item);
+  });
+  document.getElementById('voiceSelector').classList.add('open');
+}
+
+function closeVoiceSelector() {
+  stopSpeaking();
+  document.getElementById('voiceSelector').classList.remove('open');
+}
 
 // DEVICE ID
 let deviceId = localStorage.getItem('concierge_did');
@@ -393,17 +508,8 @@ function goHome() {
 
 // ── VOICE ──
 function speakThenListen(text) {
-  stopSpeaking();
-  if (window.speechSynthesis) {
-    const utt = new SpeechSynthesisUtterance(text);
-    utt.rate = 0.88; utt.pitch = 1.0;
-    utt.onend = () => setTimeout(startRecording, 400);
-    utt.onerror = () => setTimeout(startRecording, 600);
-    window.speechSynthesis.speak(utt);
-  } else {
-    setTimeout(startRecording, 800);
-  }
   startRings();
+  speak(text, () => setTimeout(startRecording, 400));
 }
 
 function toggleMic() {
@@ -567,6 +673,17 @@ function stopRings() {
 
 function stopSpeaking() {
   if (window.speechSynthesis) window.speechSynthesis.cancel();
+}
+
+function speak(text, onEnd) {
+  if (!window.speechSynthesis) { if(onEnd) onEnd(); return; }
+  stopSpeaking();
+  const clean = text.replace(/[*_#`]/g,'').substring(0, 400);
+  const utt = new SpeechSynthesisUtterance(clean);
+  if (selectedVoice) utt.voice = selectedVoice;
+  utt.rate = 0.88; utt.pitch = 1.0;
+  if (onEnd) utt.onend = onEnd;
+  window.speechSynthesis.speak(utt);
 }
 
 // ── TEXT INPUT ──
