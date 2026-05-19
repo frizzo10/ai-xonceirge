@@ -110,8 +110,13 @@ body{
 .voice-back svg{width:14px;height:14px;stroke:var(--text3);fill:none}
 .voice-stage{
   flex:1;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  padding:0 40px;gap:16px;overflow:hidden;
+  align-items:center;justify-content:flex-start;
+  padding:16px 0 0;gap:12px;overflow:hidden;
+  min-height:0;
+}
+.voice-top{
+  display:flex;flex-direction:column;align-items:center;
+  gap:10px;padding:0 40px;flex-shrink:0;
 }
 .voice-category{
   font-size:10px;font-weight:700;letter-spacing:2.5px;
@@ -155,15 +160,26 @@ body{
 
 .response-area{
   width:100%;padding:0 16px;
-  max-height:40vh;overflow-y:auto;
+  flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  display:flex;flex-direction:column;gap:10px;
+  padding-top:8px;
 }
-.response-bubble{
+.msg-row{display:flex;flex-direction:column;gap:4px}
+.msg-label{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);padding:0 4px}
+.msg-label.user-label{text-align:right;color:rgba(55,138,221,0.6)}
+.bubble-ai{
   background:var(--surface2);border:0.5px solid var(--border2);
   border-radius:18px;border-bottom-left-radius:4px;
-  padding:16px 20px;font-size:15px;line-height:1.7;
-  color:var(--text);margin-bottom:12px;
+  padding:14px 18px;font-size:15px;line-height:1.65;
+  color:var(--text);align-self:flex-start;max-width:88%;
 }
-.response-chips{display:flex;gap:8px;flex-wrap:wrap;padding:0 2px}
+.bubble-user{
+  background:var(--blue);
+  border-radius:18px;border-bottom-right-radius:4px;
+  padding:12px 16px;font-size:15px;line-height:1.65;
+  color:var(--white);align-self:flex-end;max-width:78%;
+}
+.response-chips{display:flex;gap:8px;flex-wrap:wrap;padding:2px 0}
 .r-chip{
   font-size:12px;padding:8px 16px;
   border:0.5px solid var(--border2);border-radius:20px;
@@ -313,6 +329,7 @@ body{
       Back
     </div>
     <div class="voice-stage">
+      <div class="voice-top">
       <span class="voice-category" id="voiceCategory"></span>
       <p class="voice-prompt" id="voicePrompt"></p>
       <div class="mic-wrap">
@@ -328,6 +345,7 @@ body{
         </button>
       </div>
       <p class="mic-hint" id="micHint">Tap to talk</p>
+      </div>
       <div class="response-area" id="responseArea"></div>
     </div>
     <div class="type-bar" id="typeBar" style="display:none">
@@ -564,10 +582,11 @@ function stopRecording() {
 
 function handleVoice(text) {
   if (!text || text.length < 2) {
-    showResponse("I didn't quite catch that — just slow down and tell me what's happening. Tap the mic and try again.", []);
+    showResponse("Didn't catch that — slow down and try again.", []);
     return;
   }
-  setHint('"' + text.substring(0,50) + (text.length > 50 ? '...' : '') + '"', 'live');
+  setHint('', '');
+  addUserBubble(text);
   history.push({ role:'user', content: text });
   callConcierge();
 }
@@ -588,7 +607,6 @@ async function callConcierge() {
       })
     });
     const data = await res.json();
-    clearResponse();
     document.getElementById('micBtn').className = 'mic-btn';
     if (data.caseId && !currentCaseId) currentCaseId = data.caseId;
     const reply = data.reply || "Still here — just had a hiccup. Try again.";
@@ -597,9 +615,8 @@ async function callConcierge() {
     document.getElementById('typeBar').style.display = 'flex';
     speakThenListen(reply);
   } catch(e) {
-    clearResponse();
     document.getElementById('micBtn').className = 'mic-btn';
-    showResponse("Connection dropped — I'm still here. Tap the mic and try again.", []);
+    showResponse("Connection dropped — still here. Tap the mic and try again.", []);
   }
 }
 
@@ -620,39 +637,80 @@ function getChips() {
   return chips[currentCategory] || chips.default;
 }
 
+function addUserBubble(text) {
+  const area = document.getElementById('responseArea');
+  // Remove old chips
+  const oldChips = area.querySelector('.response-chips');
+  if (oldChips) oldChips.remove();
+  const row = document.createElement('div');
+  row.className = 'msg-row';
+  const b = document.createElement('div');
+  b.className = 'bubble-user';
+  b.textContent = text;
+  row.appendChild(b);
+  area.appendChild(row);
+  scrollResponseBottom();
+}
+
 function showResponse(text, chips) {
   const area = document.getElementById('responseArea');
-  area.innerHTML = '';
+  // Remove typing indicator
+  const typing = area.querySelector('.typing-row');
+  if (typing) typing.remove();
+  // Remove old chips
+  const oldChips = area.querySelector('.response-chips');
+  if (oldChips) oldChips.remove();
+
+  const row = document.createElement('div');
+  row.className = 'msg-row';
   const b = document.createElement('div');
-  b.className = 'response-bubble';
+  b.className = 'bubble-ai';
   b.textContent = text;
-  area.appendChild(b);
+  row.appendChild(b);
+  area.appendChild(row);
+
   if (chips && chips.length) {
-    const row = document.createElement('div');
-    row.className = 'response-chips';
+    const chipRow = document.createElement('div');
+    chipRow.className = 'response-chips';
     chips.forEach(c => {
       const chip = document.createElement('div');
       chip.className = 'r-chip';
       chip.textContent = c;
       chip.onclick = () => {
+        chipRow.remove();
+        addUserBubble(c);
         history.push({ role:'user', content: c });
-        setHint('"' + c + '"', 'live');
-        area.innerHTML = '';
+        setHint('', '');
         callConcierge();
       };
-      row.appendChild(chip);
+      chipRow.appendChild(chip);
     });
-    area.appendChild(row);
+    area.appendChild(chipRow);
   }
+  scrollResponseBottom();
 }
 
 function showTyping() {
   const area = document.getElementById('responseArea');
-  area.innerHTML = '<div class="response-bubble"><div class="dots"><span></span><span></span><span></span></div></div>';
+  const oldChips = area.querySelector('.response-chips');
+  if (oldChips) oldChips.remove();
+  const row = document.createElement('div');
+  row.className = 'msg-row typing-row';
+  const b = document.createElement('div');
+  b.className = 'bubble-ai';
+  b.innerHTML = '<div class="dots"><span></span><span></span><span></span></div>';
+  row.appendChild(b);
+  area.appendChild(row);
+  scrollResponseBottom();
 }
 
 function clearResponse() {
   document.getElementById('responseArea').innerHTML = '';
+}
+
+function scrollResponseBottom() {
+  const area = document.getElementById('responseArea');
+  setTimeout(() => area.scrollTop = area.scrollHeight, 50);
 }
 
 function setHint(text, state) {
@@ -695,9 +753,9 @@ function sendTyped() {
   const text = input.value.trim();
   if (!text) return;
   input.value = '';
+  addUserBubble(text);
   history.push({ role:'user', content: text });
-  setHint('"' + text.substring(0,40) + '"', 'live');
-  clearResponse();
+  setHint('', '');
   callConcierge();
 }
 
@@ -737,8 +795,28 @@ function resumeCase(c) {
   document.getElementById('voiceCategory').textContent = c.category;
   document.getElementById('voicePrompt').textContent = 'Picking up where we left off.';
   document.getElementById('responseArea').innerHTML = '';
-  const lastAI = [...history].reverse().find(m => m.role === 'assistant');
-  if (lastAI) showResponse(lastAI.content, getChips());
+  // Rebuild visual history
+  clearResponse();
+  history.forEach(m => {
+    if (m.role === 'user') addUserBubble(m.content);
+    else if (m.role === 'assistant') showResponse(m.content, []);
+  });
+  // Add chips to last message
+  const chipRow = document.createElement('div');
+  chipRow.className = 'response-chips';
+  getChips().forEach(c => {
+    const chip = document.createElement('div');
+    chip.className = 'r-chip';
+    chip.textContent = c;
+    chip.onclick = () => {
+      chipRow.remove();
+      addUserBubble(c);
+      history.push({ role:'user', content: c });
+      callConcierge();
+    };
+    chipRow.appendChild(chip);
+  });
+  document.getElementById('responseArea').appendChild(chipRow);
   document.getElementById('typeBar').style.display = 'flex';
   setHint('Tap to continue', '');
   switchTab('talk');
