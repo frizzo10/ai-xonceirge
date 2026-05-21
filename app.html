@@ -464,24 +464,26 @@ if (window.speechSynthesis) {
   [100,500,1500].forEach(t => setTimeout(loadVoices, t));
 }
 
+const EL_VOICES = [
+  { id: 'rachel', name: 'Rachel', desc: 'Warm · American female · ElevenLabs' },
+  { id: 'bella',  name: 'Bella',  desc: 'Friendly · American female · ElevenLabs' },
+  { id: 'adam',   name: 'Adam',   desc: 'Natural · American male · ElevenLabs' },
+  { id: 'josh',   name: 'Josh',   desc: 'Deep · American male · ElevenLabs' },
+];
+
 function openVoiceSelector() {
-  loadVoices();
   const list = document.getElementById('voiceList');
   list.innerHTML = '';
-  document.getElementById('vsSub').textContent = availableVoices.length + ' voices — tap to preview';
-  availableVoices.forEach(voice => {
+  document.getElementById('vsSub').textContent = EL_VOICES.length + ' human voices — tap to preview';
+
+  EL_VOICES.forEach(voice => {
     const item = document.createElement('div');
-    item.className = 'vs-item' + (selectedVoice?.name === voice.name ? ' selected' : '');
-    const name = voice._label || voice.name.replace(/com\.apple\.(voice\.compact\.en-|ttsbundle\.|eloquence\.)/g,'');
-    const sub = voice.name.includes('Google') ? 'Google · Natural' : voice.localService ? 'Apple · On device' : 'Online';
-    item.innerHTML = `<div><div class="vs-item-name">${name}</div><div class="vs-item-lang">${sub}</div></div><span class="vs-item-check">✓</span>`;
+    item.className = 'vs-item' + (selectedELVoice === voice.id ? ' selected' : '');
+    item.innerHTML = `<div><div class="vs-item-name">${voice.name}</div><div class="vs-item-lang">${voice.desc}</div></div><span class="vs-item-check">✓</span>`;
     item.onclick = () => {
-      selectedVoice = voice;
-      localStorage.setItem('concierge_voice', voice.name);
-      stopSpeaking();
-      const utt = new SpeechSynthesisUtterance("Hi, I'm your Concierge. I'm here to help.");
-      utt.voice = voice; utt.rate = 0.88;
-      window.speechSynthesis.speak(utt);
+      selectedELVoice = voice.id;
+      localStorage.setItem('el_voice', voice.id);
+      speakElevenLabs("Hi, I'm your Concierge. I'm here to help.");
       document.querySelectorAll('.vs-item').forEach(el => el.classList.remove('selected'));
       item.classList.add('selected');
     };
@@ -580,16 +582,7 @@ function speakThenListen(text) {
   startRings();
   stopSpeaking();
   document.getElementById('stopBtn').classList.add('visible');
-  if (window.speechSynthesis && availableVoices.length > 0) {
-    const utt = new SpeechSynthesisUtterance(text.substring(0,300));
-    if (selectedVoice) utt.voice = selectedVoice;
-    utt.rate = 0.88; utt.pitch = 1.0;
-    utt.onend = () => setTimeout(startRecording, 350);
-    utt.onerror = () => setTimeout(startRecording, 500);
-    window.speechSynthesis.speak(utt);
-  } else {
-    setTimeout(startRecording, 700);
-  }
+  speakElevenLabs(text, () => setTimeout(startRecording, 350));
 }
 
 function toggleMic() { isRecording ? stopRecording() : startRecording(); }
@@ -635,7 +628,42 @@ function handleVoice(text) {
   callConcierge();
 }
 
-function stopSpeaking() { if(window.speechSynthesis) window.speechSynthesis.cancel(); }
+// ELEVENLABS VOICE
+let currentAudio = null;
+let selectedELVoice = localStorage.getItem('el_voice') || 'rachel';
+
+function stopSpeaking() {
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+  if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+}
+
+async function speakElevenLabs(text, onEnd) {
+  stopSpeaking();
+  try {
+    const res = await fetch('/api/speak', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text, voice: selectedELVoice })
+    });
+    if (!res.ok) throw new Error('ElevenLabs failed');
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    currentAudio = new Audio(url);
+    currentAudio.onended = () => { currentAudio = null; if (onEnd) onEnd(); };
+    currentAudio.onerror = () => { currentAudio = null; if (onEnd) onEnd(); };
+    await currentAudio.play();
+  } catch(e) {
+    // Fallback to browser TTS
+    console.log('ElevenLabs fallback to browser TTS');
+    if (window.speechSynthesis && availableVoices.length > 0) {
+      const utt = new SpeechSynthesisUtterance(text.substring(0,300));
+      if (selectedVoice) utt.voice = selectedVoice;
+      utt.rate = 0.88;
+      utt.onend = onEnd;
+      window.speechSynthesis.speak(utt);
+    } else if (onEnd) onEnd();
+  }
+}
 
 // CONCIERGE
 async function callConcierge() {
