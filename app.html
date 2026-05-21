@@ -3,11 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<!-- PWA -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0A0A08">
+
+<!-- Apple PWA -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Concierge">
-<meta name="theme-color" content="#0A0A08">
-<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="120x120" href="/icons/icon-120.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+
+<!-- Splash screens for iPhone -->
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<!-- SEO -->
+<meta name="description" content="The expert already standing next to you. We know everything. We have the answer.">
+<meta property="og:title" content="Concierge — We have the answer">
+<meta property="og:description" content="Same smarts as Google. Same data as OpenAI. Finally working for you.">
+
 <title>Concierge</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <style>
@@ -317,6 +334,44 @@ body{
 
 <script>
 if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
+
+// PWA Install prompt
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  showInstallBanner();
+});
+
+function showInstallBanner() {
+  const banner = document.getElementById('installBanner');
+  if (banner) banner.style.display = 'flex';
+}
+
+function installApp() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(() => {
+      deferredPrompt = null;
+      document.getElementById('installBanner').style.display = 'none';
+    });
+  }
+}
+
+function dismissInstall() {
+  document.getElementById('installBanner').style.display = 'none';
+  localStorage.setItem('install_dismissed', '1');
+}
+
+// Show iOS instruction if on Safari and not installed
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+const isStandalone = window.navigator.standalone;
+const dismissed = localStorage.getItem('install_dismissed');
+if (isIOS && !isStandalone && !dismissed) {
+  setTimeout(() => {
+    document.getElementById('iosBanner').style.display = 'flex';
+  }, 3000);
+}
 
 // STATE
 let history = [];
@@ -751,5 +806,28 @@ if (q) {
   if (btn) btn.click();
 }
 </script>
+
+<!-- Android/Chrome install banner -->
+<div id="installBanner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#1C1C19;border-top:0.5px solid rgba(255,255,255,0.15);padding:14px 16px;padding-bottom:calc(14px + env(safe-area-inset-bottom));z-index:300;align-items:center;gap:12px">
+  <span style="font-size:24px">📱</span>
+  <div style="flex:1">
+    <div style="font-size:14px;font-weight:600;color:#FAFAF7">Add to Home Screen</div>
+    <div style="font-size:12px;color:rgba(255,255,255,0.45)">Install Concierge for the full experience</div>
+  </div>
+  <button onclick="installApp()" style="background:#378ADD;color:white;border:none;padding:8px 16px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer">Install</button>
+  <button onclick="dismissInstall()" style="background:none;border:none;color:rgba(255,255,255,0.4);font-size:20px;cursor:pointer;padding:0 4px">×</button>
+</div>
+
+<!-- iOS Safari install banner -->
+<div id="iosBanner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#1C1C19;border-top:0.5px solid rgba(255,255,255,0.15);padding:16px 20px;padding-bottom:calc(16px + env(safe-area-inset-bottom));z-index:300;flex-direction:column;gap:8px">
+  <div style="display:flex;align-items:center;justify-content:space-between">
+    <div style="font-size:14px;font-weight:600;color:#FAFAF7">📱 Add Concierge to your Home Screen</div>
+    <button onclick="document.getElementById('iosBanner').style.display='none';localStorage.setItem('install_dismissed','1')" style="background:none;border:none;color:rgba(255,255,255,0.4);font-size:20px;cursor:pointer;padding:0">×</button>
+  </div>
+  <div style="font-size:13px;color:rgba(255,255,255,0.45);line-height:1.6">
+    Tap <strong style="color:rgba(255,255,255,0.7)">Share</strong> <span style="font-size:16px">⎋</span> at the bottom of Safari, then tap <strong style="color:rgba(255,255,255,0.7)">"Add to Home Screen"</strong>
+  </div>
+</div>
+
 </body>
 </html>

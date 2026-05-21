@@ -1,0 +1,10 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <rect width="512" height="512" rx="112" fill="#0A0A08"/>
+  <circle cx="256" cy="256" r="140" fill="none" stroke="#378ADD" stroke-width="12"/>
+  <circle cx="256" cy="256" r="100" fill="none" stroke="#378ADD" stroke-width="6" opacity="0.4"/>
+  <!-- Mic icon -->
+  <rect x="220" y="160" width="72" height="120" rx="36" fill="#378ADD"/>
+  <path d="M180 270 C180 332 332 332 332 270" fill="none" stroke="#378ADD" stroke-width="16" stroke-linecap="round"/>
+  <line x1="256" y1="332" x2="256" y2="372" stroke="#378ADD" stroke-width="16" stroke-linecap="round"/>
+  <line x1="216" y1="372" x2="296" y2="372" stroke="#378ADD" stroke-width="16" stroke-linecap="round"/>
+</svg>
