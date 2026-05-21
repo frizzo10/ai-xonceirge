@@ -149,6 +149,13 @@ body{
 .mic-hint{font-size:11px;color:var(--text3);text-align:center;min-height:16px}
 .mic-hint.live{color:var(--blue)}
 .mic-hint.error{color:var(--red)}
+.voice-nav{display:flex;align-items:center;justify-content:space-between;padding:12px 16px 0;flex-shrink:0}
+.back-btn{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text3);cursor:pointer;-webkit-tap-highlight-color:transparent;padding:6px 0}
+.back-btn svg{width:14px;height:14px;stroke:var(--text3);fill:none;stroke-width:2;stroke-linecap:round}
+.back-btn:active{color:var(--text2)}
+.stop-btn{font-size:12px;font-weight:600;color:var(--red);cursor:pointer;-webkit-tap-highlight-color:transparent;padding:6px 12px;border:0.5px solid rgba(224,82,82,0.3);border-radius:20px;display:none}
+.stop-btn.visible{display:block}
+.stop-btn:active{background:rgba(224,82,82,0.1)}
 
 /* CONVERSATION HISTORY */
 .convo-history{
@@ -293,6 +300,13 @@ body{
 
     <!-- VOICE STATE -->
     <div class="voice-state" id="voiceState" style="display:none">
+      <div class="voice-nav">
+        <div class="back-btn" onclick="showHome()">
+          <svg viewBox="0 0 24 24"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+          Home
+        </div>
+        <div class="stop-btn" id="stopBtn" onclick="stopConversation()">⏹ Stop</div>
+      </div>
       <div class="voice-top">
         <span class="voice-category" id="voiceCategory"></span>
         <p class="voice-prompt" id="voicePrompt"></p>
@@ -519,7 +533,8 @@ function showHome() {
   history = [];
   document.getElementById('homeState').style.display = '';
   document.getElementById('voiceState').style.display = 'none';
-  stopRecording(); stopSpeaking();
+  document.getElementById('stopBtn').classList.remove('visible');
+  stopRecording(); stopSpeaking(); stopRings();
   document.querySelectorAll('.case-item').forEach(el => el.classList.remove('active'));
 }
 
@@ -570,6 +585,7 @@ function resumeCase(c) {
 function speakThenListen(text) {
   startRings();
   stopSpeaking();
+  document.getElementById('stopBtn').classList.add('visible');
   if (window.speechSynthesis && availableVoices.length > 0) {
     const utt = new SpeechSynthesisUtterance(text.substring(0,300));
     if (selectedVoice) utt.voice = selectedVoice;
@@ -635,6 +651,15 @@ function handleVoice(text) {
 }
 
 function stopSpeaking() { if (window.speechSynthesis) window.speechSynthesis.cancel(); }
+
+function stopConversation() {
+  stopRecording();
+  stopSpeaking();
+  stopRings();
+  document.getElementById('micBtn').className = 'mic-btn';
+  document.getElementById('stopBtn').classList.remove('visible');
+  setHint('Tap to talk', '');
+}
 
 // CONCIERGE API
 async function callConcierge() {
