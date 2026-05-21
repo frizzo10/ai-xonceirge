@@ -39,9 +39,9 @@ async function getOrCreateUser(deviceId) {
   return Array.isArray(created) ? created[0].id : created.id;
 }
 
-async function createCase(userId, category, title) {
+async function createCase(deviceId, category, title) {
   const res = await sbRequest('POST', 'cases', {
-    user_id: userId,
+    user_id: deviceId,
     category,
     title,
     status: 'active',
@@ -293,30 +293,38 @@ exports.handler = async (event) => {
 
     if (deviceId) {
       try {
-        userId = await getOrCreateUser(deviceId);
-
+        // Create case on first message
         if (!activeCaseId && category && messages.length > 0) {
           const title = `${category} — ${new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
-          const newCase = await createCase(userId, category, title);
+          const newCase = await createCase(deviceId, category, title);
           activeCaseId = newCase?.id;
         }
 
+        // Save EVERY exchange to case context
         if (activeCaseId) {
           await updateCase(activeCaseId, { context: messages });
+        }
 
-          if (messages.length === 8) {
-            const existingCase = await getCase(activeCaseId);
-            if (existingCase && (!existingCase.timeline || existingCase.timeline.length === 0)) {
-              const timeline = await generateTimeline(category, messages);
-              if (timeline.length > 0) {
-                await updateCase(activeCaseId, { timeline });
-                for (const item of timeline) {
-                  await scheduleFollowup(activeCaseId, userId, item.followup_message, item.day);
-                }
+        // Generate timeline after 6+ exchanges
+        if (activeCaseId && messages.length >= 6 && messages.length % 4 === 2) {
+          const existingCase = await getCase(activeCaseId);
+          if (existingCase && (!existingCase.timeline || existingCase.timeline.length === 0)) {
+            const timeline = await generateTimeline(category, messages);
+            if (timeline.length > 0) {
+              await updateCase(activeCaseId, { timeline });
+              for (const item of timeline) {
+                await scheduleFollowup(activeCaseId, deviceId, item.followup_message, item.day);
               }
             }
           }
         }
+
+        // Extract profile facts after 4+ exchanges
+        userId = await getOrCreateUser(deviceId).catch(() => null);
+        if (userId && messages.length >= 4 && messages.length % 4 === 0) {
+          extractAndSaveProfile(userId, category, messages).catch(() => {});
+        }
+
       } catch(dbErr) {
         console.error('DB error (non-fatal):', dbErr.message);
       }
