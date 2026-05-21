@@ -341,7 +341,7 @@ body{
 <!-- VOICE SELECTOR -->
 <div id="voiceSelector" class="voice-selector">
   <p class="vs-title">Choose a voice</p>
-  <p class="vs-sub">Tap any voice to preview</p>
+  <p class="vs-sub" id="vsSub">Tap any voice to preview</p>
   <div class="vs-list" id="voiceList"></div>
   <button class="vs-close" onclick="closeVoiceSelector()">Done</button>
 </div>
@@ -433,50 +433,77 @@ let availableVoices = [];
 
 function loadVoices() {
   const all = window.speechSynthesis?.getVoices() || [];
+  if (all.length === 0) return; // not ready yet
 
-  // Our three curated voices — in priority order
-  const PICKS = [
-    { label: 'Google US English', match: v => v.name === 'Google US English' },
-    { label: 'Samantha (Enhanced)', match: v => v.name.includes('Samantha') && v.name.includes('Enhanced') },
-    { label: 'Samantha', match: v => v.name === 'Samantha' },
-    { label: 'Karen (Enhanced)', match: v => v.name.includes('Karen') && v.name.includes('Enhanced') },
-    { label: 'Daniel (Enhanced)', match: v => v.name.includes('Daniel') && v.name.includes('Enhanced') },
-    { label: 'Aaron (Enhanced)', match: v => v.name.includes('Aaron') && v.name.includes('Enhanced') },
+  // Preferred voices in order — we show up to 6
+  const PREFERRED = [
+    { label: 'Google US English',     match: v => v.name === 'Google US English' },
+    { label: 'Google UK English',     match: v => v.name === 'Google UK English Female' || v.name === 'Google UK English Male' },
+    { label: 'Samantha (Enhanced)',   match: v => v.name.includes('Samantha') && (v.name.includes('Enhanced') || v.name.includes('Premium')) },
+    { label: 'Samantha',             match: v => v.name === 'Samantha' },
+    { label: 'Karen (Enhanced)',      match: v => v.name.includes('Karen') && v.name.includes('Enhanced') },
+    { label: 'Daniel (Enhanced)',     match: v => v.name.includes('Daniel') && v.name.includes('Enhanced') },
+    { label: 'Aaron (Enhanced)',      match: v => v.name.includes('Aaron') && v.name.includes('Enhanced') },
+    { label: 'Moira (Enhanced)',      match: v => v.name.includes('Moira') && v.name.includes('Enhanced') },
+    { label: 'Tessa (Enhanced)',      match: v => v.name.includes('Tessa') && v.name.includes('Enhanced') },
+    { label: 'Nicky (Enhanced)',      match: v => v.name.includes('Nicky') && v.name.includes('Enhanced') },
+    { label: 'Karen',                match: v => v.name === 'Karen' },
+    { label: 'Daniel',               match: v => v.name === 'Daniel' },
   ];
 
-  // Build the curated short list — max 3
   availableVoices = [];
-  for (const pick of PICKS) {
-    const found = all.find(pick.match);
+  const seen = new Set();
+  for (const pick of PREFERRED) {
+    const found = all.find(v => pick.match(v) && !seen.has(v.name));
     if (found) {
       found._label = pick.label;
+      seen.add(found.name);
       availableVoices.push(found);
     }
-    if (availableVoices.length >= 3) break;
+    if (availableVoices.length >= 6) break;
   }
 
-  // Fallback — if none found just grab first 3 English voices
-  if (availableVoices.length === 0) {
-    availableVoices = all.filter(v => v.lang.startsWith('en')).slice(0, 3);
+  // Fallback — grab best English voices available
+  if (availableVoices.length < 3) {
+    const extras = all
+      .filter(v => v.lang.startsWith('en') && !seen.has(v.name))
+      .sort((a,b) => {
+        const score = v => v.name.includes('Enhanced')||v.name.includes('Premium')||v.name.includes('Neural') ? 2 : v.localService ? 1 : 0;
+        return score(b) - score(a);
+      })
+      .slice(0, 6 - availableVoices.length);
+    availableVoices = [...availableVoices, ...extras];
   }
 
   const saved = localStorage.getItem('concierge_voice');
-  selectedVoice = availableVoices.find(v => v.name === saved) || availableVoices[0];
+  const match = availableVoices.find(v => v.name === saved);
+  if (!selectedVoice || !match) {
+    selectedVoice = match || availableVoices[0];
+  }
 }
+
+// Load voices — retry because iOS loads them async
 if (window.speechSynthesis) {
-  loadVoices();
   window.speechSynthesis.onvoiceschanged = loadVoices;
+  loadVoices();
+  // iOS sometimes needs a nudge
+  setTimeout(loadVoices, 100);
+  setTimeout(loadVoices, 500);
+  setTimeout(loadVoices, 1500);
 }
 
 function openVoiceSelector() {
+  // Try loading again in case they weren't ready
   loadVoices();
   const list = document.getElementById('voiceList');
   list.innerHTML = '';
+  document.getElementById('vsSub').textContent = availableVoices.length + ' voices available — tap to preview';
   availableVoices.forEach(voice => {
     const item = document.createElement('div');
     item.className = 'vs-item' + (selectedVoice?.name === voice.name ? ' selected' : '');
-    const displayName = voice._label || voice.name.replace(/com\.apple\.(voice\.compact\.en-|ttsbundle\.|eloquence\.)/g,'');
-    const subLabel = voice.name === 'Google US English' ? 'Google · Natural' : voice.localService ? 'Apple · On device' : 'Online';
+    const displayName = voice._label || voice.name.replace(/com\.apple\.(voice\.compact\.en-|ttsbundle\.|eloquence\.)/g,'').replace(/-/g,' ');
+    const isGoogle = voice.name.toLowerCase().includes('google');
+    const subLabel = isGoogle ? 'Google · Natural' : voice.localService ? 'Apple · On device' : 'Online';
     item.innerHTML = `<div><div class="vs-item-name">${displayName}</div><div class="vs-item-lang">${subLabel}</div></div><span class="vs-item-check">✓</span>`;
     item.onclick = () => {
       selectedVoice = voice;
