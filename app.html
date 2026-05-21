@@ -3,41 +3,36 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-
-<!-- PWA -->
-<link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#0A0A08">
-
-<!-- Apple PWA -->
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Concierge">
+<meta name="theme-color" content="#F0F7E8">
+<link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-<link rel="apple-touch-icon" sizes="120x120" href="/icons/icon-120.png">
-<link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152.png">
-<link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
-
-<!-- Splash screens for iPhone -->
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
-<!-- SEO -->
-<meta name="description" content="The expert already standing next to you. We know everything. We have the answer.">
-<meta property="og:title" content="Concierge — We have the answer">
-<meta property="og:description" content="Same smarts as Google. Same data as OpenAI. Finally working for you.">
-
 <title>Concierge</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --black:#0A0A08;--surface:#1C1C19;--surface2:#242421;
-  --white:#FAFAF7;--border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.15);
-  --text:rgba(255,255,255,0.95);--text2:rgba(255,255,255,0.52);--text3:rgba(255,255,255,0.26);
-  --blue:#378ADD;--blue-dim:rgba(55,138,221,0.14);--blue-border:rgba(55,138,221,0.36);
-  --green:#639922;--green-dim:rgba(99,153,34,0.14);--green-border:rgba(99,153,34,0.4);
-  --red:#E05252;--safe:env(safe-area-inset-bottom,0px);
+  --bg:#F0F7E8;
+  --bg2:#E4F0D4;
+  --surface:#FFFFFF;
+  --surface2:#F7FBF2;
+  --border:#C8E0A8;
+  --border2:#B0D080;
+  --text:#1A2E0A;
+  --text2:#4A6830;
+  --text3:#8AAE60;
+  --green:#3D8C1A;
+  --green-dark:#2A6010;
+  --green-dim:rgba(61,140,26,0.12);
+  --green-border:rgba(61,140,26,0.3);
+  --green-light:#EAF5D8;
+  --white:#FFFFFF;
+  --red:#D63B3B;
+  --safe:env(safe-area-inset-bottom,0px);
 }
-html,body{height:100%;overflow:hidden;background:var(--black)}
+html,body{height:100%;overflow:hidden;background:var(--bg)}
 body{
   font-family:'DM Sans',sans-serif;color:var(--text);
   font-size:16px;-webkit-font-smoothing:antialiased;
@@ -49,177 +44,171 @@ body{
 .topbar{
   padding:52px 16px 12px;
   display:flex;align-items:center;justify-content:space-between;
-  border-bottom:0.5px solid var(--border);flex-shrink:0;
-  gap:8px;
+  border-bottom:1px solid var(--border);flex-shrink:0;
+  background:var(--surface);gap:8px;
 }
-.topbar-brand{font-family:'DM Serif Display',serif;font-size:20px;letter-spacing:-0.3px;flex-shrink:0}
-.topbar-right{display:flex;gap:8px;align-items:center}
-.top-btn{
-  background:var(--surface);border:0.5px solid var(--border2);
-  border-radius:20px;padding:6px 12px;font-size:11px;
-  font-weight:500;color:var(--text2);cursor:pointer;
-  -webkit-tap-highlight-color:transparent;white-space:nowrap;
+.topbar-brand{
+  font-family:'DM Serif Display',serif;
+  font-size:20px;letter-spacing:-0.3px;color:var(--green-dark);flex-shrink:0;
 }
-.top-btn.on{background:var(--green-dim);border-color:var(--green-border);color:#C0DD97}
-.listen-dot{width:6px;height:6px;border-radius:50%;background:var(--text3);display:inline-block;margin-right:4px}
-.on .listen-dot{background:var(--green)}
+.topbar-tagline{
+  font-size:11px;color:var(--text3);font-style:italic;
+  display:none;
+}
+@media(min-width:400px){.topbar-tagline{display:block}}
 
-/* MAIN LAYOUT — side by side */
+/* MAIN LAYOUT */
 .main{flex:1;display:flex;overflow:hidden;min-height:0}
 
 /* LEFT COLUMN — cases */
 .cases-col{
-  width:200px;flex-shrink:0;
-  border-right:0.5px solid var(--border);
+  width:180px;flex-shrink:0;
+  border-right:1px solid var(--border);
   display:flex;flex-direction:column;overflow:hidden;
+  background:var(--surface2);
 }
 .cases-header{
   padding:12px 12px 8px;flex-shrink:0;
   display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--border);
 }
 .cases-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3)}
-.new-case-btn{
-  font-size:18px;line-height:1;cursor:pointer;
-  color:var(--text3);-webkit-tap-highlight-color:transparent;
-}
-.new-case-btn:active{color:var(--blue)}
-.cases-list{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 8px 16px}
+.new-case-btn{font-size:20px;cursor:pointer;color:var(--green);-webkit-tap-highlight-color:transparent;line-height:1}
+.new-case-btn:active{opacity:0.6}
+.cases-list{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:8px}
 .case-item{
-  padding:10px 10px;border-radius:10px;margin-bottom:4px;
+  padding:10px;border-radius:10px;margin-bottom:4px;
   cursor:pointer;-webkit-tap-highlight-color:transparent;
-  transition:background 0.12s;
+  transition:background 0.12s;border:1px solid transparent;
 }
-.case-item:active,.case-item.active{background:var(--blue-dim)}
-.case-item.active{border-left:2px solid var(--blue);padding-left:8px}
+.case-item:active{background:var(--green-dim)}
+.case-item.active{background:var(--green-light);border-color:var(--green-border)}
 .case-item-top{display:flex;align-items:center;gap:6px;margin-bottom:3px}
 .case-icon{font-size:14px}
 .case-cat{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3)}
 .case-title{font-size:12px;font-weight:500;color:var(--text);line-height:1.3;margin-bottom:2px}
 .case-meta{font-size:10px;color:var(--text3)}
-.case-empty{padding:20px 10px;text-align:center}
+.case-empty{padding:20px 8px;text-align:center}
 .case-empty p{font-size:11px;color:var(--text3);line-height:1.6}
 
-/* RIGHT COLUMN — conversation */
-.convo-col{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+/* RIGHT COLUMN */
+.convo-col{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;background:var(--bg)}
 
-/* HOME STATE — 20 buttons */
+/* HOME */
 .home-state{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
-.home-greeting{padding:16px 16px 10px;font-size:13px;color:var(--text2)}
-.home-greeting strong{color:var(--text);font-weight:500;display:block;font-size:15px;margin-bottom:2px}
-.prob-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:0 12px 20px}
+.home-greeting{padding:20px 16px 12px}
+.home-greeting strong{color:var(--green-dark);font-weight:600;display:block;font-size:17px;margin-bottom:3px}
+.home-greeting span{font-size:13px;color:var(--text2)}
+.prob-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 12px 20px}
 .prob-btn{
-  border:0.5px solid var(--border2);border-radius:12px;
-  background:var(--surface);padding:12px 4px 10px;
-  display:flex;flex-direction:column;align-items:center;gap:5px;
+  border:1.5px solid var(--border);border-radius:14px;
+  background:var(--surface);padding:14px 4px 11px;
+  display:flex;flex-direction:column;align-items:center;gap:6px;
   cursor:pointer;-webkit-tap-highlight-color:transparent;text-align:center;
-  transition:transform 0.1s,background 0.1s;user-select:none;
+  transition:all 0.12s;user-select:none;
+  box-shadow:0 1px 3px rgba(61,140,26,0.08);
 }
-.prob-btn:active{transform:scale(0.91);background:var(--blue-dim)}
-.prob-btn .pbi{font-size:20px;pointer-events:none}
-.prob-btn .pbl{font-size:9px;color:var(--text2);line-height:1.2;font-weight:500;pointer-events:none}
+.prob-btn:active{background:var(--green-light);border-color:var(--green);transform:scale(0.93)}
+.prob-btn .pbi{font-size:22px;pointer-events:none}
+.prob-btn .pbl{font-size:9px;color:var(--text2);line-height:1.2;font-weight:600;pointer-events:none}
 
-/* VOICE STATE */
-.voice-state{flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0}
-.voice-top{
-  display:flex;flex-direction:column;align-items:center;
-  padding:16px 20px 8px;gap:8px;flex-shrink:0;
-}
+/* VOICE */
+.voice-state{flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0;background:var(--bg)}
+.voice-nav{display:flex;align-items:center;justify-content:space-between;padding:12px 16px 0;flex-shrink:0}
+.back-btn{display:flex;align-items:center;gap:5px;font-size:13px;color:var(--text2);cursor:pointer;-webkit-tap-highlight-color:transparent;font-weight:500}
+.back-btn svg{width:14px;height:14px;stroke:var(--text2);fill:none;stroke-width:2;stroke-linecap:round}
+.stop-btn{font-size:12px;font-weight:600;color:var(--red);cursor:pointer;-webkit-tap-highlight-color:transparent;padding:5px 12px;border:1px solid rgba(214,59,59,0.3);border-radius:20px;background:rgba(214,59,59,0.06);display:none}
+.stop-btn.visible{display:block}
+
+.voice-top{display:flex;flex-direction:column;align-items:center;padding:16px 20px 8px;gap:8px;flex-shrink:0}
 .voice-category{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3)}
-.voice-prompt{
-  font-family:'DM Serif Display',serif;
-  font-size:clamp(16px,3vw,22px);line-height:1.2;
-  letter-spacing:-0.3px;color:var(--text);text-align:center;
-}
-.mic-wrap{position:relative;display:flex;align-items:center;justify-content:center;width:88px;height:88px;flex-shrink:0}
-.mic-ring{position:absolute;inset:0;border-radius:50%;border:1.5px solid rgba(55,138,221,0.3);opacity:0}
+.voice-prompt{font-family:'DM Serif Display',serif;font-size:clamp(17px,3.5vw,24px);line-height:1.2;letter-spacing:-0.3px;color:var(--green-dark);text-align:center;max-width:260px}
+
+/* MIC */
+.mic-wrap{position:relative;display:flex;align-items:center;justify-content:center;width:100px;height:100px;flex-shrink:0}
+.mic-ring{position:absolute;inset:0;border-radius:50%;border:2px solid rgba(61,140,26,0.25);opacity:0}
 .mic-ring.pulse{animation:ripple 1.6s ease-out infinite}
 .mic-ring.delay{animation-delay:0.6s}
-@keyframes ripple{0%{opacity:0.6;transform:scale(0.85)}100%{opacity:0;transform:scale(1.9)}}
+@keyframes ripple{0%{opacity:0.7;transform:scale(0.85)}100%{opacity:0;transform:scale(1.9)}}
 .mic-btn{
-  width:64px;height:64px;border-radius:50%;background:var(--blue);
-  border:none;display:flex;align-items:center;justify-content:center;
+  width:72px;height:72px;border-radius:50%;
+  background:var(--green);border:none;
+  display:flex;align-items:center;justify-content:center;
   cursor:pointer;position:relative;z-index:2;
   -webkit-tap-highlight-color:transparent;
-  box-shadow:0 6px 24px rgba(55,138,221,0.4);transition:all 0.15s;
+  box-shadow:0 6px 24px rgba(61,140,26,0.35);transition:all 0.15s;
 }
 .mic-btn:active{transform:scale(0.92)}
-.mic-btn.listening{background:#1a5fa0}
-.mic-btn.thinking{background:var(--surface2);box-shadow:none}
-.mic-btn svg{width:26px;height:26px;fill:white;pointer-events:none}
-.mic-hint{font-size:11px;color:var(--text3);text-align:center;min-height:16px}
-.mic-hint.live{color:var(--blue)}
+.mic-btn.listening{background:var(--green-dark);box-shadow:0 4px 16px rgba(61,140,26,0.5)}
+.mic-btn.thinking{background:#B0C8A0;box-shadow:none}
+.mic-btn svg{width:28px;height:28px;fill:white;pointer-events:none}
+.mic-hint{font-size:11px;color:var(--text3);text-align:center;min-height:16px;font-weight:500}
+.mic-hint.live{color:var(--green)}
 .mic-hint.error{color:var(--red)}
-.voice-nav{display:flex;align-items:center;justify-content:space-between;padding:12px 16px 0;flex-shrink:0}
-.back-btn{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text3);cursor:pointer;-webkit-tap-highlight-color:transparent;padding:6px 0}
-.back-btn svg{width:14px;height:14px;stroke:var(--text3);fill:none;stroke-width:2;stroke-linecap:round}
-.back-btn:active{color:var(--text2)}
-.stop-btn{font-size:12px;font-weight:600;color:var(--red);cursor:pointer;-webkit-tap-highlight-color:transparent;padding:6px 12px;border:0.5px solid rgba(224,82,82,0.3);border-radius:20px;display:none}
-.stop-btn.visible{display:block}
-.stop-btn:active{background:rgba(224,82,82,0.1)}
 
-/* CONVERSATION HISTORY */
-.convo-history{
-  flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
-  padding:8px 12px;display:flex;flex-direction:column;gap:8px;
-  min-height:0;
-}
+/* CONVERSATION */
+.convo-history{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px 12px;display:flex;flex-direction:column;gap:8px;min-height:0}
 .bubble-ai{
-  background:var(--surface2);border:0.5px solid var(--border2);
-  border-radius:16px;border-bottom-left-radius:3px;
-  padding:12px 15px;font-size:14px;line-height:1.6;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:18px;border-bottom-left-radius:4px;
+  padding:12px 16px;font-size:14px;line-height:1.65;
   color:var(--text);align-self:flex-start;max-width:92%;
+  box-shadow:0 1px 3px rgba(61,140,26,0.08);
 }
 .bubble-user{
-  background:var(--blue);border-radius:16px;border-bottom-right-radius:3px;
-  padding:10px 14px;font-size:14px;line-height:1.6;
-  color:var(--white);align-self:flex-end;max-width:85%;
+  background:var(--green);border-radius:18px;border-bottom-right-radius:4px;
+  padding:10px 14px;font-size:14px;line-height:1.65;
+  color:white;align-self:flex-end;max-width:85%;
 }
 .chips-row{display:flex;gap:6px;flex-wrap:wrap;padding:2px 0}
 .r-chip{
-  font-size:11px;padding:6px 12px;
-  border:0.5px solid var(--border2);border-radius:16px;
-  color:var(--text2);background:var(--surface);
-  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  font-size:12px;padding:7px 14px;
+  border:1.5px solid var(--border2);border-radius:20px;
+  color:var(--green-dark);background:var(--surface);
+  cursor:pointer;-webkit-tap-highlight-color:transparent;font-weight:500;
 }
-.r-chip:active{background:var(--blue-dim);color:#B5D4F4}
+.r-chip:active{background:var(--green-light);border-color:var(--green)}
 
 /* TYPE BAR */
 .type-bar{
   padding:10px 12px;padding-bottom:calc(10px + var(--safe));
   display:flex;align-items:center;gap:8px;
-  border-top:0.5px solid var(--border);flex-shrink:0;
+  border-top:1px solid var(--border);flex-shrink:0;
+  background:var(--surface);
 }
 .type-input{
-  flex:1;background:var(--surface);border:0.5px solid var(--border2);
-  border-radius:18px;padding:9px 14px;
+  flex:1;background:var(--bg2);border:1px solid var(--border);
+  border-radius:20px;padding:9px 14px;
   font-family:'DM Sans',sans-serif;font-size:14px;
   color:var(--text);outline:none;
 }
 .type-input::placeholder{color:var(--text3)}
+.type-input:focus{border-color:var(--green);background:var(--surface)}
 .type-send{
   width:36px;height:36px;border-radius:50%;
-  background:var(--blue);border:none;
+  background:var(--green);border:none;
   display:flex;align-items:center;justify-content:center;
   cursor:pointer;flex-shrink:0;-webkit-tap-highlight-color:transparent;
+  box-shadow:0 2px 8px rgba(61,140,26,0.3);
 }
 .type-send svg{width:14px;height:14px;fill:white;pointer-events:none}
 
 /* BOTTOM NAV */
 .bottom-nav{
-  display:flex;border-top:0.5px solid var(--border);
+  display:flex;border-top:1px solid var(--border);
   flex-shrink:0;padding-bottom:var(--safe);
-  background:var(--black);
+  background:var(--surface);
 }
 .nav-btn{
   flex:1;padding:10px 8px;display:flex;flex-direction:column;
-  align-items:center;gap:4px;cursor:pointer;
+  align-items:center;gap:3px;cursor:pointer;
   background:none;border:none;-webkit-tap-highlight-color:transparent;
 }
-.nav-btn svg{width:22px;height:22px;fill:var(--text3);transition:fill 0.15s}
+.nav-btn svg{width:20px;height:20px;fill:var(--text3);transition:fill 0.15s}
 .nav-btn span{font-size:10px;font-weight:600;color:var(--text3);transition:color 0.15s}
-.nav-btn.active svg{fill:var(--blue)}
-.nav-btn.active span{color:var(--blue)}
-.nav-btn:active svg{fill:var(--text2)}
+.nav-btn.active svg{fill:var(--green)}
+.nav-btn.active span{color:var(--green)}
+.nav-btn:active svg{fill:var(--green-dark)}
 
 /* DOTS */
 .dots{display:flex;gap:4px;align-items:center;padding:2px}
@@ -231,25 +220,36 @@ body{
 /* VOICE SELECTOR */
 .voice-selector{
   position:fixed;top:0;left:0;right:0;bottom:0;
-  background:rgba(10,10,8,0.97);backdrop-filter:blur(20px);
+  background:rgba(240,247,232,0.97);backdrop-filter:blur(20px);
   z-index:200;display:none;flex-direction:column;
   padding:60px 24px 32px;
 }
 .voice-selector.open{display:flex}
-.vs-title{font-family:'DM Serif Display',serif;font-size:22px;letter-spacing:-0.5px;color:var(--text);margin-bottom:6px}
+.vs-title{font-family:'DM Serif Display',serif;font-size:22px;letter-spacing:-0.5px;color:var(--green-dark);margin-bottom:6px}
 .vs-sub{font-size:13px;color:var(--text3);margin-bottom:24px}
 .vs-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px}
-.vs-item{padding:12px 16px;border:0.5px solid var(--border2);border-radius:12px;background:var(--surface);cursor:pointer;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:space-between}
-.vs-item.selected{border-color:var(--blue);background:var(--blue-dim)}
-.vs-item-name{font-size:13px;font-weight:500;color:var(--text)}
-.vs-item-lang{font-size:11px;color:var(--text3)}
-.vs-item-check{opacity:0;color:var(--blue)}
+.vs-item{padding:14px 16px;border:1.5px solid var(--border);border-radius:14px;background:var(--surface);cursor:pointer;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:space-between}
+.vs-item.selected{border-color:var(--green);background:var(--green-light)}
+.vs-item-name{font-size:14px;font-weight:500;color:var(--text)}
+.vs-item-lang{font-size:11px;color:var(--text3);margin-top:2px}
+.vs-item-check{color:var(--green);opacity:0;font-size:16px}
 .vs-item.selected .vs-item-check{opacity:1}
-.vs-close{margin-top:16px;padding:14px;border-radius:12px;background:var(--white);color:var(--black);font-size:15px;font-weight:700;border:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.vs-close{margin-top:16px;padding:14px;border-radius:14px;background:var(--green);color:white;font-size:15px;font-weight:700;border:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
 
-/* MOBILE — stack vertically on narrow screens */
-@media(max-width:500px){
-  .cases-col{width:160px}
+/* INSTALL BANNERS */
+.install-banner{
+  position:fixed;bottom:0;left:0;right:0;
+  background:var(--surface);border-top:1px solid var(--border);
+  padding:14px 16px;padding-bottom:calc(14px + env(safe-area-inset-bottom));
+  z-index:300;display:none;align-items:center;gap:12px;
+  box-shadow:0 -4px 20px rgba(61,140,26,0.1);
+}
+.install-banner.show{display:flex}
+.install-btn{background:var(--green);color:white;border:none;padding:9px 18px;border-radius:20px;font-size:13px;font-weight:700;cursor:pointer}
+.install-x{background:none;border:none;color:var(--text3);font-size:20px;cursor:pointer;padding:0 4px}
+
+@media(max-width:480px){
+  .cases-col{width:140px}
   .prob-grid{grid-template-columns:repeat(3,1fr)}
 }
 </style>
@@ -259,13 +259,7 @@ body{
 <!-- TOPBAR -->
 <div class="topbar">
   <div class="topbar-brand">Concierge</div>
-  <div class="topbar-right">
-    <div class="top-btn" onclick="openVoiceSelector()">🔊 Voice</div>
-    <div class="top-btn" id="listenBtn" onclick="toggleListen()">
-      <span class="listen-dot" id="listenDot"></span>
-      <span id="listenLabel">Listen off</span>
-    </div>
-  </div>
+  <div class="topbar-tagline">We have the answer.</div>
 </div>
 
 <!-- MAIN -->
@@ -275,7 +269,7 @@ body{
   <div class="cases-col">
     <div class="cases-header">
       <span class="cases-label">Cases</span>
-      <span class="new-case-btn" onclick="showHome()" title="New case">＋</span>
+      <span class="new-case-btn" onclick="navHome()" title="New case">＋</span>
     </div>
     <div class="cases-list" id="casesList">
       <div class="case-empty"><p>Your cases appear here as you talk.</p></div>
@@ -283,24 +277,24 @@ body{
   </div>
 
   <!-- RIGHT: CONVERSATION -->
-  <div class="convo-col" id="convoCol">
+  <div class="convo-col">
 
-    <!-- HOME STATE -->
+    <!-- HOME -->
     <div class="home-state" id="homeState">
       <div class="home-greeting">
         <strong id="greeting">What do you need help with?</strong>
-        Tap what's happening.
+        <span>Tap what's happening — we take it from there.</span>
       </div>
       <div class="prob-grid">
         <div class="prob-btn" onclick="openVoice('car','Car trouble','Tell me about your car.')"><div class="pbi">🚙</div><div class="pbl">Car</div></div>
         <div class="prob-btn" onclick="openVoice('medical','Medical','What\'s going on with your health?')"><div class="pbi">🏥</div><div class="pbl">Medical</div></div>
         <div class="prob-btn" onclick="openVoice('kids','Kids','Tell me about your child.')"><div class="pbi">👶</div><div class="pbl">Kids</div></div>
-        <div class="prob-btn" onclick="openVoice('legal','Legal help','What\'s the legal situation?')"><div class="pbi">⚖️</div><div class="pbl">Legal</div></div>
+        <div class="prob-btn" onclick="openVoice('legal','Legal','What\'s the legal situation?')"><div class="pbi">⚖️</div><div class="pbl">Legal</div></div>
         <div class="prob-btn" onclick="openVoice('landlord','Landlord','Tell me what\'s happening.')"><div class="pbi">🏠</div><div class="pbl">Landlord</div></div>
         <div class="prob-btn" onclick="openVoice('money','Money','What\'s the financial situation?')"><div class="pbi">💸</div><div class="pbl">Money</div></div>
         <div class="prob-btn" onclick="openVoice('bills','Bills','Which company is this with?')"><div class="pbi">📄</div><div class="pbl">Bills</div></div>
         <div class="prob-btn" onclick="openVoice('insurance','Insurance','Auto, home, or health?')"><div class="pbi">🛡️</div><div class="pbl">Insurance</div></div>
-        <div class="prob-btn" onclick="openVoice('work','Work stress','What specifically happened?')"><div class="pbi">💼</div><div class="pbl">Work</div></div>
+        <div class="prob-btn" onclick="openVoice('work','Work','What specifically happened?')"><div class="pbi">💼</div><div class="pbl">Work</div></div>
         <div class="prob-btn" onclick="openVoice('relationship','Relationship','Tell me what\'s going on.')"><div class="pbi">❤️</div><div class="pbl">Relationship</div></div>
         <div class="prob-btn" onclick="openVoice('anxiety','Anxiety','Something specific or a feeling that won\'t go away?')"><div class="pbi">🧠</div><div class="pbl">Anxiety</div></div>
         <div class="prob-btn" onclick="openVoice('home','Home repair','Describe what you see, hear, or smell.')"><div class="pbi">🔧</div><div class="pbl">Home</div></div>
@@ -315,10 +309,10 @@ body{
       </div>
     </div>
 
-    <!-- VOICE STATE -->
+    <!-- VOICE -->
     <div class="voice-state" id="voiceState" style="display:none">
       <div class="voice-nav">
-        <div class="back-btn" onclick="showHome()">
+        <div class="back-btn" onclick="navHome()">
           <svg viewBox="0 0 24 24"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
           Home
         </div>
@@ -341,9 +335,7 @@ body{
         </div>
         <p class="mic-hint" id="micHint">Tap to talk</p>
       </div>
-
       <div class="convo-history" id="convoHistory"></div>
-
       <div class="type-bar">
         <input class="type-input" id="typeInput" placeholder="Or type here..." onkeydown="handleTypeKey(event)">
         <button class="type-send" onclick="sendTyped()">
@@ -355,6 +347,26 @@ body{
   </div>
 </div>
 
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <button class="nav-btn active" id="navHome" onclick="navHome()">
+    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+    <span>Home</span>
+  </button>
+  <button class="nav-btn" id="navTalk" onclick="navTalk()">
+    <svg viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="13" rx="3"/><path d="M5 10a7 7 0 0 0 14 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="17" x2="12" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    <span>Talk</span>
+  </button>
+  <button class="nav-btn" id="navCases" onclick="navCases()">
+    <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+    <span>Cases</span>
+  </button>
+  <button class="nav-btn" id="navVoice" onclick="openVoiceSelector()">
+    <svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    <span>Voice</span>
+  </button>
+</div>
+
 <!-- VOICE SELECTOR -->
 <div id="voiceSelector" class="voice-selector">
   <p class="vs-title">Choose a voice</p>
@@ -363,71 +375,34 @@ body{
   <button class="vs-close" onclick="closeVoiceSelector()">Done</button>
 </div>
 
+<!-- INSTALL BANNERS -->
+<div class="install-banner" id="installBanner">
+  <span style="font-size:24px">📱</span>
+  <div style="flex:1">
+    <div style="font-size:14px;font-weight:600;color:var(--text)">Add to Home Screen</div>
+    <div style="font-size:12px;color:var(--text3)">Install Concierge for the full experience</div>
+  </div>
+  <button class="install-btn" onclick="installApp()">Install</button>
+  <button class="install-x" onclick="dismissInstall()">×</button>
+</div>
+
+<div class="install-banner" id="iosBanner" style="flex-direction:column;gap:8px;align-items:flex-start">
+  <div style="display:flex;align-items:center;justify-content:space-between;width:100%">
+    <div style="font-size:14px;font-weight:600;color:var(--text)">📱 Add to your Home Screen</div>
+    <button class="install-x" onclick="document.getElementById('iosBanner').classList.remove('show');localStorage.setItem('install_dismissed','1')">×</button>
+  </div>
+  <div style="font-size:13px;color:var(--text2);line-height:1.6">
+    Tap <strong>Share ⎋</strong> at the bottom of Safari, then <strong>"Add to Home Screen"</strong>
+  </div>
+</div>
+
 <script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js').then(reg => {
-    // Check for updates every time app opens
-    reg.update();
-    // When new version is waiting — activate it immediately
-    reg.addEventListener('updatefound', () => {
-      const newWorker = reg.installing;
-      newWorker.addEventListener('statechange', () => {
-        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-          newWorker.postMessage('skipWaiting');
-        }
-      });
-    });
-  });
-  // Reload once new service worker takes control
-  let refreshing = false;
-  navigator.serviceWorker.addEventListener('controllerchange', () => {
-    if (!refreshing) { refreshing = true; window.location.reload(); }
-  });
-}
-
-// PWA Install prompt
-let deferredPrompt = null;
-window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault();
-  deferredPrompt = e;
-  showInstallBanner();
-});
-
-function showInstallBanner() {
-  const banner = document.getElementById('installBanner');
-  if (banner) banner.style.display = 'flex';
-}
-
-function installApp() {
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then(() => {
-      deferredPrompt = null;
-      document.getElementById('installBanner').style.display = 'none';
-    });
-  }
-}
-
-function dismissInstall() {
-  document.getElementById('installBanner').style.display = 'none';
-  localStorage.setItem('install_dismissed', '1');
-}
-
-// Show iOS instruction if on Safari and not installed
-const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-const isStandalone = window.navigator.standalone;
-const dismissed = localStorage.getItem('install_dismissed');
-if (isIOS && !isStandalone && !dismissed) {
-  setTimeout(() => {
-    document.getElementById('iosBanner').style.display = 'flex';
-  }, 3000);
-}
+if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
 
 // STATE
 let history = [];
 let currentCategory = '';
 let currentCaseId = null;
-let activeCaseEl = null;
 let isRecording = false;
 let recognition = null;
 let listenOn = false;
@@ -444,84 +419,62 @@ const SUPABASE_URL = 'https://erlfsyarkcsthrwrdenz.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVybGZzeWFya2NzdGhyd3JkZW56Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkxMTk3NzQsImV4cCI6MjA5NDY5NTc3NH0.pB3TTg6zTHqmGrAOoQMB5ql0FxSvYUpOjesq2ZT6IeM';
 const ICONS = {car:'🚙',medical:'🏥',kids:'👶',legal:'⚖️',landlord:'🏠',money:'💸',bills:'📄',insurance:'🛡️',work:'💼',relationship:'❤️',anxiety:'🧠',home:'🔧',pet:'🐾',school:'🏫',neighbor:'🏘️',traffic:'🚗',food:'🍽️',sleep:'😴',job:'🔍',talk:'💬'};
 
-// VOICE
+// VOICES
 let selectedVoice = null;
 let availableVoices = [];
 
 function loadVoices() {
   const all = window.speechSynthesis?.getVoices() || [];
-  if (all.length === 0) return; // not ready yet
-
-  // Preferred voices in order — we show up to 6
+  if (all.length === 0) return;
   const PREFERRED = [
-    { label: 'Google US English',     match: v => v.name === 'Google US English' },
-    { label: 'Google UK English',     match: v => v.name === 'Google UK English Female' || v.name === 'Google UK English Male' },
-    { label: 'Samantha (Enhanced)',   match: v => v.name.includes('Samantha') && (v.name.includes('Enhanced') || v.name.includes('Premium')) },
-    { label: 'Samantha',             match: v => v.name === 'Samantha' },
-    { label: 'Karen (Enhanced)',      match: v => v.name.includes('Karen') && v.name.includes('Enhanced') },
-    { label: 'Daniel (Enhanced)',     match: v => v.name.includes('Daniel') && v.name.includes('Enhanced') },
-    { label: 'Aaron (Enhanced)',      match: v => v.name.includes('Aaron') && v.name.includes('Enhanced') },
-    { label: 'Moira (Enhanced)',      match: v => v.name.includes('Moira') && v.name.includes('Enhanced') },
-    { label: 'Tessa (Enhanced)',      match: v => v.name.includes('Tessa') && v.name.includes('Enhanced') },
-    { label: 'Nicky (Enhanced)',      match: v => v.name.includes('Nicky') && v.name.includes('Enhanced') },
-    { label: 'Karen',                match: v => v.name === 'Karen' },
-    { label: 'Daniel',               match: v => v.name === 'Daniel' },
+    { label:'Google US English',   match: v => v.name === 'Google US English' },
+    { label:'Google UK English',   match: v => v.name.includes('Google UK English') },
+    { label:'Samantha (Enhanced)', match: v => v.name.includes('Samantha') && v.name.includes('Enhanced') },
+    { label:'Samantha',            match: v => v.name === 'Samantha' },
+    { label:'Karen (Enhanced)',    match: v => v.name.includes('Karen') && v.name.includes('Enhanced') },
+    { label:'Daniel (Enhanced)',   match: v => v.name.includes('Daniel') && v.name.includes('Enhanced') },
+    { label:'Aaron (Enhanced)',    match: v => v.name.includes('Aaron') && v.name.includes('Enhanced') },
+    { label:'Nicky (Enhanced)',    match: v => v.name.includes('Nicky') && v.name.includes('Enhanced') },
+    { label:'Karen',               match: v => v.name === 'Karen' },
+    { label:'Daniel',              match: v => v.name === 'Daniel' },
   ];
-
   availableVoices = [];
   const seen = new Set();
   for (const pick of PREFERRED) {
     const found = all.find(v => pick.match(v) && !seen.has(v.name));
-    if (found) {
-      found._label = pick.label;
-      seen.add(found.name);
-      availableVoices.push(found);
-    }
+    if (found) { found._label = pick.label; seen.add(found.name); availableVoices.push(found); }
     if (availableVoices.length >= 6) break;
   }
-
-  // Fallback — grab best English voices available
-  if (availableVoices.length < 3) {
-    const extras = all
-      .filter(v => v.lang.startsWith('en') && !seen.has(v.name))
+  if (availableVoices.length < 2) {
+    const extras = all.filter(v => v.lang.startsWith('en') && !seen.has(v.name))
       .sort((a,b) => {
-        const score = v => v.name.includes('Enhanced')||v.name.includes('Premium')||v.name.includes('Neural') ? 2 : v.localService ? 1 : 0;
-        return score(b) - score(a);
-      })
-      .slice(0, 6 - availableVoices.length);
+        const s = v => v.name.includes('Enhanced')||v.name.includes('Premium') ? 2 : v.localService ? 1 : 0;
+        return s(b)-s(a);
+      }).slice(0, 6-availableVoices.length);
     availableVoices = [...availableVoices, ...extras];
   }
-
   const saved = localStorage.getItem('concierge_voice');
-  const match = availableVoices.find(v => v.name === saved);
-  if (!selectedVoice || !match) {
-    selectedVoice = match || availableVoices[0];
+  if (!selectedVoice || !availableVoices.find(v => v.name === selectedVoice.name)) {
+    selectedVoice = availableVoices.find(v => v.name === saved) || availableVoices[0];
   }
 }
-
-// Load voices — retry because iOS loads them async
 if (window.speechSynthesis) {
   window.speechSynthesis.onvoiceschanged = loadVoices;
   loadVoices();
-  // iOS sometimes needs a nudge
-  setTimeout(loadVoices, 100);
-  setTimeout(loadVoices, 500);
-  setTimeout(loadVoices, 1500);
+  [100,500,1500].forEach(t => setTimeout(loadVoices, t));
 }
 
 function openVoiceSelector() {
-  // Try loading again in case they weren't ready
   loadVoices();
   const list = document.getElementById('voiceList');
   list.innerHTML = '';
-  document.getElementById('vsSub').textContent = availableVoices.length + ' voices available — tap to preview';
+  document.getElementById('vsSub').textContent = availableVoices.length + ' voices — tap to preview';
   availableVoices.forEach(voice => {
     const item = document.createElement('div');
     item.className = 'vs-item' + (selectedVoice?.name === voice.name ? ' selected' : '');
-    const displayName = voice._label || voice.name.replace(/com\.apple\.(voice\.compact\.en-|ttsbundle\.|eloquence\.)/g,'').replace(/-/g,' ');
-    const isGoogle = voice.name.toLowerCase().includes('google');
-    const subLabel = isGoogle ? 'Google · Natural' : voice.localService ? 'Apple · On device' : 'Online';
-    item.innerHTML = `<div><div class="vs-item-name">${displayName}</div><div class="vs-item-lang">${subLabel}</div></div><span class="vs-item-check">✓</span>`;
+    const name = voice._label || voice.name.replace(/com\.apple\.(voice\.compact\.en-|ttsbundle\.|eloquence\.)/g,'');
+    const sub = voice.name.includes('Google') ? 'Google · Natural' : voice.localService ? 'Apple · On device' : 'Online';
+    item.innerHTML = `<div><div class="vs-item-name">${name}</div><div class="vs-item-lang">${sub}</div></div><span class="vs-item-check">✓</span>`;
     item.onclick = () => {
       selectedVoice = voice;
       localStorage.setItem('concierge_voice', voice.name);
@@ -538,115 +491,91 @@ function openVoiceSelector() {
 }
 function closeVoiceSelector() { stopSpeaking(); document.getElementById('voiceSelector').classList.remove('open'); }
 
-// CASES SIDEBAR
-function renderCasesSidebar() {
+// CASES
+function renderCases() {
   const list = document.getElementById('casesList');
-  if (localCases.length === 0) {
-    list.innerHTML = '<div class="case-empty"><p>Your cases appear here as you talk.</p></div>';
-    return;
-  }
+  if (!localCases.length) { list.innerHTML = '<div class="case-empty"><p>Your cases appear here as you talk.</p></div>'; return; }
   list.innerHTML = '';
   localCases.forEach(c => {
-    const item = document.createElement('div');
-    item.className = 'case-item' + (c.id === currentCaseId ? ' active' : '');
-    item.dataset.caseId = c.id;
+    const el = document.createElement('div');
+    el.className = 'case-item' + (c.id === currentCaseId ? ' active' : '');
+    el.dataset.id = c.id;
     const date = new Date(c.created_at||Date.now()).toLocaleDateString('en-US',{month:'short',day:'numeric'});
-    item.innerHTML = `
-      <div class="case-item-top">
-        <span class="case-icon">${ICONS[c.category]||'📋'}</span>
-        <span class="case-cat">${c.category}</span>
-      </div>
-      <div class="case-title">${c.title||c.category}</div>
-      <div class="case-meta">${date}</div>
-    `;
-    item.onclick = () => resumeCase(c);
-    list.appendChild(item);
+    el.innerHTML = `<div class="case-item-top"><span class="case-icon">${ICONS[c.category]||'📋'}</span><span class="case-cat">${c.category}</span></div><div class="case-title">${c.title||c.category}</div><div class="case-meta">${date}</div>`;
+    el.onclick = () => resumeCase(c);
+    list.appendChild(el);
   });
 }
 
-function addLocalCase(c) {
-  localCases = [c, ...localCases.filter(x => x.id !== c.id)];
-  renderCasesSidebar();
-}
-
-function setActiveCaseItem(caseId) {
-  document.querySelectorAll('.case-item').forEach(el => {
-    el.classList.toggle('active', el.dataset.caseId === caseId);
-  });
+function setActiveCase(id) {
+  document.querySelectorAll('.case-item').forEach(el => el.classList.toggle('active', el.dataset.id === id));
 }
 
 async function loadCasesFromDB() {
   try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/cases?user_id=eq.${deviceId}&status=eq.active&order=updated_at.desc&limit=20`, {
-      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-    });
-    const cases = await res.json();
-    if (Array.isArray(cases) && cases.length > 0) {
-      localCases = cases;
-      renderCasesSidebar();
-    }
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/cases?user_id=eq.${deviceId}&status=eq.active&order=updated_at.desc&limit=20`,{headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`}});
+    const data = await res.json();
+    if (Array.isArray(data) && data.length) { localCases = data; renderCases(); }
   } catch(e) {}
 }
 loadCasesFromDB();
 
-// NAVIGATION
+// NAV
+function setNav(id) { document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+
+function navHome() {
+  setNav('navHome'); showHome();
+}
+function navTalk() {
+  if (document.getElementById('voiceState').style.display !== 'none') { setNav('navTalk'); }
+  else { setNav('navHome'); showHome(); }
+}
+function navCases() {
+  setNav('navCases'); loadCasesFromDB();
+}
+
 function showHome() {
-  currentCaseId = null;
-  currentCategory = '';
-  history = [];
+  currentCaseId = null; currentCategory = ''; history = [];
   document.getElementById('homeState').style.display = '';
   document.getElementById('voiceState').style.display = 'none';
   document.getElementById('stopBtn').classList.remove('visible');
   stopRecording(); stopSpeaking(); stopRings();
   document.querySelectorAll('.case-item').forEach(el => el.classList.remove('active'));
-  setActiveNav('navHome');
+  setNav('navHome');
 }
 
 function openVoice(category, label, prompt) {
-  currentCategory = category;
-  currentCaseId = null;
-  history = [];
-
+  currentCategory = category; currentCaseId = null; history = [];
   document.getElementById('voiceCategory').textContent = label;
   document.getElementById('voicePrompt').textContent = prompt;
   document.getElementById('convoHistory').innerHTML = '';
   document.getElementById('micBtn').className = 'mic-btn';
-  setHint('', '');
+  setHint('','');
   stopRings();
-
   document.getElementById('homeState').style.display = 'none';
   document.getElementById('voiceState').style.display = 'flex';
-  setActiveNav('navVoice');
-
+  setNav('navTalk');
   speakThenListen(prompt);
 }
 
 function resumeCase(c) {
-  currentCaseId = c.id;
-  currentCategory = c.category;
+  currentCaseId = c.id; currentCategory = c.category;
   history = Array.isArray(c.context) ? c.context : [];
-
   document.getElementById('voiceCategory').textContent = c.category;
   document.getElementById('voicePrompt').textContent = 'Picking up where we left off.';
   document.getElementById('homeState').style.display = 'none';
   document.getElementById('voiceState').style.display = 'flex';
-
-  // Rebuild visual history
+  setNav('navTalk');
   const hist = document.getElementById('convoHistory');
   hist.innerHTML = '';
-  history.forEach(m => {
-    if (m.role === 'user') addUserBubble(m.content);
-    else addAIBubble(m.content, []);
-  });
-  if (history.length > 0) {
-    addChips(getChips());
-  }
-  setHint('Tap to continue', '');
-  setActiveCaseItem(c.id);
+  history.forEach(m => { if(m.role==='user') addUserBubble(m.content); else addAIBubble(m.content,[]); });
+  if (history.length) addChips(getChips());
+  setHint('Tap to continue','');
+  setActiveCase(c.id);
   scrollHistory();
 }
 
-// VOICE
+// VOICE ENGINE
 function speakThenListen(text) {
   startRings();
   stopSpeaking();
@@ -659,7 +588,7 @@ function speakThenListen(text) {
     utt.onerror = () => setTimeout(startRecording, 500);
     window.speechSynthesis.speak(utt);
   } else {
-    setTimeout(startRecording, 600);
+    setTimeout(startRecording, 700);
   }
 }
 
@@ -667,129 +596,86 @@ function toggleMic() { isRecording ? stopRecording() : startRecording(); }
 
 function startRecording() {
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR) {
-    setHint('Voice not available — type below', 'error');
-    return;
-  }
+  if (!SR) { setHint('Voice not available — type below','error'); return; }
   recognition = new SR();
-  recognition.continuous = false;
-  recognition.interimResults = false;
-  recognition.lang = 'en-US';
+  recognition.continuous = false; recognition.interimResults = false; recognition.lang = 'en-US';
   isRecording = true;
   document.getElementById('micBtn').classList.add('listening');
-  startRings();
-  setHint('Listening...', 'live');
-  stopSpeaking();
-
-  recognition.onresult = e => {
-    const text = e.results[0][0].transcript.trim();
-    stopRecording();
-    handleVoice(text);
-  };
+  startRings(); setHint('Listening...','live'); stopSpeaking();
+  recognition.onresult = e => { const t = e.results[0][0].transcript.trim(); stopRecording(); handleVoice(t); };
   recognition.onerror = e => {
     stopRecording();
-    if (e.error === 'not-allowed') setHint('Mic blocked — type below', 'error');
-    else if (e.error === 'no-speech') setHint('Tap to try again', '');
-    else { addAIBubble("Didn't catch that — slow down and tap the mic again.", []); }
+    if (e.error==='not-allowed') setHint('Mic blocked — type below','error');
+    else if (e.error==='no-speech') setHint('Tap to try again','');
+    else addAIBubble("Didn't catch that — slow down and tap the mic again.",[]);
   };
-  recognition.onend = () => { if (isRecording) stopRecording(); };
+  recognition.onend = () => { if(isRecording) stopRecording(); };
   try { recognition.start(); } catch(e) { stopRecording(); }
 }
 
 function stopRecording() {
   isRecording = false;
-  if (recognition) { try { recognition.stop(); } catch(e) {} recognition = null; }
+  if(recognition){try{recognition.stop();}catch(e){} recognition=null;}
   document.getElementById('micBtn').classList.remove('listening');
-  stopRings();
-  setHint('Tap to talk', '');
+  stopRings(); setHint('Tap to talk','');
+}
+
+function stopConversation() {
+  stopRecording(); stopSpeaking(); stopRings();
+  document.getElementById('micBtn').className = 'mic-btn';
+  document.getElementById('stopBtn').classList.remove('visible');
+  setHint('Tap to talk','');
 }
 
 function handleVoice(text) {
-  if (!text || text.length < 2) {
-    addAIBubble("Didn't catch that — slow down and try again.", []);
-    return;
-  }
+  if (!text || text.length < 2) { addAIBubble("Didn't catch that — slow down and try again.",[]); return; }
   addUserBubble(text);
-  history.push({ role:'user', content: text });
-  setHint('', '');
+  history.push({role:'user',content:text});
+  setHint('','');
   callConcierge();
 }
 
-function stopSpeaking() { if (window.speechSynthesis) window.speechSynthesis.cancel(); }
+function stopSpeaking() { if(window.speechSynthesis) window.speechSynthesis.cancel(); }
 
-function stopConversation() {
-  stopRecording();
-  stopSpeaking();
-  stopRings();
-  document.getElementById('micBtn').className = 'mic-btn';
-  document.getElementById('stopBtn').classList.remove('visible');
-  setHint('Tap to talk', '');
-}
-
-// CONCIERGE API
+// CONCIERGE
 async function callConcierge() {
   document.getElementById('micBtn').className = 'mic-btn thinking';
-  const typingId = addTypingBubble();
-
+  const tid = addTypingBubble();
   try {
-    const res = await fetch('/api/chat', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ messages: history, category: currentCategory, deviceId, caseId: currentCaseId })
+    const res = await fetch('/api/chat',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({messages:history,category:currentCategory,deviceId,caseId:currentCaseId})
     });
     const data = await res.json();
-    removeTypingBubble(typingId);
+    removeTypingBubble(tid);
     document.getElementById('micBtn').className = 'mic-btn';
-
     if (data.caseId && !currentCaseId) {
       currentCaseId = data.caseId;
-      // Add to sidebar immediately
-      addLocalCase({
-        id: data.caseId,
-        category: currentCategory,
-        title: currentCategory + ' — ' + new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'}),
-        user_id: deviceId,
-        status: 'active',
-        context: history,
-        created_at: new Date().toISOString()
-      });
-      setActiveCaseItem(data.caseId);
+      const newCase = {id:data.caseId,category:currentCategory,title:currentCategory+' — '+new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'}),user_id:deviceId,status:'active',context:history,created_at:new Date().toISOString()};
+      localCases = [newCase,...localCases.filter(c=>c.id!==data.caseId)];
+      renderCases(); setActiveCase(data.caseId);
     }
-
     const reply = data.reply || "Still here — try again.";
-    history.push({ role:'assistant', content: reply });
+    history.push({role:'assistant',content:reply});
     addAIBubble(reply, getChips());
     speakThenListen(reply);
-
   } catch(e) {
-    removeTypingBubble(typingId);
+    removeTypingBubble(tid);
     document.getElementById('micBtn').className = 'mic-btn';
-    addAIBubble("Connection dropped — still here. Tap the mic and try again.", []);
+    addAIBubble("Connection dropped — still here. Tap the mic and try again.",[]);
   }
 }
 
 function getChips() {
-  const c = {
-    car:['Keep going','Pull over?','Is it urgent?'],
-    medical:['Keep going','Getting worse','Need a doctor now?'],
-    kids:['Keep going','It\'s urgent','What do I say?'],
-    legal:['Keep going','Draft a letter','Find me a lawyer'],
-    landlord:['Keep going','Draft a letter','Withhold rent?'],
-    money:['Keep going','Help me negotiate','Find assistance'],
-    bills:['Keep going','Negotiate it','Find assistance'],
-    insurance:['Keep going','Am I lowballed?','Help me file'],
-    work:['Keep going','Help me respond','Time to leave?'],
-    anxiety:['Keep talking','Calm me down','Find someone'],
-  };
-  return c[currentCategory] || ['Keep going','Tell me more','What next?'];
+  const c = {car:['Keep going','Pull over?','Is it urgent?'],medical:['Keep going','Getting worse','Doctor now?'],kids:['Keep going','It\'s urgent','What do I say?'],legal:['Keep going','Draft a letter','Find a lawyer'],landlord:['Keep going','Draft a letter','Withhold rent?'],money:['Keep going','Help me negotiate','Find assistance'],bills:['Keep going','Negotiate it','Find assistance'],insurance:['Keep going','Am I lowballed?','Help me file'],work:['Keep going','Help me respond','Time to leave?'],anxiety:['Keep talking','Calm me down','Find someone']};
+  return c[currentCategory]||['Keep going','Tell me more','What next?'];
 }
 
-// CONVERSATION UI
+// UI HELPERS
 function addUserBubble(text) {
   removeChips();
   const b = document.createElement('div');
-  b.className = 'bubble-user';
-  b.textContent = text;
+  b.className = 'bubble-user'; b.textContent = text;
   document.getElementById('convoHistory').appendChild(b);
   scrollHistory();
 }
@@ -797,8 +683,7 @@ function addUserBubble(text) {
 function addAIBubble(text, chips) {
   removeChips();
   const b = document.createElement('div');
-  b.className = 'bubble-ai';
-  b.textContent = text;
+  b.className = 'bubble-ai'; b.textContent = text;
   document.getElementById('convoHistory').appendChild(b);
   if (chips && chips.length) addChips(chips);
   scrollHistory();
@@ -810,163 +695,57 @@ function addChips(chips) {
   row.className = 'chips-row';
   chips.forEach(c => {
     const chip = document.createElement('div');
-    chip.className = 'r-chip';
-    chip.textContent = c;
-    chip.onclick = () => {
-      removeChips();
-      addUserBubble(c);
-      history.push({ role:'user', content: c });
-      callConcierge();
-    };
+    chip.className = 'r-chip'; chip.textContent = c;
+    chip.onclick = () => { removeChips(); addUserBubble(c); history.push({role:'user',content:c}); callConcierge(); };
     row.appendChild(chip);
   });
   document.getElementById('convoHistory').appendChild(row);
   scrollHistory();
 }
 
-function removeChips() {
-  const old = document.querySelector('.chips-row');
-  if (old) old.remove();
-}
+function removeChips() { const r = document.querySelector('.chips-row'); if(r) r.remove(); }
 
 function addTypingBubble() {
   removeChips();
   const b = document.createElement('div');
-  b.className = 'bubble-ai';
-  b.id = 'typing-' + Date.now();
+  b.className = 'bubble-ai'; b.id = 'typ-'+Date.now();
   b.innerHTML = '<div class="dots"><span></span><span></span><span></span></div>';
   document.getElementById('convoHistory').appendChild(b);
-  scrollHistory();
-  return b.id;
+  scrollHistory(); return b.id;
 }
-
-function removeTypingBubble(id) {
-  const el = document.getElementById(id);
-  if (el) el.remove();
-}
-
-function scrollHistory() {
-  const h = document.getElementById('convoHistory');
-  setTimeout(() => h.scrollTop = h.scrollHeight, 50);
-}
-
-function setHint(text, state) {
-  const el = document.getElementById('micHint');
-  el.textContent = text;
-  el.className = 'mic-hint' + (state ? ' ' + state : '');
-}
-
-function startRings() {
-  document.getElementById('ring1').classList.add('pulse');
-  document.getElementById('ring2').classList.add('pulse');
-}
-function stopRings() {
-  document.getElementById('ring1').classList.remove('pulse');
-  document.getElementById('ring2').classList.remove('pulse');
-}
+function removeTypingBubble(id) { const el = document.getElementById(id); if(el) el.remove(); }
+function scrollHistory() { const h = document.getElementById('convoHistory'); setTimeout(()=>h.scrollTop=h.scrollHeight,50); }
+function setHint(text,state) { const el = document.getElementById('micHint'); el.textContent=text; el.className='mic-hint'+(state?' '+state:''); }
+function startRings() { document.getElementById('ring1').classList.add('pulse'); document.getElementById('ring2').classList.add('pulse'); }
+function stopRings() { document.getElementById('ring1').classList.remove('pulse'); document.getElementById('ring2').classList.remove('pulse'); }
 
 // TYPE INPUT
-function handleTypeKey(e) { if (e.key==='Enter') { e.preventDefault(); sendTyped(); } }
+function handleTypeKey(e) { if(e.key==='Enter'){e.preventDefault();sendTyped();} }
 function sendTyped() {
   const input = document.getElementById('typeInput');
-  const text = input.value.trim();
-  if (!text) return;
-  input.value = '';
-  addUserBubble(text);
-  history.push({ role:'user', content: text });
-  callConcierge();
+  const text = input.value.trim(); if(!text) return;
+  input.value = ''; addUserBubble(text);
+  history.push({role:'user',content:text}); callConcierge();
 }
 
-// LISTEN & HELP
-function toggleListen() {
-  listenOn = !listenOn;
-  document.getElementById('listenBtn').classList.toggle('on', listenOn);
-  document.getElementById('listenDot').style.background = listenOn ? '#639922' : '';
-  document.getElementById('listenLabel').textContent = listenOn ? 'Listening' : 'Listen off';
-}
-
-// BOTTOM NAV
-function setActiveNav(id) {
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-
-function navHome() {
-  setActiveNav('navHome');
-  showHome();
-}
-
-function navVoice() {
-  // If already in voice state stay there, otherwise show home to pick a topic
-  if (document.getElementById('voiceState').style.display !== 'none') {
-    setActiveNav('navVoice');
-  } else {
-    setActiveNav('navHome');
-    showHome();
-  }
-}
-
-function navCases() {
-  setActiveNav('navCases');
-  // Show cases panel — on mobile scroll left column into view
-  const casesCol = document.querySelector('.cases-col');
-  if (casesCol) casesCol.scrollIntoView({ behavior: 'smooth' });
-  loadCasesFromDB();
+// INSTALL
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredPrompt=e; document.getElementById('installBanner').classList.add('show'); });
+function installApp() { if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.userChoice.then(()=>{deferredPrompt=null;document.getElementById('installBanner').classList.remove('show');});} }
+function dismissInstall() { document.getElementById('installBanner').classList.remove('show'); localStorage.setItem('install_dismissed','1'); }
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+const isStandalone = window.navigator.standalone;
+if (isIOS && !isStandalone && !localStorage.getItem('install_dismissed')) {
+  setTimeout(()=>document.getElementById('iosBanner').classList.add('show'), 3000);
 }
 
 // GREETING
-const h = new Date().getHours();
-document.getElementById('greeting').textContent = h<12?'Good morning.':h<17?'Good afternoon.':'Good evening.';
+const hr = new Date().getHours();
+document.getElementById('greeting').textContent = hr<12?'Good morning.':hr<17?'Good afternoon.':'Good evening.';
 
 // DEEP LINK
 const q = new URLSearchParams(location.search).get('q');
-if (q) {
-  const btn = [...document.querySelectorAll('.prob-btn')].find(b => b.getAttribute('onclick')?.includes(`'${q}'`));
-  if (btn) btn.click();
-}
+if(q){const btn=[...document.querySelectorAll('.prob-btn')].find(b=>b.getAttribute('onclick')?.includes(`'${q}'`));if(btn)btn.click();}
 </script>
-
-<!-- BOTTOM NAV -->
-<div class="bottom-nav">
-  <button class="nav-btn active" id="navHome" onclick="navHome()">
-    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22" fill="none" stroke="currentColor" stroke-width="0" style="fill:var(--text3)"/></svg>
-    <span>Home</span>
-  </button>
-  <button class="nav-btn" id="navVoice" onclick="navVoice()">
-    <svg viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="13" rx="3"/><path d="M5 10a7 7 0 0 0 14 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="17" x2="12" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-    <span>Talk</span>
-  </button>
-  <button class="nav-btn" id="navCases" onclick="navCases()">
-    <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8" fill="none" stroke="currentColor" stroke-width="2"/><line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="2"/><line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="2"/></svg>
-    <span>Cases</span>
-  </button>
-  <button class="nav-btn" id="navVoiceSelect" onclick="openVoiceSelector()">
-    <svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-    <span>Voice</span>
-  </button>
-</div>
-
-<!-- Android/Chrome install banner -->
-<div id="installBanner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#1C1C19;border-top:0.5px solid rgba(255,255,255,0.15);padding:14px 16px;padding-bottom:calc(14px + env(safe-area-inset-bottom));z-index:300;align-items:center;gap:12px">
-  <span style="font-size:24px">📱</span>
-  <div style="flex:1">
-    <div style="font-size:14px;font-weight:600;color:#FAFAF7">Add to Home Screen</div>
-    <div style="font-size:12px;color:rgba(255,255,255,0.45)">Install Concierge for the full experience</div>
-  </div>
-  <button onclick="installApp()" style="background:#378ADD;color:white;border:none;padding:8px 16px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer">Install</button>
-  <button onclick="dismissInstall()" style="background:none;border:none;color:rgba(255,255,255,0.4);font-size:20px;cursor:pointer;padding:0 4px">×</button>
-</div>
-
-<!-- iOS Safari install banner -->
-<div id="iosBanner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#1C1C19;border-top:0.5px solid rgba(255,255,255,0.15);padding:16px 20px;padding-bottom:calc(16px + env(safe-area-inset-bottom));z-index:300;flex-direction:column;gap:8px">
-  <div style="display:flex;align-items:center;justify-content:space-between">
-    <div style="font-size:14px;font-weight:600;color:#FAFAF7">📱 Add Concierge to your Home Screen</div>
-    <button onclick="document.getElementById('iosBanner').style.display='none';localStorage.setItem('install_dismissed','1')" style="background:none;border:none;color:rgba(255,255,255,0.4);font-size:20px;cursor:pointer;padding:0">×</button>
-  </div>
-  <div style="font-size:13px;color:rgba(255,255,255,0.45);line-height:1.6">
-    Tap <strong style="color:rgba(255,255,255,0.7)">Share</strong> <span style="font-size:16px">⎋</span> at the bottom of Safari, then tap <strong style="color:rgba(255,255,255,0.7)">"Add to Home Screen"</strong>
-  </div>
-</div>
-
 </body>
 </html>
