@@ -1,12 +1,10 @@
 const https = require('https');
 
-// Best ElevenLabs voice IDs — human sounding
 const VOICES = {
-  default: '21m00Tcm4TlvDq8ikWAM', // Rachel — warm, clear, American female
-  rachel:  '21m00Tcm4TlvDq8ikWAM', // Rachel
-  adam:    'pNInz6obpgDQGcFmaJgB', // Adam — natural American male
-  bella:   'EXAVITQu4vr4xnSDxMaL', // Bella — warm female
-  josh:    'TxGEqnHWrfWFTfGW9XjX', // Josh — deep male
+  rachel: '21m00Tcm4TlvDq8ikWAM',
+  adam:   'pNInz6obpgDQGcFmaJgB',
+  bella:  'EXAVITQu4vr4xnSDxMaL',
+  josh:   'TxGEqnHWrfWFTfGW9XjX',
 };
 
 exports.handler = async (event) => {
@@ -28,22 +26,20 @@ exports.handler = async (event) => {
 
   try {
     const { text, voice = 'rachel' } = JSON.parse(event.body);
-    const voiceId = VOICES[voice] || VOICES.default;
+    const voiceId = VOICES[voice] || VOICES.rachel;
 
-    // Clean text for speech
     const clean = text
       .replace(/[*_#`]/g, '')
       .replace(/\n+/g, ' ')
+      .trim()
       .substring(0, 500);
 
     const payload = JSON.stringify({
       text: clean,
-      model_id: 'eleven_turbo_v2_5',
+      model_id: 'eleven_monolingual_v1',
       voice_settings: {
         stability: 0.5,
-        similarity_boost: 0.75,
-        style: 0.3,
-        use_speaker_boost: true
+        similarity_boost: 0.75
       }
     });
 
@@ -51,7 +47,7 @@ exports.handler = async (event) => {
       const chunks = [];
       const req = https.request({
         hostname: 'api.elevenlabs.io',
-        path: `/v1/text-to-speech/${voiceId}`,
+        path: `/v1/text-to-speech/${voiceId}/stream`,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -60,6 +56,7 @@ exports.handler = async (event) => {
           'Content-Length': Buffer.byteLength(payload)
         }
       }, (res) => {
+        console.log('ElevenLabs status:', res.statusCode);
         if (res.statusCode !== 200) {
           let err = '';
           res.on('data', c => err += c);
@@ -86,7 +83,7 @@ exports.handler = async (event) => {
     };
 
   } catch (err) {
-    console.error('ElevenLabs error:', err);
+    console.error('ElevenLabs error:', err.message);
     return {
       statusCode: 500,
       headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
