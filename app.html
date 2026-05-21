@@ -204,6 +204,23 @@ body{
 }
 .type-send svg{width:14px;height:14px;fill:white;pointer-events:none}
 
+/* BOTTOM NAV */
+.bottom-nav{
+  display:flex;border-top:0.5px solid var(--border);
+  flex-shrink:0;padding-bottom:var(--safe);
+  background:var(--black);
+}
+.nav-btn{
+  flex:1;padding:10px 8px;display:flex;flex-direction:column;
+  align-items:center;gap:4px;cursor:pointer;
+  background:none;border:none;-webkit-tap-highlight-color:transparent;
+}
+.nav-btn svg{width:22px;height:22px;fill:var(--text3);transition:fill 0.15s}
+.nav-btn span{font-size:10px;font-weight:600;color:var(--text3);transition:color 0.15s}
+.nav-btn.active svg{fill:var(--blue)}
+.nav-btn.active span{color:var(--blue)}
+.nav-btn:active svg{fill:var(--text2)}
+
 /* DOTS */
 .dots{display:flex;gap:4px;align-items:center;padding:2px}
 .dots span{width:6px;height:6px;border-radius:50%;background:var(--text3);animation:blink 1.2s infinite}
@@ -582,6 +599,7 @@ function showHome() {
   document.getElementById('stopBtn').classList.remove('visible');
   stopRecording(); stopSpeaking(); stopRings();
   document.querySelectorAll('.case-item').forEach(el => el.classList.remove('active'));
+  setActiveNav('navHome');
 }
 
 function openVoice(category, label, prompt) {
@@ -598,6 +616,7 @@ function openVoice(category, label, prompt) {
 
   document.getElementById('homeState').style.display = 'none';
   document.getElementById('voiceState').style.display = 'flex';
+  setActiveNav('navVoice');
 
   speakThenListen(prompt);
 }
@@ -866,6 +885,35 @@ function toggleListen() {
   document.getElementById('listenLabel').textContent = listenOn ? 'Listening' : 'Listen off';
 }
 
+// BOTTOM NAV
+function setActiveNav(id) {
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function navHome() {
+  setActiveNav('navHome');
+  showHome();
+}
+
+function navVoice() {
+  // If already in voice state stay there, otherwise show home to pick a topic
+  if (document.getElementById('voiceState').style.display !== 'none') {
+    setActiveNav('navVoice');
+  } else {
+    setActiveNav('navHome');
+    showHome();
+  }
+}
+
+function navCases() {
+  setActiveNav('navCases');
+  // Show cases panel — on mobile scroll left column into view
+  const casesCol = document.querySelector('.cases-col');
+  if (casesCol) casesCol.scrollIntoView({ behavior: 'smooth' });
+  loadCasesFromDB();
+}
+
 // GREETING
 const h = new Date().getHours();
 document.getElementById('greeting').textContent = h<12?'Good morning.':h<17?'Good afternoon.':'Good evening.';
@@ -877,6 +925,26 @@ if (q) {
   if (btn) btn.click();
 }
 </script>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <button class="nav-btn active" id="navHome" onclick="navHome()">
+    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22" fill="none" stroke="currentColor" stroke-width="0" style="fill:var(--text3)"/></svg>
+    <span>Home</span>
+  </button>
+  <button class="nav-btn" id="navVoice" onclick="navVoice()">
+    <svg viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="13" rx="3"/><path d="M5 10a7 7 0 0 0 14 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="17" x2="12" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    <span>Talk</span>
+  </button>
+  <button class="nav-btn" id="navCases" onclick="navCases()">
+    <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8" fill="none" stroke="currentColor" stroke-width="2"/><line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="2"/><line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="2"/></svg>
+    <span>Cases</span>
+  </button>
+  <button class="nav-btn" id="navVoiceSelect" onclick="openVoiceSelector()">
+    <svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    <span>Voice</span>
+  </button>
+</div>
 
 <!-- Android/Chrome install banner -->
 <div id="installBanner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#1C1C19;border-top:0.5px solid rgba(255,255,255,0.15);padding:14px 16px;padding-bottom:calc(14px + env(safe-area-inset-bottom));z-index:300;align-items:center;gap:12px">
