@@ -747,15 +747,16 @@ async function callConcierge() {
       localCases = [newCase,...localCases.filter(c=>c.id!==data.caseId)];
       renderCases(); setActiveCase(data.caseId);
     }
-    const reply = data.reply || "Still here — try again.";
+    const reply = data.reply || data.error || "I'm here — try again.";
+    console.log('Reply:', reply);
     history.push({role:'assistant',content:reply});
     addAIBubble(reply, getChips());
     speakThenListen(reply);
   } catch(e) {
     removeTypingBubble(tid);
     document.getElementById('micBtn').className = 'mic-btn';
-    setHint('Hold mic to respond','live');
-    addAIBubble("Connection dropped — still here. Hold the mic and try again.",[]);
+    setHint('Tap mic to respond','live');
+    addAIBubble("Connection hiccup — I'm still here. Tap the mic or type below.",[]);
   }
 }
 
