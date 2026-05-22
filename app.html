@@ -465,10 +465,12 @@ if (window.speechSynthesis) {
 }
 
 const EL_VOICES = [
-  { id: 'rachel', name: 'Rachel', desc: 'Warm · American female · ElevenLabs' },
-  { id: 'bella',  name: 'Bella',  desc: 'Friendly · American female · ElevenLabs' },
-  { id: 'adam',   name: 'Adam',   desc: 'Natural · American male · ElevenLabs' },
-  { id: 'josh',   name: 'Josh',   desc: 'Deep · American male · ElevenLabs' },
+  { id: 'sarah',   name: 'Sarah',   desc: 'Mature · Reassuring · Confident' },
+  { id: 'matilda', name: 'Matilda', desc: 'Professional · Clear · Knowledgable' },
+  { id: 'jessica', name: 'Jessica', desc: 'Warm · Bright · Friendly' },
+  { id: 'eric',    name: 'Eric',    desc: 'Smooth · Trustworthy · Male' },
+  { id: 'george',  name: 'George',  desc: 'Warm · Captivating · Male' },
+  { id: 'brian',   name: 'Brian',   desc: 'Deep · Comforting · Male' },
 ];
 
 function openVoiceSelector() {
@@ -630,7 +632,7 @@ function handleVoice(text) {
 
 // ELEVENLABS VOICE
 let currentAudio = null;
-let selectedELVoice = localStorage.getItem('el_voice') || 'rachel';
+let selectedELVoice = localStorage.getItem('el_voice') || 'sarah';
 
 function stopSpeaking() {
   if (window.speechSynthesis) window.speechSynthesis.cancel();
