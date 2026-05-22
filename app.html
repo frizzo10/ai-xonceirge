@@ -595,13 +595,20 @@ function resumeCase(c) {
 
 // VOICE ENGINE
 function speakThenListen(text) {
-  startRings();
   stopSpeaking();
-  stopRecording(); // Make sure mic is off while speaking
+  stopRecording();
+  stopRings();
   document.getElementById('stopBtn').classList.add('visible');
-  // Give a clean gap between speaking and listening
+  setHint('Speaking...', '');
+
   speakElevenLabs(text, () => {
-    setTimeout(startRecording, 600); // Longer gap so speech fully ends
+    // Clear gap after speech ends before opening mic
+    setHint('', '');
+    setTimeout(() => {
+      setHint('🎤 Your turn — speak now', 'live');
+      startRings();
+      setTimeout(startRecording, 500);
+    }, 1000);
   });
 }
 
@@ -615,12 +622,22 @@ function startRecording() {
   isRecording = true;
   document.getElementById('micBtn').classList.add('listening');
   startRings(); setHint('Listening...','live'); stopSpeaking();
-  recognition.onresult = e => { const t = e.results[0][0].transcript.trim(); stopRecording(); handleVoice(t); };
+  recognition.onresult = e => {
+    const t = e.results[0][0].transcript.trim();
+    console.log('Heard:', t);
+    stopRecording();
+    handleVoice(t);
+  };
   recognition.onerror = e => {
+    console.log('Speech error:', e.error);
     stopRecording();
     if (e.error==='not-allowed') setHint('Mic blocked — type below','error');
-    else if (e.error==='no-speech') setHint('Tap to try again','');
-    else addAIBubble("Didn't catch that — slow down and tap the mic again.",[]);
+    else if (e.error==='no-speech') {
+      setHint('Tap mic and try again','');
+    }
+    else {
+      setHint('Tap mic and try again','');
+    }
   };
   recognition.onend = () => { if(isRecording) stopRecording(); };
   try { recognition.start(); } catch(e) { stopRecording(); }
