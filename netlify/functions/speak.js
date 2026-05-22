@@ -36,8 +36,22 @@ exports.handler = async (event) => {
     return { statusCode: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' }, body: JSON.stringify({ error: 'No API key configured' }) };
   }
 
-  // GET = test endpoint to verify API key works
+  // GET = test endpoint
   if (event.httpMethod === 'GET') {
+    const path = event.path || '';
+    if (path.includes('voices')) {
+      // List available voices
+      const test = await makeRequest({
+        hostname: 'api.elevenlabs.io',
+        path: '/v1/voices',
+        method: 'GET',
+        headers: { 'xi-api-key': apiKey }
+      });
+      const data = JSON.parse(test.body.toString());
+      const voices = (data.voices || []).map(v => ({ id: v.voice_id, name: v.name, category: v.category }));
+      return { statusCode: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' }, body: JSON.stringify(voices) };
+    }
+    // Default — test user
     const test = await makeRequest({
       hostname: 'api.elevenlabs.io',
       path: '/v1/user',
