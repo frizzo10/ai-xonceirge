@@ -597,8 +597,12 @@ function resumeCase(c) {
 function speakThenListen(text) {
   startRings();
   stopSpeaking();
+  stopRecording(); // Make sure mic is off while speaking
   document.getElementById('stopBtn').classList.add('visible');
-  speakElevenLabs(text, () => setTimeout(startRecording, 350));
+  // Give a clean gap between speaking and listening
+  speakElevenLabs(text, () => {
+    setTimeout(startRecording, 600); // Longer gap so speech fully ends
+  });
 }
 
 function toggleMic() { isRecording ? stopRecording() : startRecording(); }
@@ -798,6 +802,35 @@ if (isIOS && !isStandalone && !localStorage.getItem('install_dismissed')) {
 // GREETING
 const hr = new Date().getHours();
 document.getElementById('greeting').textContent = hr<12?'Good morning.':hr<17?'Good afternoon.':'Good evening.';
+
+// REQUEST MIC PERMISSION UPFRONT — before any conversation starts
+// This prevents the permission popup from interrupting mid-conversation
+async function requestMicPermission() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    // Permission granted — stop the stream immediately, we just needed the grant
+    stream.getTracks().forEach(t => t.stop());
+    console.log('Mic permission granted upfront');
+  } catch(e) {
+    console.log('Mic permission denied or not available:', e.message);
+  }
+}
+
+// Also warm up ElevenLabs with a silent request so first response is faster
+async function warmupElevenLabs() {
+  try {
+    await fetch('/api/speak', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: 'Ready.', voice: selectedELVoice })
+    });
+  } catch(e) {}
+}
+
+// Run both on load — silently
+setTimeout(() => {
+  requestMicPermission();
+}, 1000);
 
 // DEEP LINK
 const q = new URLSearchParams(location.search).get('q');
