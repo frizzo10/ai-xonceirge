@@ -65,7 +65,7 @@ exports.handler = async (event) => {
 
   try {
     const { text, voice = 'sarah' } = JSON.parse(event.body);
-    const voiceId = VOICES[voice] || VOICES.sarah;
+    const voiceId = VOICES[voice] || VOICES.default;
 
     const clean = text.replace(/[*_#`]/g, '').replace(/\n+/g, ' ').trim().substring(0, 500);
     console.log(`Speaking with voice ${voice} (${voiceId}): "${clean.substring(0, 50)}..."`);
