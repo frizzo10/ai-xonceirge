@@ -615,10 +615,12 @@ function speakThenListen(text) {
   setHint('Speaking...', '');
 
   speakElevenLabs(text, () => {
-    // Audio fully done — now auto-listen
-    setHint('Listening...', 'live');
-    startRings();
-    startRecording();
+    setTimeout(() => {
+      setHint('🎤 Tap mic to respond', 'live');
+      startRings();
+      // Try auto-listen
+      try { startRecording(); } catch(e) {}
+    }, 1200);
   });
 }
 
