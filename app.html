@@ -656,7 +656,7 @@ async function speakElevenLabs(text, onEnd) {
     await currentAudio.play();
   } catch(e) {
     // Fallback to browser TTS
-    console.log('ElevenLabs fallback to browser TTS');
+    console.error('ElevenLabs failed:', e.message, '— falling back to browser TTS');
     if (window.speechSynthesis && availableVoices.length > 0) {
       const utt = new SpeechSynthesisUtterance(text.substring(0,300));
       if (selectedVoice) utt.voice = selectedVoice;
