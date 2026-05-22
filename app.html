@@ -99,18 +99,18 @@ body{
 .home-greeting{padding:20px 16px 12px}
 .home-greeting strong{color:var(--green-dark);font-weight:600;display:block;font-size:17px;margin-bottom:3px}
 .home-greeting span{font-size:13px;color:var(--text2)}
-.prob-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 12px 20px}
+.prob-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 12px 24px}
 .prob-btn{
-  border:1.5px solid var(--border);border-radius:14px;
-  background:var(--surface);padding:14px 4px 11px;
-  display:flex;flex-direction:column;align-items:center;gap:6px;
+  border:1.5px solid var(--border);border-radius:16px;
+  background:var(--surface);padding:18px 8px 14px;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
   cursor:pointer;-webkit-tap-highlight-color:transparent;text-align:center;
   transition:all 0.12s;user-select:none;
-  box-shadow:0 1px 3px rgba(61,140,26,0.08);
+  box-shadow:0 1px 4px rgba(61,140,26,0.1);
 }
 .prob-btn:active{background:var(--green-light);border-color:var(--green);transform:scale(0.93)}
-.prob-btn .pbi{font-size:22px;pointer-events:none}
-.prob-btn .pbl{font-size:9px;color:var(--text2);line-height:1.2;font-weight:600;pointer-events:none}
+.prob-btn .pbi{font-size:28px;pointer-events:none}
+.prob-btn .pbl{font-size:11px;color:var(--text2);line-height:1.3;font-weight:600;pointer-events:none}
 
 /* VOICE */
 .voice-state{flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0;background:var(--bg)}
@@ -271,8 +271,10 @@ body{
 .install-x{background:none;border:none;color:var(--text3);font-size:20px;cursor:pointer;padding:0 4px}
 
 @media(max-width:480px){
-  .cases-col{width:140px}
-  .prob-grid{grid-template-columns:repeat(3,1fr)}
+  .cases-col{width:130px}
+}
+@media(max-width:380px){
+  .prob-grid{grid-template-columns:repeat(2,1fr)}
 }
 </style>
 </head>
