@@ -210,6 +210,18 @@ body{
 .nav-btn.active span{color:var(--green)}
 .nav-btn:active svg{fill:var(--green-dark)}
 
+/* DONE BUTTON */
+.done-btn{
+  display:none;margin:8px 12px 4px;padding:12px;
+  border-radius:12px;border:1.5px solid var(--border2);
+  background:var(--surface);color:var(--text2);
+  font-size:14px;font-weight:600;text-align:center;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  transition:all 0.15s;
+}
+.done-btn.visible{display:block}
+.done-btn:active{background:var(--green-light);border-color:var(--green);color:var(--green-dark)}
+
 /* DOTS */
 .dots{display:flex;gap:4px;align-items:center;padding:2px}
 .dots span{width:6px;height:6px;border-radius:50%;background:var(--text3);animation:blink 1.2s infinite}
@@ -336,6 +348,7 @@ body{
         <p class="mic-hint" id="micHint">Tap to talk</p>
       </div>
       <div class="convo-history" id="convoHistory"></div>
+      <div class="done-btn" id="doneBtn" onclick="finishConversation()">✓ Done — close this case</div>
       <div class="type-bar">
         <input class="type-input" id="typeInput" placeholder="Or type here..." onkeydown="handleTypeKey(event)">
         <button class="type-send" onclick="sendTyped()">
@@ -554,6 +567,7 @@ function openVoice(category, label, prompt) {
   document.getElementById('voicePrompt').textContent = prompt;
   document.getElementById('convoHistory').innerHTML = '';
   document.getElementById('micBtn').className = 'mic-btn';
+  document.getElementById('doneBtn').classList.remove('visible');
   setHint('','');
   stopRings();
   document.getElementById('homeState').style.display = 'none';
@@ -716,6 +730,8 @@ function addAIBubble(text, chips) {
   b.className = 'bubble-ai'; b.textContent = text;
   document.getElementById('convoHistory').appendChild(b);
   if (chips && chips.length) addChips(chips);
+  // Show done button after first real response
+  document.getElementById('doneBtn').classList.add('visible');
   scrollHistory();
 }
 
@@ -748,6 +764,16 @@ function scrollHistory() { const h = document.getElementById('convoHistory'); se
 function setHint(text,state) { const el = document.getElementById('micHint'); el.textContent=text; el.className='mic-hint'+(state?' '+state:''); }
 function startRings() { document.getElementById('ring1').classList.add('pulse'); document.getElementById('ring2').classList.add('pulse'); }
 function stopRings() { document.getElementById('ring1').classList.remove('pulse'); document.getElementById('ring2').classList.remove('pulse'); }
+
+// FINISH CONVERSATION
+function finishConversation() {
+  stopRecording();
+  stopSpeaking();
+  stopRings();
+  document.getElementById('doneBtn').classList.remove('visible');
+  document.getElementById('stopBtn').classList.remove('visible');
+  showHome();
+}
 
 // TYPE INPUT
 function handleTypeKey(e) { if(e.key==='Enter'){e.preventDefault();sendTyped();} }
