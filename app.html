@@ -333,10 +333,13 @@ body{
       <div class="voice-top">
         <span class="voice-category" id="voiceCategory"></span>
         <p class="voice-prompt" id="voicePrompt"></p>
+        <p style="font-size:11px;color:var(--text3);margin-top:-4px">Hold the mic button and speak</p>
         <div class="mic-wrap">
           <div class="mic-ring" id="ring1"></div>
           <div class="mic-ring delay" id="ring2"></div>
-          <button class="mic-btn" id="micBtn" onclick="toggleMic()">
+          <button class="mic-btn" id="micBtn" 
+          ontouchstart="holdStart(event)" ontouchend="holdEnd(event)"
+          onmousedown="holdStart(event)" onmouseup="holdEnd(event)">
             <svg viewBox="0 0 24 24">
               <rect x="9" y="2" width="6" height="13" rx="3"/>
               <path d="M5 10a7 7 0 0 0 14 0" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"/>
@@ -602,13 +605,35 @@ function speakThenListen(text) {
   setHint('Speaking...', '');
 
   speakElevenLabs(text, () => {
-    // Don't auto-listen — let user tap when ready
-    setHint('Tap mic to respond', 'live');
+    setHint('Hold mic to respond', 'live');
     startRings();
   });
 }
 
 function toggleMic() { isRecording ? stopRecording() : startRecording(); }
+
+// HOLD TO TALK
+let holdTimer = null;
+function holdStart(e) {
+  e.preventDefault();
+  if (isRecording) return;
+  // Small delay to distinguish tap from hold
+  holdTimer = setTimeout(() => {
+    startRecording();
+    setHint('Hold & speak...', 'live');
+  }, 100);
+}
+function holdEnd(e) {
+  e.preventDefault();
+  clearTimeout(holdTimer);
+  if (isRecording) {
+    stopRecording();
+    // Manually trigger result processing
+    if (recognition) {
+      try { recognition.stop(); } catch(e) {}
+    }
+  }
+}
 
 function startRecording() {
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
