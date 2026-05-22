@@ -222,6 +222,16 @@ body{
 .done-btn.visible{display:block}
 .done-btn:active{background:var(--green-light);border-color:var(--green);color:var(--green-dark)}
 
+/* THINKING PULSE */
+@keyframes thinking {
+  0%,100%{box-shadow:0 0 0 0 rgba(61,140,26,0.4)}
+  50%{box-shadow:0 0 0 16px rgba(61,140,26,0)}
+}
+.mic-btn.thinking-pulse{
+  animation:thinking 1s infinite;
+  background:#8AAE60 !important;
+}
+
 /* DOTS */
 .dots{display:flex;gap:4px;align-items:center;padding:2px}
 .dots span{width:6px;height:6px;border-radius:50%;background:var(--text3);animation:blink 1.2s infinite}
@@ -605,8 +615,11 @@ function speakThenListen(text) {
   setHint('Speaking...', '');
 
   speakElevenLabs(text, () => {
-    setHint('Hold mic to respond', 'live');
-    startRings();
+    // Wait for audio session to fully release on iOS
+    setTimeout(() => {
+      setHint('Hold mic to respond', 'live');
+      startRings();
+    }, 1500);
   });
 }
 
@@ -679,10 +692,16 @@ function stopConversation() {
 }
 
 function handleVoice(text) {
-  if (!text || text.length < 2) { addAIBubble("Didn't catch that — slow down and try again.",[]); return; }
+  if (!text || text.length < 2) {
+    setHint('Tap mic and try again','error');
+    return;
+  }
+  // Show what they said immediately
   addUserBubble(text);
   history.push({role:'user',content:text});
-  setHint('','');
+  setHint('Thinking...','');
+  // Pulse the mic to show thinking
+  document.getElementById('micBtn').className = 'mic-btn thinking-pulse';
   callConcierge();
 }
 
@@ -735,6 +754,7 @@ async function callConcierge() {
     const data = await res.json();
     removeTypingBubble(tid);
     document.getElementById('micBtn').className = 'mic-btn';
+    setHint('Hold mic to respond','live');
     if (data.caseId && !currentCaseId) {
       currentCaseId = data.caseId;
       const newCase = {id:data.caseId,category:currentCategory,title:currentCategory+' — '+new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'}),user_id:deviceId,status:'active',context:history,created_at:new Date().toISOString()};
@@ -748,7 +768,8 @@ async function callConcierge() {
   } catch(e) {
     removeTypingBubble(tid);
     document.getElementById('micBtn').className = 'mic-btn';
-    addAIBubble("Connection dropped — still here. Tap the mic and try again.",[]);
+    setHint('Hold mic to respond','live');
+    addAIBubble("Connection dropped — still here. Hold the mic and try again.",[]);
   }
 }
 
@@ -822,8 +843,12 @@ function handleTypeKey(e) { if(e.key==='Enter'){e.preventDefault();sendTyped();}
 function sendTyped() {
   const input = document.getElementById('typeInput');
   const text = input.value.trim(); if(!text) return;
-  input.value = ''; addUserBubble(text);
-  history.push({role:'user',content:text}); callConcierge();
+  input.value = '';
+  addUserBubble(text);
+  history.push({role:'user',content:text});
+  setHint('Thinking...','');
+  document.getElementById('micBtn').className = 'mic-btn thinking-pulse';
+  callConcierge();
 }
 
 // INSTALL
