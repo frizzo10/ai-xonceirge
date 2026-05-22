@@ -602,13 +602,9 @@ function speakThenListen(text) {
   setHint('Speaking...', '');
 
   speakElevenLabs(text, () => {
-    // Clear gap after speech ends before opening mic
-    setHint('', '');
-    setTimeout(() => {
-      setHint('🎤 Your turn — speak now', 'live');
-      startRings();
-      setTimeout(startRecording, 500);
-    }, 1000);
+    // Don't auto-listen — let user tap when ready
+    setHint('Tap mic to respond', 'live');
+    startRings();
   });
 }
 
