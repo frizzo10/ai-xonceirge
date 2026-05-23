@@ -688,10 +688,13 @@ function openVoice(category, label, prompt) {
   const userName = localStorage.getItem('user_name');
   const openingLine = userName ? `${userName}, ${prompt}` : prompt;
 
-  // Pre-seed history with known profile facts so Groq doesn't ask again
+  // Pre-seed history — inject profile as assistant context
   const profile = getLocalProfile();
   if (profile) {
-    history = [{ role: 'system', content: `Known about this user: ${profile}. Do not ask for any of this.` }];
+    history = [
+      { role: 'user', content: 'Before we start, here is what I want you to know about me: ' + profile },
+      { role: 'assistant', content: 'Got it — I have everything I need. I won't ask you about any of that.' }
+    ];
   }
 
   speakThenListen(openingLine);
