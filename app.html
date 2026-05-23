@@ -210,6 +210,26 @@ body{
 .nav-btn.active span{color:var(--green)}
 .nav-btn:active svg{fill:var(--green-dark)}
 
+/* PLACES RESULTS */
+.places-card{
+  background:var(--surface);border:1.5px solid var(--border);
+  border-radius:14px;padding:14px 16px;margin-top:8px;
+}
+.places-card-name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px}
+.places-card-addr{font-size:12px;color:var(--text3);margin-bottom:6px;line-height:1.4}
+.places-card-meta{display:flex;gap:10px;align-items:center;margin-bottom:8px}
+.places-rating{font-size:12px;color:var(--green-dark);font-weight:600}
+.places-open{font-size:11px;padding:2px 8px;border-radius:10px;font-weight:600}
+.places-open.yes{background:var(--green-dim);color:var(--green-dark)}
+.places-open.no{background:rgba(214,59,59,0.1);color:var(--red)}
+.places-call{
+  display:block;width:100%;padding:9px;border-radius:10px;
+  background:var(--green);color:white;border:none;
+  font-size:13px;font-weight:700;cursor:pointer;text-align:center;
+  -webkit-tap-highlight-color:transparent;text-decoration:none;
+}
+.places-call:active{opacity:0.85}
+
 /* DONE BUTTON */
 .done-btn{
   display:none;margin:8px 12px 4px;padding:12px;
@@ -757,11 +777,24 @@ async function callConcierge() {
       localCases = [newCase,...localCases.filter(c=>c.id!==data.caseId)];
       renderCases(); setActiveCase(data.caseId);
     }
-    const reply = data.reply || data.error || "I'm here — try again.";
-    console.log('Reply:', reply);
-    history.push({role:'assistant',content:reply});
-    addAIBubble(reply, getChips());
-    speakThenListen(reply);
+    const rawReply = data.reply || data.error || "I'm here — try again.";
+    console.log('Reply:', rawReply);
+
+    const { cleanReply, placesQuery } = checkForPlacesSearch(rawReply);
+    history.push({role:'assistant',content:cleanReply});
+    addAIBubble(cleanReply, getChips());
+    speakThenListen(cleanReply);
+
+    // Execute places search if requested
+    if (placesQuery) {
+      setTimeout(() => searchPlaces(placesQuery), 1500);
+    }
+
+    // Save location if user mentioned it
+    const zipMatch = cleanReply.match(/\d{5}/) || [];
+    if (zipMatch.length && !localStorage.getItem('user_zip')) {
+      localStorage.setItem('user_zip', zipMatch[0]);
+    }
   } catch(e) {
     removeTypingBubble(tid);
     document.getElementById('micBtn').className = 'mic-btn';
@@ -835,6 +868,84 @@ function finishConversation() {
   showHome();
 }
 
+// PLACES SEARCH
+async function searchPlaces(query) {
+  // Ask for location if we don't have it
+  const zip = localStorage.getItem('user_zip');
+  if (!zip) {
+    addAIBubble("What city or zip code are you in? I'll find real options near you.", []);
+    localStorage.setItem('pending_places', query);
+    return;
+  }
+  doPlacesSearch(query, zip);
+}
+
+async function doPlacesSearch(query, location) {
+  const loadingId = addTypingBubble();
+  try {
+    const res = await fetch('/api/places', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query, location })
+    });
+    const data = await res.json();
+    removeTypingBubble(loadingId);
+
+    if (!data.places || data.places.length === 0) {
+      addAIBubble(`I couldn't find results near ${location}. Try searching Google Maps for "${query}".`, []);
+      return;
+    }
+
+    // Show results
+    const hist = document.getElementById('convoHistory');
+    const wrapper = document.createElement('div');
+    wrapper.style.cssText = 'display:flex;flex-direction:column;gap:8px;align-self:flex-start;width:92%';
+
+    const label = document.createElement('div');
+    label.style.cssText = 'font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3)';
+    label.textContent = `Found near ${location}`;
+    wrapper.appendChild(label);
+
+    data.places.forEach(p => {
+      const card = document.createElement('div');
+      card.className = 'places-card';
+      const openStatus = p.open_now === true ? '<span class="places-open yes">Open now</span>' :
+                         p.open_now === false ? '<span class="places-open no">Closed</span>' : '';
+      const rating = p.rating ? `<span class="places-rating">★ ${p.rating}</span>` : '';
+      card.innerHTML = `
+        <div class="places-card-name">${p.name}</div>
+        <div class="places-card-addr">${p.address}</div>
+        <div class="places-card-meta">${rating}${openStatus}</div>
+        <a class="places-call" href="https://www.google.com/maps/place/?q=place_id:${p.place_id}" target="_blank">
+          Open in Google Maps →
+        </a>
+      `;
+      wrapper.appendChild(card);
+    });
+
+    hist.appendChild(wrapper);
+    scrollHistory();
+
+    // Tell Groq we found results
+    history.push({ role: 'assistant', content: `I found ${data.places.length} options near ${location}: ${data.places.map(p => p.name).join(', ')}. Which one would you like to call first?` });
+
+  } catch(e) {
+    removeTypingBubble(loadingId);
+    addAIBubble(`Couldn't load results — try searching Google Maps for "${query}".`, []);
+  }
+}
+
+// Check if Groq response contains a places search request
+function checkForPlacesSearch(reply) {
+  const match = reply.match(/\[PLACES_SEARCH:\s*(.+?)\]/);
+  if (match) {
+    const query = match[1].trim();
+    // Remove the tag from displayed text
+    return { cleanReply: reply.replace(/\[PLACES_SEARCH:[^\]]+\]/, '').trim(), placesQuery: query };
+  }
+  return { cleanReply: reply, placesQuery: null };
+}
+
 // TYPE INPUT
 function handleTypeKey(e) { if(e.key==='Enter'){e.preventDefault();sendTyped();} }
 function sendTyped() {
@@ -842,6 +953,20 @@ function sendTyped() {
   const text = input.value.trim(); if(!text) return;
   input.value = '';
   addUserBubble(text);
+
+  // Check if they're answering a location request
+  const zipMatch = text.match(/\d{5}/);
+  const cityMatch = text.match(/^[A-Za-z\s]+,?\s*[A-Z]{2}$/);
+  const pending = localStorage.getItem('pending_places');
+
+  if ((zipMatch || cityMatch) && pending) {
+    const loc = zipMatch ? zipMatch[0] : text.trim();
+    localStorage.setItem('user_zip', loc);
+    localStorage.removeItem('pending_places');
+    doPlacesSearch(pending, loc);
+    return;
+  }
+
   history.push({role:'user',content:text});
   setHint('Thinking...','');
   document.getElementById('micBtn').className = 'mic-btn thinking-pulse';
