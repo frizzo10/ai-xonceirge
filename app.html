@@ -849,9 +849,12 @@ function speakThenListen(text) {
   setHint('Speaking...', '');
 
   speakElevenLabs(text, () => {
-    // 2 second gap — gives iOS time to fully release audio session
+    // Show wait message immediately after speech ends
+    setHint('Please wait...', '');
+    stopRings();
+    // Then open mic after gap
     setTimeout(() => {
-      setHint('🎤 Tap mic to respond', 'live');
+      setHint('🎤 Your turn — speak now', 'live');
       startRings();
       try { startRecording(); } catch(e) {}
     }, 2000);
