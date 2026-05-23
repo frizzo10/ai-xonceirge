@@ -214,9 +214,15 @@ body{
 .onboarding{
   position:fixed;top:0;left:0;right:0;bottom:0;
   background:var(--bg);z-index:500;
-  display:flex;flex-direction:column;
+  flex-direction:column;
   justify-content:center;align-items:center;
   padding:40px 32px;text-align:center;
+  display:none;
+  pointer-events:none;
+}
+.onboarding.active{
+  display:flex;
+  pointer-events:all;
 }
 .ob-brand{
   font-family:'DM Serif Display',serif;
@@ -477,7 +483,7 @@ body{
 </div>
 
 <!-- ONBOARDING -->
-<div class="onboarding" id="onboarding" style="display:none">
+<div class="onboarding" id="onboarding">
   <div class="ob-brand">Concierge</div>
   <div class="ob-sub">Let me get to know you.<br>Five quick things.</div>
   <div class="ob-progress" id="obProgress"></div>
@@ -488,7 +494,7 @@ body{
 </div>
 
 <!-- INSTALL BANNERS -->
-<div class="install-banner" id="installBanner">
+<div class="install-banner" id="installBanner" style="pointer-events:none">
   <span style="font-size:24px">📱</span>
   <div style="flex:1">
     <div style="font-size:14px;font-weight:600;color:var(--text)">Add to Home Screen</div>
@@ -1082,7 +1088,7 @@ function sendTyped() {
 
 // INSTALL
 let deferredPrompt = null;
-window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredPrompt=e; document.getElementById('installBanner').classList.add('show'); });
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredPrompt=e; const b=document.getElementById('installBanner'); b.classList.add('show'); b.style.pointerEvents='all'; });
 function installApp() { if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.userChoice.then(()=>{deferredPrompt=null;document.getElementById('installBanner').classList.remove('show');});} }
 function dismissInstall() { document.getElementById('installBanner').classList.remove('show'); localStorage.setItem('install_dismissed','1'); }
 const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
@@ -1103,7 +1109,7 @@ let obStep = 0;
 let obAnswers = {};
 
 function showOnboarding() {
-  document.getElementById('onboarding').style.display = 'flex';
+  document.getElementById('onboarding').classList.add('active');
   renderObStep();
 }
 
@@ -1178,7 +1184,7 @@ async function finishOnboarding() {
   } catch(e) { console.log('Profile save error:', e); }
 
   // Hide onboarding and update greeting
-  document.getElementById('onboarding').style.display = 'none';
+  document.getElementById('onboarding').classList.remove('active');
   updateGreeting();
 }
 
