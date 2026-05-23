@@ -678,7 +678,9 @@ function openVoice(category, label, prompt) {
   document.getElementById('homeState').style.display = 'none';
   document.getElementById('voiceState').style.display = 'flex';
   setNav('navTalk');
-  speakThenListen(prompt);
+  const userName = localStorage.getItem('user_name');
+  const openingLine = userName ? `${userName}, ${prompt}` : prompt;
+  speakThenListen(openingLine);
 }
 
 function resumeCase(c) {
