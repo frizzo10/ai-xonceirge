@@ -618,7 +618,14 @@ function renderCases() {
   const list = document.getElementById('casesList');
   if (!localCases.length) { list.innerHTML = '<div class="case-empty"><p>Your cases appear here as you talk.</p></div>'; return; }
   list.innerHTML = '';
-  localCases.forEach(c => {
+  // Deduplicate — one card per category
+  const seen = new Set();
+  const deduped = localCases.filter(c => {
+    if (seen.has(c.category)) return false;
+    seen.add(c.category);
+    return true;
+  });
+  deduped.forEach(c => {
     const el = document.createElement('div');
     el.className = 'case-item' + (c.id === currentCaseId ? ' active' : '');
     el.dataset.id = c.id;

@@ -146,13 +146,30 @@ exports.handler = async (event) => {
     if (deviceId) {
       try {
         if (!activeCaseId && category && messages.length > 0) {
-          const title = `${category} — ${new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
-          const newCase = await createCase(deviceId, category, title);
-          activeCaseId = newCase?.id;
-        }
-        if (activeCaseId) {
+          // Check for existing open case in this category — reuse it
+          const existing = await sbRequest('GET', 
+            `cases?user_id=eq.${encodeURIComponent(deviceId)}&category=eq.${category}&status=eq.active&order=updated_at.desc&limit=1`
+          );
+          const existingCases = JSON.parse(existing.body);
+          if (existingCases && existingCases.length > 0) {
+            activeCaseId = existingCases[0].id;
+            // Append new messages to existing context
+            const existingContext = Array.isArray(existingCases[0].context) ? existingCases[0].context : [];
+            // Merge — keep existing history + new messages
+            const merged = [...existingContext, ...messages.filter(m => 
+              !existingContext.some(e => e.role === m.role && e.content === m.content)
+            )];
+            await updateCase(activeCaseId, { context: merged });
+          } else {
+            // Create new case — first time for this category
+            const title = `${category}`;
+            const newCase = await createCase(deviceId, category, title);
+            activeCaseId = newCase?.id;
+          }
+        } else if (activeCaseId) {
           await updateCase(activeCaseId, { context: messages });
         }
+        // (case update handled above)
         if (activeCaseId && messages.length >= 6 && messages.length % 4 === 2) {
           const existing = await getCase(activeCaseId);
           if (existing && (!existing.timeline || existing.timeline.length === 0)) {
@@ -186,9 +203,7 @@ exports.handler = async (event) => {
     // Extract any system context messages and merge into prompt
     const systemMsgs = messages.filter(m => m.role === 'system').map(m => m.content).join(' ');
     const chatMsgs = messages.filter(m => m.role !== 'system').slice(-8);
-    const fullSystem = SYSTEM + profileContext + (systemMsgs ? '
-
-' + systemMsgs : '');
+    const fullSystem = SYSTEM + profileContext + (systemMsgs ? '\n\n' + systemMsgs : '');
     const reply = await callGroq(chatMsgs, fullSystem);
 
     return {
