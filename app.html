@@ -849,12 +849,12 @@ function speakThenListen(text) {
   setHint('Speaking...', '');
 
   speakElevenLabs(text, () => {
+    // 2 second gap — gives iOS time to fully release audio session
     setTimeout(() => {
       setHint('🎤 Tap mic to respond', 'live');
       startRings();
-      // Try auto-listen
       try { startRecording(); } catch(e) {}
-    }, 1200);
+    }, 2000);
   });
 }
 
