@@ -183,9 +183,13 @@ exports.handler = async (event) => {
       } catch(e) {}
     }
 
-    // Trim history to last 8 messages to avoid token overflow
-    const trimmed = messages.slice(-8);
-    const reply = await callGroq(trimmed, SYSTEM + profileContext);
+    // Extract any system context messages and merge into prompt
+    const systemMsgs = messages.filter(m => m.role === 'system').map(m => m.content).join(' ');
+    const chatMsgs = messages.filter(m => m.role !== 'system').slice(-8);
+    const fullSystem = SYSTEM + profileContext + (systemMsgs ? '
+
+' + systemMsgs : '');
+    const reply = await callGroq(chatMsgs, fullSystem);
 
     return {
       statusCode: 200,
