@@ -683,7 +683,9 @@ function showHome() {
 }
 
 function openVoice(category, label, prompt) {
-  currentCategory = category; currentCaseId = null; history = [];
+  currentCategory = category;
+  currentCaseId = null;
+
   document.getElementById('voiceCategory').textContent = label;
   document.getElementById('voicePrompt').textContent = prompt;
   document.getElementById('convoHistory').innerHTML = '';
@@ -694,18 +696,27 @@ function openVoice(category, label, prompt) {
   document.getElementById('homeState').style.display = 'none';
   document.getElementById('voiceState').style.display = 'flex';
   setNav('navTalk');
-  const userName = localStorage.getItem('user_name');
-  const openingLine = userName ? `${userName}, ${prompt}` : prompt;
 
-  // Pre-seed history — inject profile as assistant context
+  // Build profile context first
   const profile = getLocalProfile();
-  if (profile) {
-    history = [
-      { role: 'user', content: 'Before we start, here is what I want you to know about me: ' + profile },
-      { role: 'assistant', content: "Got it — I have everything I need. I won't ask you about any of that." }
-    ];
+  const profileMessages = profile ? [
+    { role: 'user', content: 'What you already know about me: ' + profile },
+    { role: 'assistant', content: "Got it. I have all of that — I won't ask about any of it." }
+  ] : [];
+
+  // Check for existing case — resume it
+  const existingCase = localCases.find(c => c.category === category);
+  if (existingCase) {
+    currentCaseId = existingCase.id;
+    const caseHistory = Array.isArray(existingCase.context) ? existingCase.context : [];
+    // Profile first, then case history (deduped)
+    history = [...profileMessages, ...caseHistory.filter(m => m.role !== 'system')];
+  } else {
+    history = [...profileMessages];
   }
 
+  const userName = localStorage.getItem('user_name');
+  const openingLine = userName ? `${userName}, ${prompt}` : prompt;
   speakThenListen(openingLine);
 }
 
