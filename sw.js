@@ -1,40 +1,12 @@
-const CACHE = 'concierge-v14';
-const ASSETS = ['/', '/index.html', '/app.html', '/manifest.json'];
-
-self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)));
-  self.skipWaiting();
-});
-
+// Service worker — network first, no caching
+self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', e => {
   e.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE).map(k => {
-        console.log('Deleting old cache:', k);
-        return caches.delete(k);
-      }))
-    )
+    caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k))))
   );
   self.clients.claim();
 });
-
 self.addEventListener('fetch', e => {
-  if (e.request.method !== 'GET') return;
-  // Always fetch fresh from network for HTML files
-  if (e.request.url.includes('.html') || e.request.url.endsWith('/')) {
-    e.respondWith(
-      fetch(e.request).catch(() => caches.match(e.request))
-    );
-    return;
-  }
-  // Cache first for other assets
-  e.respondWith(
-    fetch(e.request)
-      .then(res => {
-        const clone = res.clone();
-        caches.open(CACHE).then(c => c.put(e.request, clone));
-        return res;
-      })
-      .catch(() => caches.match(e.request))
-  );
+  // Always go to network — never serve from cache
+  e.respondWith(fetch(e.request).catch(() => new Response('Offline')));
 });
