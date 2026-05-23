@@ -1117,6 +1117,13 @@ function showOnboarding() {
 }
 
 function renderObStep() {
+  // Skip questions already answered
+  const KEY_MAP = { first_name: 'user_name', zip_code: 'user_zip', has_car: 'user_car', has_kids: 'user_kids', health_note: 'user_health' };
+  while (obStep < OB_QUESTIONS.length && localStorage.getItem(KEY_MAP[OB_QUESTIONS[obStep].key])) {
+    obStep++;
+  }
+  if (obStep >= OB_QUESTIONS.length) { finishOnboarding(); return; }
+  
   const q = OB_QUESTIONS[obStep];
   document.getElementById('obQuestion').textContent = q.q;
   const input = document.getElementById('obInput');
@@ -1199,8 +1206,13 @@ function updateGreeting() {
   if (el) el.textContent = name ? `${time}, ${name}.` : `${time}.`;
 }
 
-// Show onboarding if not done
-if (!localStorage.getItem('ob_done')) {
+// Show onboarding if any key field is missing
+function needsOnboarding() {
+  return !localStorage.getItem('user_name') || 
+         !localStorage.getItem('user_car') || 
+         !localStorage.getItem('user_zip');
+}
+if (needsOnboarding()) {
   setTimeout(() => showOnboarding(), 800);
 }
 
