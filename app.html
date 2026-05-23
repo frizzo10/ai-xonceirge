@@ -599,11 +599,30 @@ body{
 </div>
 
 <script>
-if('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js');
-  // Force update check
-  navigator.serviceWorker.getRegistrations().then(regs => {
-    regs.forEach(reg => reg.update());
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').then(reg => {
+    // Check for updates every 60 seconds
+    setInterval(() => reg.update(), 60000);
+
+    // When new SW is waiting — activate it immediately
+    reg.addEventListener('updatefound', () => {
+      const newSW = reg.installing;
+      newSW.addEventListener('statechange', () => {
+        if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
+          // New version available — reload silently
+          newSW.postMessage('skipWaiting');
+        }
+      });
+    });
+  });
+
+  // When SW takes control — reload the page to get fresh content
+  let refreshing = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!refreshing) {
+      refreshing = true;
+      window.location.reload();
+    }
   });
 }
 
