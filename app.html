@@ -282,7 +282,7 @@ body{
 
 <!-- TOPBAR -->
 <div class="topbar">
-  <div class="topbar-brand">Concierge</div>
+  <div class="topbar-brand">Concierge <span style="font-size:10px;font-weight:400;color:var(--text3);font-family:'DM Sans',sans-serif;letter-spacing:1px">v1.4</span></div>
   <div class="topbar-tagline">We have the answer.</div>
 </div>
 
@@ -423,7 +423,13 @@ body{
 </div>
 
 <script>
-if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
+if('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js');
+  // Force update check
+  navigator.serviceWorker.getRegistrations().then(regs => {
+    regs.forEach(reg => reg.update());
+  });
+}
 
 // STATE
 let history = [];
