@@ -213,6 +213,37 @@ body{
 .nav-btn.active span{color:var(--green)}
 .nav-btn:active svg{fill:var(--green-dark)}
 
+/* PROFILE SCREEN */
+.profile-screen{
+  flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  padding:20px 16px;display:none;flex-direction:column;gap:16px;
+}
+.profile-screen.active{display:flex}
+.profile-section{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.profile-section-title{
+  font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--text3);padding:14px 16px 8px;
+}
+.profile-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 16px;border-top:1px solid var(--border);
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+}
+.profile-row:first-of-type{border-top:none}
+.profile-row:active{background:var(--green-light)}
+.profile-row-left{display:flex;flex-direction:column;gap:2px}
+.profile-row-label{font-size:11px;color:var(--text3);font-weight:500}
+.profile-row-value{font-size:14px;color:var(--text);font-weight:500}
+.profile-row-value.empty{color:var(--text3);font-style:italic}
+.profile-row-edit{font-size:18px;color:var(--text3)}
+.profile-add-btn{
+  display:flex;align-items:center;gap:10px;
+  padding:14px 16px;border-top:1px solid var(--border);
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  color:var(--green);font-size:14px;font-weight:600;
+}
+.profile-add-btn:active{background:var(--green-light)}
+
 /* ONBOARDING */
 .onboarding{
   position:fixed;top:0;left:0;right:0;bottom:0;
@@ -454,6 +485,56 @@ body{
       </div>
     </div>
 
+    <!-- PROFILE SCREEN -->
+    <div class="profile-screen" id="profileScreen">
+      <div class="profile-section">
+        <div class="profile-section-title">About You</div>
+        <div class="profile-row" onclick="editField('user_name','Your name','text')">
+          <div class="profile-row-left">
+            <span class="profile-row-label">Name</span>
+            <span class="profile-row-value" id="pf-name">—</span>
+          </div>
+          <span class="profile-row-edit">›</span>
+        </div>
+        <div class="profile-row" onclick="editField('user_zip','City or zip code','text')">
+          <div class="profile-row-left">
+            <span class="profile-row-label">Location</span>
+            <span class="profile-row-value" id="pf-zip">—</span>
+          </div>
+          <span class="profile-row-edit">›</span>
+        </div>
+        <div class="profile-row" onclick="editField('user_kids','Kids (ages or yes/no)','text')">
+          <div class="profile-row-left">
+            <span class="profile-row-label">Kids</span>
+            <span class="profile-row-value" id="pf-kids">—</span>
+          </div>
+          <span class="profile-row-edit">›</span>
+        </div>
+        <div class="profile-row" onclick="editField('user_health','Health notes','text')">
+          <div class="profile-row-left">
+            <span class="profile-row-label">Health notes</span>
+            <span class="profile-row-value" id="pf-health">—</span>
+          </div>
+          <span class="profile-row-edit">›</span>
+        </div>
+      </div>
+
+      <div class="profile-section">
+        <div class="profile-section-title">Your Vehicles</div>
+        <div id="pf-cars-list"></div>
+        <div class="profile-add-btn" onclick="addVehicle()">＋ Add a vehicle</div>
+      </div>
+
+      <div style="padding:8px 0">
+        <div class="profile-row" style="background:var(--surface);border-radius:16px;border:1px solid var(--border)" onclick="resetOnboarding()">
+          <div class="profile-row-left">
+            <span class="profile-row-value" style="color:var(--red)">Reset & redo setup</span>
+          </div>
+          <span class="profile-row-edit">›</span>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -471,9 +552,9 @@ body{
     <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8" fill="none" stroke="currentColor" stroke-width="2"/></svg>
     <span>Cases</span>
   </button>
-  <button class="nav-btn" id="navVoice" onclick="openVoiceSelector()">
-    <svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-    <span>Voice</span>
+  <button class="nav-btn" id="navProfile" onclick="navProfile()">
+    <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <span>Profile</span>
   </button>
 </div>
 
@@ -676,6 +757,7 @@ function showHome() {
   currentCaseId = null; currentCategory = ''; history = [];
   document.getElementById('homeState').style.display = '';
   document.getElementById('voiceState').style.display = 'none';
+  document.getElementById('profileScreen').classList.remove('active');
   document.getElementById('stopBtn').classList.remove('visible');
   stopRecording(); stopSpeaking(); stopRings();
   document.querySelectorAll('.case-item').forEach(el => el.classList.remove('active'));
@@ -719,15 +801,15 @@ function getLocalProfile() {
   const parts = [];
   const name = localStorage.getItem('user_name');
   const zip = localStorage.getItem('user_zip');
-  const car = localStorage.getItem('user_car');
   const kids = localStorage.getItem('user_kids');
   const health = localStorage.getItem('user_health');
-  if (name) parts.push(`Name: ${name}`);
-  if (zip) parts.push(`Location: ${zip}`);
-  if (car) parts.push(`Car: ${car}`);
-  if (kids) parts.push(`Kids: ${kids}`);
-  if (health) parts.push(`Health: ${health}`);
-  return parts.length ? parts.join(', ') : null;
+  const cars = getCars();
+  if (name) parts.push('Name: ' + name);
+  if (zip) parts.push('Location: ' + zip);
+  if (cars.length > 0) parts.push('Vehicles: ' + cars.join(', '));
+  if (kids) parts.push('Kids: ' + kids);
+  if (health) parts.push('Health: ' + health);
+  return parts.length ? parts.join('. ') : null;
 }
 
 function resumeCase(c) {
@@ -1106,6 +1188,106 @@ const isStandalone = window.navigator.standalone;
 if (isIOS && !isStandalone && !localStorage.getItem('install_dismissed')) {
   setTimeout(()=>document.getElementById('iosBanner').classList.add('show'), 3000);
 }
+
+// PROFILE
+function navProfile() {
+  setNav('navProfile');
+  stopRecording(); stopSpeaking();
+  document.getElementById('homeState').style.display = 'none';
+  document.getElementById('voiceState').style.display = 'none';
+  document.getElementById('profileScreen').classList.add('active');
+  renderProfile();
+}
+
+function renderProfile() {
+  const name = localStorage.getItem('user_name');
+  const zip = localStorage.getItem('user_zip');
+  const kids = localStorage.getItem('user_kids');
+  const health = localStorage.getItem('user_health');
+
+  document.getElementById('pf-name').textContent = name || 'Tap to add';
+  document.getElementById('pf-name').className = 'profile-row-value' + (name ? '' : ' empty');
+  document.getElementById('pf-zip').textContent = zip || 'Tap to add';
+  document.getElementById('pf-zip').className = 'profile-row-value' + (zip ? '' : ' empty');
+  document.getElementById('pf-kids').textContent = kids || 'Tap to add';
+  document.getElementById('pf-kids').className = 'profile-row-value' + (kids ? '' : ' empty');
+  document.getElementById('pf-health').textContent = health || 'Tap to add';
+  document.getElementById('pf-health').className = 'profile-row-value' + (health ? '' : ' empty');
+
+  // Render vehicles
+  const carsList = document.getElementById('pf-cars-list');
+  carsList.innerHTML = '';
+  const cars = getCars();
+  if (cars.length === 0) {
+    carsList.innerHTML = '<div class="profile-row"><div class="profile-row-left"><span class="profile-row-value empty">No vehicles added yet</span></div></div>';
+  }
+  cars.forEach((car, i) => {
+    const row = document.createElement('div');
+    row.className = 'profile-row';
+    row.innerHTML = `<div class="profile-row-left"><span class="profile-row-label">Vehicle ${i+1}</span><span class="profile-row-value">${car}</span></div><span class="profile-row-edit" onclick="removeCar(${i})" style="color:var(--red);font-size:14px">Remove</span>`;
+    row.onclick = (e) => { if (!e.target.onclick) editCar(i); };
+    carsList.appendChild(row);
+  });
+}
+
+function getCars() {
+  try { return JSON.parse(localStorage.getItem('user_cars') || '[]'); } catch(e) { 
+    // Migrate from old single car format
+    const old = localStorage.getItem('user_car');
+    if (old) { localStorage.setItem('user_cars', JSON.stringify([old])); return [old]; }
+    return [];
+  }
+}
+
+function saveCars(cars) {
+  localStorage.setItem('user_cars', JSON.stringify(cars));
+  // Keep user_car as primary for backward compat
+  if (cars.length > 0) localStorage.setItem('user_car', cars[0]);
+}
+
+function addVehicle() {
+  const val = prompt('What vehicle? (e.g. 2024 Ford Bronco)');
+  if (!val || !val.trim()) return;
+  const cars = getCars();
+  cars.push(val.trim());
+  saveCars(cars);
+  renderProfile();
+}
+
+function removeCar(i) {
+  if (!confirm('Remove this vehicle?')) return;
+  const cars = getCars();
+  cars.splice(i, 1);
+  saveCars(cars);
+  renderProfile();
+}
+
+function editCar(i) {
+  const cars = getCars();
+  const val = prompt('Edit vehicle:', cars[i]);
+  if (!val || !val.trim()) return;
+  cars[i] = val.trim();
+  saveCars(cars);
+  renderProfile();
+}
+
+function editField(key, label, type) {
+  const current = localStorage.getItem(key) || '';
+  const val = prompt(label + ':', current);
+  if (val === null) return;
+  localStorage.setItem(key, val.trim());
+  if (key === 'user_name') updateGreeting();
+  renderProfile();
+}
+
+function resetOnboarding() {
+  if (!confirm('Reset your profile and redo setup?')) return;
+  ['user_name','user_zip','user_car','user_cars','user_kids','user_health','ob_done'].forEach(k => localStorage.removeItem(k));
+  location.reload();
+}
+
+// Update showHome to hide profile screen
+const _origShowHome = showHome;
 
 // ONBOARDING
 const OB_QUESTIONS = [
