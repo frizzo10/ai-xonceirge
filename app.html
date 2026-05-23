@@ -1326,7 +1326,7 @@ function showOnboarding() {
 
 function renderObStep() {
   // Skip questions already answered
-  const KEY_MAP = { first_name: 'user_name', zip_code: 'user_zip', has_car: 'user_car', has_kids: 'user_kids', health_note: 'user_health' };
+  const KEY_MAP = { first_name: 'user_name', zip_code: 'user_zip', has_car: 'user_cars', has_kids: 'user_kids', health_note: 'user_health' };
   while (obStep < OB_QUESTIONS.length && localStorage.getItem(KEY_MAP[OB_QUESTIONS[obStep].key])) {
     obStep++;
   }
@@ -1374,7 +1374,11 @@ async function finishOnboarding() {
   // Save to localStorage for immediate use
   if (obAnswers.first_name) localStorage.setItem('user_name', obAnswers.first_name);
   if (obAnswers.zip_code) localStorage.setItem('user_zip', obAnswers.zip_code);
-  if (obAnswers.has_car) localStorage.setItem('user_car', obAnswers.has_car);
+  if (obAnswers.has_car) {
+    const cars = [obAnswers.has_car];
+    localStorage.setItem('user_cars', JSON.stringify(cars));
+    localStorage.setItem('user_car', obAnswers.has_car);
+  }
   if (obAnswers.has_kids) localStorage.setItem('user_kids', obAnswers.has_kids);
   if (obAnswers.health_note && obAnswers.health_note.toLowerCase() !== 'skip') localStorage.setItem('user_health', obAnswers.health_note);
   localStorage.setItem('ob_done', '1');
@@ -1417,7 +1421,7 @@ function updateGreeting() {
 // Show onboarding if any key field is missing
 function needsOnboarding() {
   return !localStorage.getItem('user_name') || 
-         !localStorage.getItem('user_car') || 
+         !localStorage.getItem('user_cars') || 
          !localStorage.getItem('user_zip');
 }
 if (needsOnboarding()) {
