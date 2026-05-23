@@ -773,21 +773,28 @@ async function callConcierge() {
     setHint('Hold mic to respond','live');
     if (data.caseId && !currentCaseId) {
       currentCaseId = data.caseId;
-      const newCase = {id:data.caseId,category:currentCategory,title:currentCategory+' — '+new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'}),user_id:deviceId,status:'active',context:history,created_at:new Date().toISOString()};
-      localCases = [newCase,...localCases.filter(c=>c.id!==data.caseId)];
-      renderCases(); setActiveCase(data.caseId);
+      // Only add to sidebar if not already there
+      if (!localCases.find(c => c.id === data.caseId)) {
+        const newCase = {id:data.caseId,category:currentCategory,title:currentCategory+' — '+new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'}),user_id:deviceId,status:'active',context:history,created_at:new Date().toISOString()};
+        localCases = [newCase,...localCases];
+        renderCases();
+      }
+      setActiveCase(data.caseId);
     }
     const rawReply = data.reply || data.error || "I'm here — try again.";
     console.log('Reply:', rawReply);
 
     const { cleanReply, placesQuery } = checkForPlacesSearch(rawReply);
     history.push({role:'assistant',content:cleanReply});
+    
+    // Only speak the first sentence/question — keep it tight
+    const speakText = cleanReply.split(/[.?!]/)[0] + (cleanReply.match(/[.?!]/) ? cleanReply.match(/[.?!]/)[0] : '');
     addAIBubble(cleanReply, getChips());
-    speakThenListen(cleanReply);
+    speakThenListen(speakText.trim() || cleanReply);
 
     // Execute places search if requested
     if (placesQuery) {
-      setTimeout(() => searchPlaces(placesQuery), 1500);
+      setTimeout(() => searchPlaces(placesQuery), 2000);
     }
 
     // Save location if user mentioned it
