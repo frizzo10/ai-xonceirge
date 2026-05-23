@@ -140,7 +140,7 @@ exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') return { statusCode: 405, body: 'Method not allowed' };
 
   try {
-    const { messages, category, deviceId, caseId } = JSON.parse(event.body);
+    const { messages, category, deviceId, caseId, profile } = JSON.parse(event.body);
     let activeCaseId = caseId;
 
     if (deviceId) {

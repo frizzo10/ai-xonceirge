@@ -798,18 +798,10 @@ function openVoice(category, label, prompt) {
   document.getElementById('voiceState').style.display = 'flex';
   setNav('navTalk');
 
-  // Build profile context first
-  const profile = getLocalProfile();
-  const profileMessages = profile ? [
-    { role: 'user', content: 'What you already know about me: ' + profile },
-    { role: 'assistant', content: "Got it. I have all of that — I won't ask about any of it." }
-  ] : [];
-
-  // Reuse existing case ID but always start fresh — profile only
-  // Old case history confuses Groq with outdated info
+  // Reuse existing case ID — fresh history each time
   const existingCase = localCases.find(c => c.category === category);
   currentCaseId = existingCase ? existingCase.id : null;
-  history = [...profileMessages];
+  history = [];
 
   const userName = localStorage.getItem('user_name');
   const openingLine = userName ? `${userName}, ${prompt}` : prompt;
@@ -979,10 +971,10 @@ async function callConcierge() {
   document.getElementById('micBtn').className = 'mic-btn thinking';
   const tid = addTypingBubble();
   try {
-    console.log('Sending to Groq:', JSON.stringify(history.slice(0,3)));
+    const userProfile = getLocalProfile();
     const res = await fetch('/api/chat',{
       method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({messages:history,category:currentCategory,deviceId,caseId:currentCaseId})
+      body:JSON.stringify({messages:history,category:currentCategory,deviceId,caseId:currentCaseId,profile:userProfile})
     });
     const data = await res.json();
     removeTypingBubble(tid);
