@@ -70,7 +70,7 @@ async function scheduleFollowup(caseId, userId, message, daysFromNow) {
 async function callGroq(messages, systemPrompt) {
   const payload = JSON.stringify({
     model: 'llama-3.3-70b-versatile',
-    max_tokens: 300,
+    max_tokens: 400,
     temperature: 0.65,
     messages: [{ role: 'system', content: systemPrompt }, ...messages]
   });
@@ -186,7 +186,9 @@ exports.handler = async (event) => {
       } catch(e) {}
     }
 
-    const reply = await callGroq(messages, SYSTEM + profileContext);
+    // Trim history to last 8 messages to avoid token overflow
+    const trimmed = messages.slice(-8);
+    const reply = await callGroq(trimmed, SYSTEM + profileContext);
 
     return {
       statusCode: 200,
