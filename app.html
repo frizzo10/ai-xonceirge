@@ -821,9 +821,7 @@ function openVoice(category, label, prompt) {
   currentCaseId = existingCase ? existingCase.id : null;
   history = [];
 
-  const userName = localStorage.getItem('user_name');
-  const openingLine = userName ? `${userName}, ${prompt}` : prompt;
-  speakThenListen(openingLine);
+  speakThenListen(prompt);
 }
 
 function getLocalProfile() {
