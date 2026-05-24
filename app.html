@@ -977,6 +977,7 @@ async function callConcierge() {
   const tid = addTypingBubble();
   try {
     const userProfile = getLocalProfile();
+    console.log('Profile sent to Groq:', userProfile);
     const res = await fetch('/api/chat',{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({messages:history,category:currentCategory,deviceId,caseId:currentCaseId,profile:userProfile})
