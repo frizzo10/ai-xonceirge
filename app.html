@@ -144,6 +144,7 @@ body{
 .mic-btn:active{transform:scale(0.92)}
 .mic-btn.listening{background:var(--green-dark);box-shadow:0 4px 16px rgba(61,140,26,0.5)}
 .mic-btn.thinking{background:#B0C8A0;box-shadow:none}
+.mic-btn.waiting{background:#D63B3B;box-shadow:0 4px 16px rgba(214,59,59,0.4)}
 .mic-btn svg{width:28px;height:28px;fill:white;pointer-events:none}
 .mic-hint{font-size:11px;color:var(--text3);text-align:center;min-height:16px;font-weight:500}
 .mic-hint.live{color:var(--green)}
@@ -847,14 +848,14 @@ function speakThenListen(text) {
   stopRings();
   document.getElementById('stopBtn').classList.add('visible');
   setHint('Speaking...', '');
+  document.getElementById('micBtn').className = 'mic-btn waiting'; // RED — not your turn
 
   speakElevenLabs(text, () => {
-    // Show wait message immediately after speech ends
     setHint('Please wait...', '');
     stopRings();
-    // Then open mic after gap
     setTimeout(() => {
       playBell();
+      document.getElementById('micBtn').className = 'mic-btn'; // GREEN — your turn
       setHint('🎤 Your turn — speak now', 'live');
       startRings();
       try { startRecording(); } catch(e) {}
@@ -919,7 +920,7 @@ function handleVoice(text) {
   history.push({role:'user',content:text});
   setHint('Thinking...','');
   // Pulse the mic to show thinking
-  document.getElementById('micBtn').className = 'mic-btn thinking-pulse';
+  document.getElementById('micBtn').className = 'mic-btn waiting';
   callConcierge();
 }
 
@@ -1206,7 +1207,7 @@ function sendTyped() {
 
   history.push({role:'user',content:text});
   setHint('Thinking...','');
-  document.getElementById('micBtn').className = 'mic-btn thinking-pulse';
+  document.getElementById('micBtn').className = 'mic-btn waiting';
   callConcierge();
 }
 
