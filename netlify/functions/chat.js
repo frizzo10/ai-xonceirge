@@ -206,6 +206,8 @@ exports.handler = async (event) => {
     const systemMsgs = messages.filter(m => m.role === 'system').map(m => m.content).join(' ');
     const chatMsgs = messages.filter(m => m.role !== 'system').slice(-8);
     const fullSystem = SYSTEM + profileContext + (systemMsgs ? '\n\n' + systemMsgs : '');
+    console.log('SYSTEM PROMPT:', fullSystem.substring(0, 300));
+    console.log('MESSAGES:', JSON.stringify(chatMsgs));
     const reply = await callGroq(chatMsgs, fullSystem);
 
     return {
