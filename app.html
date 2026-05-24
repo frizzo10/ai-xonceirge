@@ -426,7 +426,7 @@ body{
         <span>Tap what's happening — we take it from there.</span>
       </div>
       <div class="prob-grid">
-        <div class="prob-btn" onclick="openVoice('car','Car trouble','Tell me about your car.')"><div class="pbi">🚙</div><div class="pbl">Car</div></div>
+        <div class="prob-btn" onclick="openCarVoice()"><div class="pbi">🚙</div><div class="pbl">Car</div></div>
         <div class="prob-btn" onclick="openVoice('medical','Medical','What\'s going on with your health?')"><div class="pbi">🏥</div><div class="pbl">Medical</div></div>
         <div class="prob-btn" onclick="openVoice('kids','Kids','Tell me about your child.')"><div class="pbi">👶</div><div class="pbl">Kids</div></div>
         <div class="prob-btn" onclick="openVoice('legal','Legal','What\'s the legal situation?')"><div class="pbi">⚖️</div><div class="pbl">Legal</div></div>
@@ -782,6 +782,23 @@ function showHome() {
   stopRecording(); stopSpeaking(); stopRings();
   document.querySelectorAll('.case-item').forEach(el => el.classList.remove('active'));
   setNav('navHome');
+}
+
+function openCarVoice() {
+  const cars = getCars();
+  const name = localStorage.getItem('user_name');
+  let prompt, label;
+  if (cars.length === 1) {
+    label = 'Car trouble';
+    prompt = name ? `${name}, what's going on with your ${cars[0]}?` : `What's going on with your ${cars[0]}?`;
+  } else if (cars.length > 1) {
+    label = 'Car trouble';
+    prompt = name ? `${name}, which car — ${cars.join(' or ')}?` : `Which car — ${cars.join(' or ')}?`;
+  } else {
+    label = 'Car trouble';
+    prompt = name ? `${name}, tell me about your car.` : 'Tell me about your car.';
+  }
+  openVoice('car', label, prompt);
 }
 
 function openVoice(category, label, prompt) {
