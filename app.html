@@ -326,6 +326,23 @@ body{
 }
 .places-call:active{opacity:0.85}
 
+/* RESOLVED BANNER */
+.resolved-banner{
+  margin:8px 12px;padding:16px 20px;
+  background:var(--green-light);border:1.5px solid var(--green-border);
+  border-radius:14px;text-align:center;display:none;
+}
+.resolved-banner.show{display:block}
+.resolved-title{font-size:15px;font-weight:700;color:var(--green-dark);margin-bottom:4px}
+.resolved-sub{font-size:13px;color:var(--text2);margin-bottom:12px}
+.resolved-btns{display:flex;gap:8px;justify-content:center}
+.resolved-btn{
+  padding:9px 20px;border-radius:20px;font-size:13px;font-weight:700;
+  cursor:pointer;border:none;-webkit-tap-highlight-color:transparent;
+}
+.resolved-btn.yes{background:var(--green);color:white}
+.resolved-btn.no{background:var(--surface);color:var(--text2);border:1px solid var(--border)}
+
 /* DONE BUTTON */
 .done-btn{
   display:none;margin:8px 12px 4px;padding:12px;
@@ -477,6 +494,14 @@ body{
         <p class="mic-hint" id="micHint">Tap to talk</p>
       </div>
       <div class="convo-history" id="convoHistory"></div>
+      <div class="resolved-banner" id="resolvedBanner">
+        <div class="resolved-title">✓ Problem solved.</div>
+        <div class="resolved-sub">Anything else on your mind?</div>
+        <div class="resolved-btns">
+          <button class="resolved-btn yes" onclick="startNewTopic()">Yes, something else</button>
+          <button class="resolved-btn no" onclick="finishConversation()">No, I'm good</button>
+        </div>
+      </div>
       <div class="done-btn" id="doneBtn" onclick="finishConversation()">✓ Done — close this case</div>
       <div class="type-bar">
         <input class="type-input" id="typeInput" placeholder="Or type here..." onkeydown="handleTypeKey(event)">
@@ -810,6 +835,8 @@ function openVoice(category, label, prompt) {
   document.getElementById('convoHistory').innerHTML = '';
   document.getElementById('micBtn').className = 'mic-btn';
   document.getElementById('doneBtn').classList.remove('visible');
+  document.getElementById('resolvedBanner').classList.remove('show');
+  document.getElementById('doneBtn').style.display = '';
   setHint('','');
   stopRings();
   document.getElementById('homeState').style.display = 'none';
@@ -1014,13 +1041,38 @@ async function callConcierge() {
     const rawReply = data.reply || data.error || "I'm here — try again.";
     console.log('Reply:', rawReply);
 
-    const { cleanReply, placesQuery } = checkForPlacesSearch(rawReply);
+    // Check for resolution
+    const isResolved = rawReply.includes('[RESOLVED]');
+    const withoutResolved = rawReply.replace('[RESOLVED]', '').trim();
+
+    const { cleanReply, placesQuery } = checkForPlacesSearch(withoutResolved);
     history.push({role:'assistant',content:cleanReply});
-    
-    // Only speak the first sentence/question — keep it tight
-    const speakText = cleanReply.split(/[.?!]/)[0] + (cleanReply.match(/[.?!]/) ? cleanReply.match(/[.?!]/)[0] : '');
-    addAIBubble(cleanReply, getChips());
-    speakThenListen(speakText.trim() || cleanReply);
+
+    addAIBubble(cleanReply, isResolved ? [] : getChips());
+    speakThenListen(cleanReply);
+
+    if (isResolved) {
+      // Mark case resolved in Supabase
+      if (currentCaseId) {
+        fetch(`${SUPABASE_URL}/rest/v1/cases?id=eq.${currentCaseId}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`
+          },
+          body: JSON.stringify({ status: 'resolved', resolved_at: new Date().toISOString() })
+        }).catch(() => {});
+        // Remove from local cases
+        localCases = localCases.filter(c => c.id !== currentCaseId);
+        renderCases();
+      }
+      // Show resolved banner after speech
+      setTimeout(() => {
+        document.getElementById('resolvedBanner').classList.add('show');
+        document.getElementById('doneBtn').style.display = 'none';
+      }, 3000);
+    }
 
     // Execute places search if requested
     if (placesQuery) {
@@ -1102,6 +1154,13 @@ function finishConversation() {
   stopRings();
   document.getElementById('doneBtn').classList.remove('visible');
   document.getElementById('stopBtn').classList.remove('visible');
+  showHome();
+}
+
+// START NEW TOPIC
+function startNewTopic() {
+  document.getElementById('resolvedBanner').classList.remove('show');
+  document.getElementById('doneBtn').style.display = '';
   showHome();
 }
 
