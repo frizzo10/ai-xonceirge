@@ -696,6 +696,7 @@ let isRecording = false;
 let recognition = null;
 let listenOn = false;
 let localCases = [];
+let hasPlayedElevenLabs = false;  // After first play, use browser TTS
 
 // DEVICE ID
 let deviceId = localStorage.getItem('concierge_did');
@@ -873,6 +874,7 @@ function openVoice(category, label, prompt) {
   document.getElementById('doneBtn').classList.remove('visible');
   document.getElementById('resolvedBanner').classList.remove('show');
   document.getElementById('doneBtn').style.display = '';
+  hasPlayedElevenLabs = false;  // Reset so ElevenLabs plays first response
   setHint('','');
   stopRings();
   document.getElementById('homeState').style.display = 'none';
