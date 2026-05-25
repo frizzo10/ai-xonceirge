@@ -934,8 +934,9 @@ function speakThenListen(text) {
     setTimeout(() => {
       playBell();
       document.getElementById('micBtn').className = 'mic-btn';
-      setHint('🟢 Your turn — tap and speak', 'live');
+      setHint('🟢 Listening...', 'live');
       startRings();
+      startRecording();
     }, 1200);
   });
 }
