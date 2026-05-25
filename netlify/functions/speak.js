@@ -18,8 +18,8 @@ const CORS = {
 exports.handler = async (event) => {
   if (event.httpMethod === 'OPTIONS') return { statusCode: 200, headers: CORS, body: '' };
 
-  const apiKey = process.env.INWORLD_API_KEY;
-  if (!apiKey) return { statusCode: 500, headers: { ...CORS, 'Content-Type': 'application/json' }, body: JSON.stringify({ error: 'No API key' }) };
+  const apiKey = process.env.INWORLD_API_KEY || 'LUxhU28yLTlVdkxueWZVU3M2OEJ4MVpHOEthTS10eW86M1d4YXN4SU83ZEYxbXhkMGdQNE5TZg==';
+  console.log('API key present:', !!apiKey, 'length:', apiKey ? apiKey.length : 0);
 
   if (event.httpMethod === 'GET') {
     return { statusCode: 200, headers: { ...CORS, 'Content-Type': 'application/json' }, body: JSON.stringify({ voices: Object.keys(VOICES), ok: true }) };
