@@ -145,10 +145,11 @@ body{
 .mic-btn:active{transform:scale(0.92)}
 .mic-btn.listening{background:var(--green-dark);box-shadow:0 4px 16px rgba(61,140,26,0.5)}
 .mic-btn.thinking{background:#B0C8A0;box-shadow:none}
-.mic-btn.waiting{background:#D63B3B;box-shadow:0 4px 16px rgba(214,59,59,0.4)}
-.mic-btn svg{width:28px;height:28px;fill:white;pointer-events:none}
-.mic-hint{font-size:11px;color:var(--text3);text-align:center;min-height:16px;font-weight:500}
-.mic-hint.live{color:var(--green)}
+.mic-btn.waiting{background:#D63B3B;box-shadow:0 4px 16px rgba(214,59,59,0.4);cursor:not-allowed}
+.mic-btn.waiting::after{content:'';position:absolute;inset:0;border-radius:50%}
+.mic-btn svg{width:34px;height:34px;fill:white;pointer-events:none}
+.mic-hint{font-size:13px;color:var(--text3);text-align:center;min-height:20px;font-weight:600}
+.mic-hint.live{color:var(--green);font-size:15px}
 .mic-hint.error{color:var(--red)}
 
 /* CONVERSATION */
@@ -480,7 +481,7 @@ body{
         <span class="voice-category" id="voiceCategory"></span>
         <p class="voice-prompt" id="voicePrompt"></p>
         <p style="font-size:11px;color:var(--text3);margin-top:-4px">Tap mic anytime to speak</p>
-        <div class="mic-wrap">
+        <div class="mic-wrap" style="position:relative">
           <div class="mic-ring" id="ring1"></div>
           <div class="mic-ring delay" id="ring2"></div>
           <button class="mic-btn" id="micBtn" onclick="toggleMic()">
@@ -924,19 +925,18 @@ function speakThenListen(text) {
   stopRecording();
   stopRings();
   document.getElementById('stopBtn').classList.add('visible');
-  setHint('Speaking...', '');
-  document.getElementById('micBtn').className = 'mic-btn waiting'; // RED — not your turn
+  setHint('🔴 Please wait...', '');
+  document.getElementById('micBtn').className = 'mic-btn waiting';
 
   speakElevenLabs(text, () => {
     setHint('Please wait...', '');
     stopRings();
     setTimeout(() => {
       playBell();
-      document.getElementById('micBtn').className = 'mic-btn'; // GREEN — your turn
-      setHint('🎤 Your turn — speak now', 'live');
+      document.getElementById('micBtn').className = 'mic-btn';
+      setHint('🟢 Your turn — tap and speak', 'live');
       startRings();
-      try { startRecording(); } catch(e) {}
-    }, 2000);
+    }, 1200);
   });
 }
 
