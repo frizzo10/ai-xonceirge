@@ -1013,39 +1013,56 @@ function stopSpeaking() {
 
 async function speakElevenLabs(text, onEnd) {
   stopSpeaking();
+  stopRecording();
+  const clean = text.replace(/[*_#`]/g, '').replace(/\n+/g, ' ').trim().substring(0, 400);
   try {
     const res = await fetch('/api/speak', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text, voice: selectedELVoice })
+      body: JSON.stringify({ text: clean, voice: selectedELVoice })
     });
-    if (!res.ok) throw new Error('ElevenLabs failed');
-    const blob = await res.blob();
+    if (!res.ok) throw new Error('ElevenLabs ' + res.status);
+    const contentType = res.headers.get('content-type') || '';
+    if (!contentType.includes('audio')) throw new Error('Not audio');
+    const arrayBuffer = await res.arrayBuffer();
+    const blob = new Blob([arrayBuffer], { type: 'audio/mpeg' });
     const url = URL.createObjectURL(blob);
-    currentAudio = new Audio(url);
-    currentAudio.onended = () => {
-      currentAudio = null;
+    // Fresh Audio object every single time — required for iOS to speak after first response
+    const audio = new Audio();
+    currentAudio = audio;
+    audio.addEventListener('ended', () => {
+      if (currentAudio === audio) currentAudio = null;
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      setTimeout(() => { if (onEnd) onEnd(); }, 300);
+    }, { once: true });
+    audio.addEventListener('error', () => {
+      if (currentAudio === audio) currentAudio = null;
       URL.revokeObjectURL(url);
-      // Wait for audio session to fully release on iOS before callback
-      setTimeout(() => { if (onEnd) onEnd(); }, 800);
-    };
-    currentAudio.onerror = () => {
+      fallbackTTS(clean, onEnd);
+    }, { once: true });
+    audio.src = url;
+    audio.play().catch(e => {
+      console.error('Play failed:', e.message);
       currentAudio = null;
-      if (onEnd) onEnd();
-    };
-    await currentAudio.play();
+      fallbackTTS(clean, onEnd);
+    });
   } catch(e) {
-    console.error('ElevenLabs failed:', e.message, '— falling back to browser TTS');
-    if (window.speechSynthesis && availableVoices.length > 0) {
-      const utt = new SpeechSynthesisUtterance(text.substring(0,300));
-      if (selectedVoice) utt.voice = selectedVoice;
-      utt.rate = 0.88;
-      utt.onend = () => { setTimeout(() => { if (onEnd) onEnd(); }, 300); };
-      utt.onerror = () => { if (onEnd) onEnd(); };
-      window.speechSynthesis.speak(utt);
-    } else {
-      setTimeout(() => { if (onEnd) onEnd(); }, 500);
-    }
+    console.error('ElevenLabs error:', e.message);
+    fallbackTTS(clean, onEnd);
+  }
+}
+
+function fallbackTTS(text, onEnd) {
+  if (window.speechSynthesis) {
+    window.speechSynthesis.cancel();
+    const utt = new SpeechSynthesisUtterance(text.substring(0, 300));
+    if (selectedVoice) utt.voice = selectedVoice;
+    utt.rate = 0.9;
+    utt.onend = () => setTimeout(() => { if (onEnd) onEnd(); }, 300);
+    utt.onerror = () => { if (onEnd) onEnd(); };
+    window.speechSynthesis.speak(utt);
+  } else {
+    setTimeout(() => { if (onEnd) onEnd(); }, 300);
   }
 }
 
