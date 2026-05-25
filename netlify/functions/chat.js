@@ -152,10 +152,35 @@ exports.handler = async (event) => {
       }
     }
 
-    // Profile context
+    // Profile context — only inject relevant fields per category
     let profileContext = '';
     if (profile) {
-      profileContext = '\n\nWHAT YOU KNOW ABOUT THIS USER — never ask for any of this:\n' + profile;
+      const carCategories = ['car'];
+      const medCategories = ['medical', 'anxiety', 'sleep'];
+      const kidsCategories = ['kids', 'school'];
+      
+      let relevantProfile = profile;
+      
+      // For car — exclude health notes (not relevant)
+      if (carCategories.includes(category)) {
+        relevantProfile = profile.split('. ').filter(p => 
+          !p.toLowerCase().startsWith('health')
+        ).join('. ');
+      }
+      // For medical — exclude car info
+      if (medCategories.includes(category)) {
+        relevantProfile = profile.split('. ').filter(p => 
+          !p.toLowerCase().startsWith('vehicles') && !p.toLowerCase().startsWith('car')
+        ).join('. ');
+      }
+      // For kids/school — exclude car and health
+      if (kidsCategories.includes(category)) {
+        relevantProfile = profile.split('. ').filter(p => 
+          !p.toLowerCase().startsWith('vehicles') && !p.toLowerCase().startsWith('health')
+        ).join('. ');
+      }
+      
+      profileContext = '\n\nWHAT YOU KNOW ABOUT THIS USER — never ask for any of this, and only mention what is directly relevant:\n' + relevantProfile;
     }
 
     const systemMsgs = messages.filter(m => m.role === 'system').map(m => m.content).join(' ');
