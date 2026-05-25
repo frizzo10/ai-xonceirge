@@ -945,7 +945,20 @@ function toggleMic() { isRecording ? stopRecording() : startRecording(); }
 
 
 
+function keepAudioAlive() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const buf = ctx.createBuffer(1, 1, 22050);
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    src.connect(ctx.destination);
+    src.start(0);
+    ctx.resume();
+  } catch(e) {}
+}
+
 function startRecording() {
+  keepAudioAlive();
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SR) { setHint('Voice not available — type below','error'); return; }
   recognition = new SR();
