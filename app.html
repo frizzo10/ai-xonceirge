@@ -755,18 +755,18 @@ if (window.speechSynthesis) {
 }
 
 const EL_VOICES = [
-  { id: 'sarah',   name: 'Sarah',   desc: 'Mature · Reassuring · Confident' },
-  { id: 'matilda', name: 'Matilda', desc: 'Professional · Clear · Knowledgable' },
-  { id: 'jessica', name: 'Jessica', desc: 'Warm · Bright · Friendly' },
-  { id: 'eric',    name: 'Eric',    desc: 'Smooth · Trustworthy · Male' },
-  { id: 'george',  name: 'George',  desc: 'Warm · Captivating · Male' },
-  { id: 'brian',   name: 'Brian',   desc: 'Deep · Comforting · Male' },
+  { id: 'sarah',   name: 'Sarah',   desc: 'Warm · Natural · American female · Inworld #1' },
+  { id: 'aria',    name: 'Aria',    desc: 'Clear · Confident · American female · Inworld' },
+  { id: 'jessica', name: 'Jessica', desc: 'Friendly · Bright · American female · Inworld' },
+  { id: 'michael', name: 'Michael', desc: 'Natural · Trustworthy · American male · Inworld' },
+  { id: 'george',  name: 'George',  desc: 'Deep · Warm · Male · Inworld' },
+  { id: 'brian',   name: 'Brian',   desc: 'Resonant · Calm · Male · Inworld' },
 ];
 
 function openVoiceSelector() {
   const list = document.getElementById('voiceList');
   list.innerHTML = '';
-  document.getElementById('vsSub').textContent = EL_VOICES.length + ' human voices — tap to preview';
+  document.getElementById('vsSub').textContent = EL_VOICES.length + ' Inworld voices — tap to preview';
 
   EL_VOICES.forEach(voice => {
     const item = document.createElement('div');
