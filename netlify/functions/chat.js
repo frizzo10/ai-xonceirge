@@ -60,9 +60,9 @@ async function scheduleFollowup(caseId, deviceId, message, daysFromNow) {
 
 async function callGroq(messages, systemPrompt) {
   const payload = JSON.stringify({
-    model: 'llama-3.3-70b-versatile',
-    max_tokens: 250,
-    temperature: 0.65,
+    model: 'llama-3.1-70b-versatile',
+    max_tokens: 180,
+    temperature: 0.5,
     messages: [{ role: 'system', content: systemPrompt }, ...messages]
   });
   const result = await new Promise((resolve, reject) => {
