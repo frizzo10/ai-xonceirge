@@ -1079,14 +1079,24 @@ async function speakElevenLabs(text, onEnd) {
 function fallbackTTS(text, onEnd) {
   if (window.speechSynthesis) {
     window.speechSynthesis.cancel();
-    const utt = new SpeechSynthesisUtterance(text.substring(0, 300));
+    const utt = new SpeechSynthesisUtterance(text.substring(0, 250));
     if (selectedVoice) utt.voice = selectedVoice;
-    utt.rate = 0.9;
-    utt.onend = () => setTimeout(() => { if (onEnd) onEnd(); }, 300);
-    utt.onerror = () => { if (onEnd) onEnd(); };
+    utt.rate = 1.05;
+    utt.pitch = 1.0;
+
+    let ended = false;
+    const done = () => { if (!ended) { ended = true; setTimeout(() => { if (onEnd) onEnd(); }, 200); } };
+
+    utt.onend = done;
+    utt.onerror = done;
+
+    // iOS Safari sometimes never fires onend — force after estimated duration
+    const estimatedMs = Math.max(2500, text.length * 55);
+    setTimeout(done, estimatedMs);
+
     window.speechSynthesis.speak(utt);
   } else {
-    setTimeout(() => { if (onEnd) onEnd(); }, 300);
+    setTimeout(() => { if (onEnd) onEnd(); }, 200);
   }
 }
 
