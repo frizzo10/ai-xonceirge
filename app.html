@@ -952,14 +952,25 @@ function speakThenListen(text) {
 
   if (window.speechSynthesis) {
     window.speechSynthesis.cancel();
-    const utt = new SpeechSynthesisUtterance(clean);
-    if (selectedVoice) utt.voice = selectedVoice;
-    utt.rate = 1.05;
-    utt.onend = () => setTimeout(goGreen, 300);
-    utt.onerror = () => setTimeout(goGreen, 300);
+
+    // Split into sentences — iOS cuts off long utterances
+    const sentences = clean.match(/[^.!?]+[.!?]+/g) || [clean];
+    let idx = 0;
+
+    function speakNext() {
+      if (idx >= sentences.length) { setTimeout(goGreen, 300); return; }
+      const utt = new SpeechSynthesisUtterance(sentences[idx].trim());
+      if (selectedVoice) utt.voice = selectedVoice;
+      utt.rate = 1.05;
+      utt.onend = () => { idx++; speakNext(); };
+      utt.onerror = () => { idx++; speakNext(); };
+      window.speechSynthesis.speak(utt);
+      idx++;
+    }
+
     // iOS failsafe
-    setTimeout(goGreen, Math.max(3000, clean.length * 55));
-    window.speechSynthesis.speak(utt);
+    setTimeout(goGreen, Math.max(4000, clean.length * 60));
+    speakNext();
   } else {
     setTimeout(goGreen, 1000);
   }
