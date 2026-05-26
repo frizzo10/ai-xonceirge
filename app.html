@@ -936,16 +936,21 @@ function speakThenListen(text) {
   setHint('🔴 Please wait...', '');
   document.getElementById('micBtn').className = 'mic-btn waiting';
 
+  // Hard timeout — always go green within 8 seconds no matter what
+  let wentGreen = false;
+  const goGreen = () => {
+    if (wentGreen) return;
+    wentGreen = true;
+    playBell();
+    document.getElementById('micBtn').className = 'mic-btn';
+    setHint('🟢 Listening — speak now', 'live');
+    startRings();
+    startRecording();
+  };
+  setTimeout(goGreen, 8000);
+
   speakElevenLabs(text, () => {
-    setHint('Please wait...', '');
-    stopRings();
-    setTimeout(() => {
-      playBell();
-      document.getElementById('micBtn').className = 'mic-btn';
-      setHint('🟢 Listening — speak now', 'live');
-      startRings();
-      startRecording();
-    }, 600);
+    setTimeout(goGreen, 600);
   });
 }
 
