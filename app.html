@@ -973,10 +973,10 @@ function speakThenListen(text) {
       const utt = new SpeechSynthesisUtterance(chunks[chunkIdx]);
       if (selectedVoice) utt.voice = selectedVoice;
       utt.rate = 1.05;
-      utt.onend = () => { chunkIdx++; speakChunk(); };
-      utt.onerror = () => { chunkIdx++; speakChunk(); };
+      utt.onend = () => { chunkIdx++; setTimeout(speakChunk, 50); };
+      utt.onerror = () => { chunkIdx++; setTimeout(speakChunk, 50); };
       window.speechSynthesis.speak(utt);
-      chunkIdx++;
+      // Don't increment here — wait for onend
     }
 
     // iOS failsafe
