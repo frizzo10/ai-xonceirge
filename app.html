@@ -1429,8 +1429,7 @@ async function handleImageUpload(event) {
 
     try {
       // Get last few messages as context
-      const context = history.slice(-4).map(m => m.role + ': ' + m.content).join('
-');
+      const context = history.slice(-4).map(m => m.role + ': ' + m.content).join(' | ');
 
       const res = await fetch('/api/vision', {
         method: 'POST',
