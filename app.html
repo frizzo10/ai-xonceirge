@@ -754,14 +754,8 @@ if (window.speechSynthesis) {
   [100,500,1500].forEach(t => setTimeout(loadVoices, t));
 }
 
-const EL_VOICES = [
-  { id: 'sarah',   name: 'Sarah',   desc: 'Warm · Natural · American female · Inworld #1' },
-  { id: 'aria',    name: 'Aria',    desc: 'Clear · Confident · American female · Inworld' },
-  { id: 'jessica', name: 'Jessica', desc: 'Friendly · Bright · American female · Inworld' },
-  { id: 'michael', name: 'Michael', desc: 'Natural · Trustworthy · American male · Inworld' },
-  { id: 'george',  name: 'George',  desc: 'Deep · Warm · Male · Inworld' },
-  { id: 'brian',   name: 'Brian',   desc: 'Resonant · Calm · Male · Inworld' },
-];
+// Use browser voices — consistent on all devices
+const EL_VOICES = [];  // populated dynamically from browser
 
 function openVoiceSelector() {
   const list = document.getElementById('voiceList');
