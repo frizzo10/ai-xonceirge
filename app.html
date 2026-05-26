@@ -953,24 +953,35 @@ function speakThenListen(text) {
   if (window.speechSynthesis) {
     window.speechSynthesis.cancel();
 
-    // Split into sentences — iOS cuts off long utterances
-    const sentences = clean.match(/[^.!?]+[.!?]+/g) || [clean];
-    let idx = 0;
+    // Split into chunks of max 150 chars at word boundaries — iOS cuts long utterances
+    const words = clean.split(' ');
+    const chunks = [];
+    let current = '';
+    for (const word of words) {
+      if ((current + ' ' + word).length > 150) {
+        if (current) chunks.push(current.trim());
+        current = word;
+      } else {
+        current = current ? current + ' ' + word : word;
+      }
+    }
+    if (current) chunks.push(current.trim());
 
-    function speakNext() {
-      if (idx >= sentences.length) { setTimeout(goGreen, 300); return; }
-      const utt = new SpeechSynthesisUtterance(sentences[idx].trim());
+    let chunkIdx = 0;
+    function speakChunk() {
+      if (chunkIdx >= chunks.length) { setTimeout(goGreen, 300); return; }
+      const utt = new SpeechSynthesisUtterance(chunks[chunkIdx]);
       if (selectedVoice) utt.voice = selectedVoice;
       utt.rate = 1.05;
-      utt.onend = () => { idx++; speakNext(); };
-      utt.onerror = () => { idx++; speakNext(); };
+      utt.onend = () => { chunkIdx++; speakChunk(); };
+      utt.onerror = () => { chunkIdx++; speakChunk(); };
       window.speechSynthesis.speak(utt);
-      idx++;
+      chunkIdx++;
     }
 
     // iOS failsafe
-    setTimeout(goGreen, Math.max(4000, clean.length * 60));
-    speakNext();
+    setTimeout(goGreen, Math.max(4000, clean.length * 65));
+    speakChunk();
   } else {
     setTimeout(goGreen, 1000);
   }
