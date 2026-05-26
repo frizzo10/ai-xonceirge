@@ -24,3 +24,8 @@
 [[scheduled_functions]]
   function = "notify"
   schedule = "0 * * * *"
+
+[[redirects]]
+  from = "/api/vision"
+  to = "/.netlify/functions/vision"
+  status = 200

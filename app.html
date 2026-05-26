@@ -328,6 +328,30 @@ body{
 }
 .places-call:active{opacity:0.85}
 
+/* CAMERA / FILE UPLOAD */
+.camera-btn{
+  position:absolute;right:0;bottom:0;
+  width:36px;height:36px;border-radius:50%;
+  background:var(--surface);border:1.5px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  box-shadow:0 2px 8px rgba(61,140,26,0.15);
+}
+.camera-btn:active{background:var(--green-light)}
+.camera-btn svg{width:18px;height:18px;stroke:var(--green-dark);fill:none;stroke-width:1.5;stroke-linecap:round}
+.image-preview{
+  align-self:flex-end;max-width:80%;
+  border-radius:14px;overflow:hidden;
+  border:1.5px solid var(--border);margin-bottom:4px;
+}
+.image-preview img{width:100%;display:block;max-height:200px;object-fit:cover}
+.image-analyzing{
+  align-self:flex-start;background:var(--surface);
+  border:1px solid var(--border);border-radius:14px;
+  padding:10px 14px;font-size:13px;color:var(--text3);
+  display:flex;align-items:center;gap:8px;
+}
+
 /* SOLUTION CARD POPUP */
 .solution-overlay{
   position:fixed;top:0;left:0;right:0;bottom:0;
@@ -542,6 +566,9 @@ body{
           </button>
         </div>
         <p class="mic-hint" id="micHint">Speak now</p>
+        <button class="camera-btn" onclick="openCamera()" title="Share a photo">
+          <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        </button>
       </div>
       <div class="convo-history" id="convoHistory"></div>
       <div class="resolved-banner" id="resolvedBanner">
@@ -652,6 +679,9 @@ body{
   <button class="ob-next" onclick="obNext()">Continue →</button>
   <div class="ob-skip" onclick="obSkip()">Skip this</div>
 </div>
+
+<!-- HIDDEN FILE INPUT FOR CAMERA -->
+<input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none" onchange="handleImageUpload(event)">
 
 <!-- SOLUTION CARD POPUP -->
 <div class="solution-overlay" id="solutionOverlay">
@@ -1343,6 +1373,77 @@ function finishConversation() {
   document.getElementById('doneBtn').classList.remove('visible');
   document.getElementById('stopBtn').classList.remove('visible');
   showHome();
+}
+
+// CAMERA & VISION
+function openCamera() {
+  document.getElementById('cameraInput').click();
+}
+
+async function handleImageUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  event.target.value = ''; // Reset so same file can be selected again
+
+  // Show image preview
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    const dataUrl = e.target.result;
+    const base64 = dataUrl.split(',')[1];
+    const mediaType = file.type || 'image/jpeg';
+
+    // Show preview bubble
+    const hist = document.getElementById('convoHistory');
+    const preview = document.createElement('div');
+    preview.className = 'image-preview';
+    preview.innerHTML = `<img src="${dataUrl}" alt="Your photo">`;
+    hist.appendChild(preview);
+
+    // Show analyzing indicator
+    const analyzing = document.createElement('div');
+    analyzing.className = 'image-analyzing';
+    analyzing.innerHTML = '<div class="dots"><span></span><span></span><span></span></div> Analyzing your photo...';
+    hist.appendChild(analyzing);
+    scrollHistory();
+
+    // Stop mic while analyzing
+    stopRecording();
+    setHint('🔴 Analyzing photo...', '');
+    document.getElementById('micBtn').className = 'mic-btn waiting';
+
+    try {
+      // Get last few messages as context
+      const context = history.slice(-4).map(m => m.role + ': ' + m.content).join('
+');
+
+      const res = await fetch('/api/vision', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ image: base64, mediaType, category: currentCategory, context })
+      });
+
+      const data = await res.json();
+      hist.removeChild(analyzing);
+
+      if (data.description) {
+        // Add to conversation
+        history.push({ role: 'user', content: '[Photo shared] ' + data.description });
+        addAIBubble('I can see: ' + data.description, getChips());
+        
+        // Speak what we see
+        speakThenListen('I can see ' + data.description);
+        
+        // Continue conversation with this context
+        callConcierge();
+      }
+    } catch(e) {
+      hist.removeChild(analyzing);
+      addAIBubble("Couldn't analyze the photo — try describing what you see instead.", []);
+      document.getElementById('micBtn').className = 'mic-btn';
+      setHint('Speak now', '');
+    }
+  };
+  reader.readAsDataURL(file);
 }
 
 // CLOSE SOLUTION
