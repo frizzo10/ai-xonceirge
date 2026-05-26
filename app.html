@@ -418,7 +418,7 @@ body{
 <!-- TOPBAR -->
 <div class="topbar">
   <div class="topbar-brand">Concierge <span style="font-size:10px;font-weight:400;color:var(--text3);font-family:'DM Sans',sans-serif;letter-spacing:1px">v1.5.445</span></div>
-  <div style="display:flex;align-items:center;gap:8px"><div class="topbar-tagline">We have the answer.</div><button onclick="openVoiceSelector()" style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:5px 10px;font-size:11px;color:var(--text2);cursor:pointer">🔊 Voice</button></div>
+  <div class="topbar-tagline">We have the answer.</div>
 </div>
 
 <!-- MAIN -->
@@ -748,10 +748,22 @@ function loadVoices() {
     selectedVoice = availableVoices.find(v => v.name === saved) || availableVoices[0];
   }
 }
+function pickBestVoice() {
+  const all = window.speechSynthesis?.getVoices() || [];
+  if (!all.length) return;
+  selectedVoice = 
+    all.find(v => v.name === 'Google US English') ||
+    all.find(v => v.name.includes('Samantha') && v.name.includes('Enhanced')) ||
+    all.find(v => v.name === 'Samantha') ||
+    all.find(v => v.name.includes('Karen') && v.name.includes('Enhanced')) ||
+    all.find(v => v.lang === 'en-US' && v.localService) ||
+    all.find(v => v.lang.startsWith('en')) ||
+    all[0];
+}
 if (window.speechSynthesis) {
-  window.speechSynthesis.onvoiceschanged = loadVoices;
-  loadVoices();
-  [100,500,1500].forEach(t => setTimeout(loadVoices, t));
+  window.speechSynthesis.onvoiceschanged = pickBestVoice;
+  pickBestVoice();
+  [100,500,1500].forEach(t => setTimeout(pickBestVoice, t));
 }
 
 // Use browser voices — consistent on all devices
