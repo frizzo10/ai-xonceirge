@@ -493,7 +493,7 @@ body{
             </svg>
           </button>
         </div>
-        <p class="mic-hint" id="micHint">Tap to speak</p>
+        <p class="mic-hint" id="micHint">Speak now</p>
       </div>
       <div class="convo-history" id="convoHistory"></div>
       <div class="resolved-banner" id="resolvedBanner">
@@ -881,7 +881,7 @@ function openVoice(category, label, prompt) {
   document.getElementById('resolvedBanner').classList.remove('show');
   document.getElementById('doneBtn').style.display = '';
   turnCount = 0;
-  setHint('Tap to speak', '');
+  setHint('Speak now', '');
   stopRings();
   document.getElementById('homeState').style.display = 'none';
   document.getElementById('voiceState').style.display = 'flex';
@@ -922,7 +922,7 @@ function resumeCase(c) {
   hist.innerHTML = '';
   history.forEach(m => { if(m.role==='user') addUserBubble(m.content); else addAIBubble(m.content,[]); });
   if (history.length) addChips(getChips());
-  setHint('Tap to continue','');
+  setHint('Speak now','');
   setActiveCase(c.id);
   scrollHistory();
 }
@@ -985,10 +985,10 @@ function startRecording() {
     stopRecording();
     if (e.error==='not-allowed') setHint('Mic blocked — type below','error');
     else if (e.error==='no-speech') {
-      setHint('Tap to speak', '');
+      setHint('Speak now', '');
     }
     else {
-      setHint('Tap to speak', '');
+      setHint('Speak now', '');
     }
   };
   recognition.onend = () => { if(isRecording) stopRecording(); };
@@ -999,19 +999,19 @@ function stopRecording() {
   isRecording = false;
   if(recognition){try{recognition.stop();}catch(e){} recognition=null;}
   document.getElementById('micBtn').classList.remove('listening');
-  stopRings(); setHint('Tap to speak', '');
+  stopRings(); setHint('Speak now', '');
 }
 
 function stopConversation() {
   stopRecording(); stopSpeaking(); stopRings();
   document.getElementById('micBtn').className = 'mic-btn';
   document.getElementById('stopBtn').classList.remove('visible');
-  setHint('Tap to speak', '');
+  setHint('Speak now', '');
 }
 
 function handleVoice(text) {
   if (!text || text.length < 2) {
-    setHint('Tap to speak', '');
+    setHint('Speak now', '');
     return;
   }
   // Show what they said immediately
@@ -1104,7 +1104,7 @@ async function callConcierge() {
     const data = await res.json();
     removeTypingBubble(tid);
     document.getElementById('micBtn').className = 'mic-btn';
-    setHint('Tap to speak', '');
+    setHint('Speak now', '');
     if (data.caseId && !currentCaseId) {
       currentCaseId = data.caseId;
       // Only add to sidebar if not already there
@@ -1164,7 +1164,7 @@ async function callConcierge() {
   } catch(e) {
     removeTypingBubble(tid);
     document.getElementById('micBtn').className = 'mic-btn';
-    setHint('Tap to speak', '');
+    setHint('Speak now', '');
     addAIBubble("Connection hiccup — I'm still here. Tap the mic or type below.",[]);
   }
 }
