@@ -728,19 +728,19 @@ if ('serviceWorker' in navigator) {
     // Check for updates every 60 seconds
     setInterval(() => reg.update(), 60000);
 
-    // When new SW is waiting — activate it immediately
+    // When new SW is waiting - activate it immediately
     reg.addEventListener('updatefound', () => {
       const newSW = reg.installing;
       newSW.addEventListener('statechange', () => {
         if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
-          // New version available — reload silently
+          // New version available - reload silently
           newSW.postMessage('skipWaiting');
         }
       });
     });
   });
 
-  // When SW takes control — reload the page to get fresh content
+  // When SW takes control - reload the page to get fresh content
   let refreshing = false;
   navigator.serviceWorker.addEventListener('controllerchange', () => {
     if (!refreshing) {
@@ -862,13 +862,13 @@ if (window.speechSynthesis) {
   [100,500,1500].forEach(t => setTimeout(pickBestVoice, t));
 }
 
-// Use browser voices — consistent on all devices
+// Use browser voices - consistent on all devices
 const EL_VOICES = [];  // populated dynamically from browser
 
 function openVoiceSelector() {
   const list = document.getElementById('voiceList');
   list.innerHTML = '';
-  document.getElementById('vsSub').textContent = EL_VOICES.length + ' Inworld voices — tap to preview';
+  document.getElementById('vsSub').textContent = EL_VOICES.length + ' Inworld voices - tap to preview';
 
   EL_VOICES.forEach(voice => {
     const item = document.createElement('div');
@@ -892,7 +892,7 @@ function renderCases() {
   const list = document.getElementById('casesList');
   if (!localCases.length) { list.innerHTML = '<div class="case-empty"><p>Your cases appear here as you talk.</p></div>'; return; }
   list.innerHTML = '';
-  // Deduplicate — one card per category
+  // Deduplicate - one card per category
   const seen = new Set();
   const deduped = localCases.filter(c => {
     if (seen.has(c.category)) return false;
@@ -958,7 +958,7 @@ function openCarVoice() {
     prompt = name ? `${name}, what's going on with your ${cars[0]}?` : `What's going on with your ${cars[0]}?`;
   } else if (cars.length > 1) {
     label = 'Car trouble';
-    prompt = name ? `${name}, which car — ${cars.join(' or ')}?` : `Which car — ${cars.join(' or ')}?`;
+    prompt = name ? `${name}, which car - ${cars.join(' or ')}?` : `Which car - ${cars.join(' or ')}?`;
   } else {
     label = 'Car trouble';
     prompt = name ? `${name}, tell me about your car.` : 'Tell me about your car.';
@@ -985,7 +985,7 @@ function openVoice(category, label, prompt) {
   setNav('navTalk');
   requestWakeLock();
 
-  // Reuse existing case ID — fresh history each time
+  // Reuse existing case ID - fresh history each time
   const existingCase = localCases.find(c => c.category === category);
   currentCaseId = existingCase ? existingCase.id : null;
   history = [];
@@ -1035,7 +1035,7 @@ function speakThenListen(text) {
   setHint('🔴 Please wait...', '');
   document.getElementById('micBtn').className = 'mic-btn waiting';
 
-  // Speak directly — must be synchronous for iOS Safari user gesture
+  // Speak directly - must be synchronous for iOS Safari user gesture
   const clean = text.replace(/[*_#`]/g, '').replace(/\n+/g, ' ').trim().substring(0, 600);
   
   let wentGreen = false;
@@ -1044,7 +1044,7 @@ function speakThenListen(text) {
     wentGreen = true;
     playBell();
     document.getElementById('micBtn').className = 'mic-btn';
-    setHint('🟢 Listening — speak now', 'live');
+    setHint('🟢 Listening - speak now', 'live');
     startRings();
     startRecording();
   };
@@ -1052,7 +1052,7 @@ function speakThenListen(text) {
   if (window.speechSynthesis) {
     window.speechSynthesis.cancel();
 
-    // Split into chunks of max 150 chars at word boundaries — iOS cuts long utterances
+    // Split into chunks of max 150 chars at word boundaries - iOS cuts long utterances
     const words = clean.split(' ');
     const chunks = [];
     let current = '';
@@ -1075,7 +1075,7 @@ function speakThenListen(text) {
       utt.onend = () => { chunkIdx++; setTimeout(speakChunk, 50); };
       utt.onerror = () => { chunkIdx++; setTimeout(speakChunk, 50); };
       window.speechSynthesis.speak(utt);
-      // Don't increment here — wait for onend
+      // Don't increment here - wait for onend
     }
 
     // iOS failsafe
@@ -1105,12 +1105,12 @@ function keepAudioAlive() {
 function startRecording() {
   keepAudioAlive();
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR) { setHint('Voice not available — type below','error'); return; }
+  if (!SR) { setHint('Voice not available - type below','error'); return; }
   recognition = new SR();
   recognition.continuous = false; recognition.interimResults = false; recognition.lang = 'en-US';
   isRecording = true;
   document.getElementById('micBtn').classList.add('listening');
-  startRings(); setHint('🟢 Listening — speak now', 'live'); stopSpeaking();
+  startRings(); setHint('🟢 Listening - speak now', 'live'); stopSpeaking();
   recognition.onresult = e => {
     const t = e.results[0][0].transcript.trim();
     console.log('Heard:', t);
@@ -1120,7 +1120,7 @@ function startRecording() {
   recognition.onerror = e => {
     console.log('Speech error:', e.error);
     stopRecording();
-    if (e.error==='not-allowed') setHint('Mic blocked — type below','error');
+    if (e.error==='not-allowed') setHint('Mic blocked - type below','error');
     else if (e.error==='no-speech') {
       setHint('Speak now', '');
     }
@@ -1173,7 +1173,7 @@ async function speakElevenLabs(text, onEnd) {
   stopSpeaking();
   stopRecording();
   const clean = text.replace(/[*_#`]/g, '').replace(/\n+/g, ' ').trim().substring(0, 400);
-  // Use browser TTS directly — reliable on all devices
+  // Use browser TTS directly - reliable on all devices
   fallbackTTS(clean, onEnd);
   return;
   try {
@@ -1188,7 +1188,7 @@ async function speakElevenLabs(text, onEnd) {
     const arrayBuffer = await res.arrayBuffer();
     const blob = new Blob([arrayBuffer], { type: 'audio/mpeg' });
     const url = URL.createObjectURL(blob);
-    // Fresh Audio object every single time — required for iOS to speak after first response
+    // Fresh Audio object every single time - required for iOS to speak after first response
     const audio = new Audio();
     currentAudio = audio;
     audio.addEventListener('ended', () => {
@@ -1227,7 +1227,7 @@ function fallbackTTS(text, onEnd) {
     utt.onend = done;
     utt.onerror = done;
 
-    // iOS Safari sometimes never fires onend — force after estimated duration
+    // iOS Safari sometimes never fires onend - force after estimated duration
     const estimatedMs = Math.max(2500, text.length * 55);
     setTimeout(done, estimatedMs);
 
@@ -1256,13 +1256,13 @@ async function callConcierge() {
       currentCaseId = data.caseId;
       // Only add to sidebar if not already there
       if (!localCases.find(c => c.id === data.caseId)) {
-        const newCase = {id:data.caseId,category:currentCategory,title:currentCategory+' — '+new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'}),user_id:deviceId,status:'active',context:history,created_at:new Date().toISOString()};
+        const newCase = {id:data.caseId,category:currentCategory,title:currentCategory+' - '+new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'}),user_id:deviceId,status:'active',context:history,created_at:new Date().toISOString()};
         localCases = [newCase,...localCases];
         renderCases();
       }
       setActiveCase(data.caseId);
     }
-    const rawReply = data.reply || data.error || "I'm here — try again.";
+    const rawReply = data.reply || data.error || "I'm here - try again.";
     console.log('Reply:', rawReply);
 
     // Check for resolution
@@ -1312,7 +1312,7 @@ async function callConcierge() {
     removeTypingBubble(tid);
     document.getElementById('micBtn').className = 'mic-btn';
     setHint('Speak now', '');
-    addAIBubble("Connection hiccup — I'm still here. Tap the mic or type below.",[]);
+    addAIBubble("Connection hiccup - I'm still here. Tap the mic or type below.",[]);
   }
 }
 
@@ -1453,7 +1453,7 @@ async function handleImageUpload(event) {
       }
     } catch(e) {
       hist.removeChild(analyzing);
-      addAIBubble("Couldn't analyze the photo — try describing what you see instead.", []);
+      addAIBubble("Couldn't analyze the photo - try describing what you see instead.", []);
       document.getElementById('micBtn').className = 'mic-btn';
       setHint('Speak now', '');
     }
@@ -1541,7 +1541,7 @@ async function doPlacesSearch(query, location) {
 
   } catch(e) {
     removeTypingBubble(loadingId);
-    addAIBubble(`Couldn't load results — try searching Google Maps for "${query}".`, []);
+    addAIBubble(`Couldn't load results - try searching Google Maps for "${query}".`, []);
   }
 }
 
@@ -1717,7 +1717,7 @@ const OB_QUESTIONS = [
   { key: 'zip_code',    q: "What city or zip code are you in?",           placeholder: 'City or zip code',    type: 'text' },
   { key: 'has_car',     q: "What car do you drive?",                      placeholder: 'e.g. 2021 Toyota Camry', type: 'text' },
   { key: 'has_kids',    q: "Do you have kids?",                           placeholder: 'Yes / No / Ages',     type: 'text' },
-  { key: 'health_note', q: "Anything health-related I should know?",      placeholder: 'Optional — medications, conditions, or skip', type: 'text' },
+  { key: 'health_note', q: "Anything health-related I should know?",      placeholder: 'Optional - medications, conditions, or skip', type: 'text' },
 ];
 let obStep = 0;
 let obAnswers = {};
@@ -1850,7 +1850,7 @@ if (caseFromNotif) {
   }, 1000);
 }
 
-// WAKE LOCK — keep screen on during conversations
+// WAKE LOCK - keep screen on during conversations
 let wakeLock = null;
 
 async function requestWakeLock() {
@@ -1883,12 +1883,12 @@ document.addEventListener('visibilitychange', () => {
 const hr = new Date().getHours();
 updateGreeting();
 
-// REQUEST MIC PERMISSION UPFRONT — before any conversation starts
+// REQUEST MIC PERMISSION UPFRONT - before any conversation starts
 // This prevents the permission popup from interrupting mid-conversation
 async function requestMicPermission() {
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    // Permission granted — stop the stream immediately, we just needed the grant
+    // Permission granted - stop the stream immediately, we just needed the grant
     stream.getTracks().forEach(t => t.stop());
     console.log('Mic permission granted upfront');
   } catch(e) {
@@ -1907,7 +1907,7 @@ async function warmupElevenLabs() {
   } catch(e) {}
 }
 
-// Run both on load — silently
+// Run both on load - silently
 setTimeout(() => {
   requestMicPermission();
 }, 1000);
