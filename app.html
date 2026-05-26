@@ -936,7 +936,9 @@ function speakThenListen(text) {
   setHint('🔴 Please wait...', '');
   document.getElementById('micBtn').className = 'mic-btn waiting';
 
-  // Hard timeout — always go green within 8 seconds no matter what
+  // Speak directly — must be synchronous for iOS Safari user gesture
+  const clean = text.replace(/[*_#`]/g, '').replace(/\n+/g, ' ').trim().substring(0, 250);
+  
   let wentGreen = false;
   const goGreen = () => {
     if (wentGreen) return;
@@ -947,11 +949,20 @@ function speakThenListen(text) {
     startRings();
     startRecording();
   };
-  setTimeout(goGreen, 8000);
 
-  speakElevenLabs(text, () => {
-    setTimeout(goGreen, 600);
-  });
+  if (window.speechSynthesis) {
+    window.speechSynthesis.cancel();
+    const utt = new SpeechSynthesisUtterance(clean);
+    if (selectedVoice) utt.voice = selectedVoice;
+    utt.rate = 1.05;
+    utt.onend = () => setTimeout(goGreen, 300);
+    utt.onerror = () => setTimeout(goGreen, 300);
+    // iOS failsafe
+    setTimeout(goGreen, Math.max(3000, clean.length * 55));
+    window.speechSynthesis.speak(utt);
+  } else {
+    setTimeout(goGreen, 1000);
+  }
 }
 
 function toggleMic() { isRecording ? stopRecording() : startRecording(); }
