@@ -15,35 +15,44 @@ exports.handler = async (event) => {
 
   try {
     const { image, mediaType, category, context } = JSON.parse(event.body);
+    const isPDF = mediaType === 'application/pdf';
 
-    const systemPrompt = `You are Concierge — a brilliant problem-solver analyzing an image for a user who needs help.
-Category: ${category}
-Be specific and actionable. Describe exactly what you see that's relevant to their situation.
-1-3 sentences. Direct. Like a smart friend looking at their photo.
-Focus on what matters for solving their problem.`;
+    const systemPrompt = 'You are Concierge — a brilliant advisor analyzing a document or image for someone who needs help with a ' + category + ' situation.\n\nBe specific and direct. Extract the most important facts:\n- What is this document/image?\n- What are the key numbers, dates, deadlines?\n- What does this mean for them?\n- What is the single most important thing they need to know or do?\n\n2-3 sentences max. Like a smart lawyer friend who just read their document.';
 
-    const userMessage = context 
-      ? `Here's the situation so far: ${context}\n\nNow I'm looking at this image — what do you see that's relevant?`
-      : 'What do you see in this image that can help me?';
+    const userMessage = context
+      ? 'Situation so far: ' + context + '\n\nNow analyzing this ' + (isPDF ? 'document' : 'image') + ' — what are the key facts and what should they do?'
+      : 'What are the key facts in this ' + (isPDF ? 'document' : 'image') + ' and what does the person need to know or do?';
+
+    // Build content array based on file type
+    const contentArray = [];
+
+    if (isPDF) {
+      contentArray.push({
+        type: 'document',
+        source: {
+          type: 'base64',
+          media_type: 'application/pdf',
+          data: image
+        }
+      });
+    } else {
+      contentArray.push({
+        type: 'image',
+        source: {
+          type: 'base64',
+          media_type: mediaType || 'image/jpeg',
+          data: image
+        }
+      });
+    }
+
+    contentArray.push({ type: 'text', text: userMessage });
 
     const payload = JSON.stringify({
       model: 'claude-opus-4-5',
-      max_tokens: 300,
+      max_tokens: 400,
       system: systemPrompt,
-      messages: [{
-        role: 'user',
-        content: [
-          {
-            type: 'image',
-            source: {
-              type: 'base64',
-              media_type: mediaType || 'image/jpeg',
-              data: image
-            }
-          },
-          { type: 'text', text: userMessage }
-        ]
-      }]
+      messages: [{ role: 'user', content: contentArray }]
     });
 
     const result = await new Promise((resolve, reject) => {
@@ -56,6 +65,7 @@ Focus on what matters for solving their problem.`;
           'Content-Type': 'application/json',
           'x-api-key': ANTHROPIC_KEY,
           'anthropic-version': '2023-06-01',
+          'anthropic-beta': 'pdfs-2024-09-25',
           'Content-Length': Buffer.byteLength(payload)
         }
       }, res => {
@@ -68,13 +78,13 @@ Focus on what matters for solving their problem.`;
     });
 
     const data = JSON.parse(result.body);
-    if (result.status !== 200) throw new Error(data.error ? data.error.message : 'Vision API error');
+    if (result.status !== 200) throw new Error(data.error ? data.error.message : 'Vision API error ' + result.status);
 
     const description = data.content[0].text;
     return {
       statusCode: 200,
       headers: { ...CORS, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ description })
+      body: JSON.stringify({ description, isPDF })
     };
 
   } catch (err) {

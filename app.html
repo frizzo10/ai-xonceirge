@@ -566,9 +566,14 @@ body{
           </button>
         </div>
         <p class="mic-hint" id="micHint">Speak now</p>
-        <button class="camera-btn" onclick="openCamera()" title="Share a photo">
-          <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-        </button>
+        <div style="display:flex;gap:6px;justify-content:center;margin-top:4px">
+          <button class="camera-btn" onclick="openCamera()" title="Take photo" style="position:relative">
+            <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          </button>
+          <button class="camera-btn" onclick="openFile()" title="Upload file or PDF" style="position:relative">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9,15 12,12 15,15"/></svg>
+          </button>
+        </div>
       </div>
       <div class="convo-history" id="convoHistory"></div>
       <div class="resolved-banner" id="resolvedBanner">
@@ -682,6 +687,7 @@ body{
 
 <!-- HIDDEN FILE INPUT FOR CAMERA -->
 <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none" onchange="handleImageUpload(event)">
+<input type="file" id="fileInput" accept="image/*,application/pdf,.pdf" style="display:none" onchange="handleImageUpload(event)">
 
 <!-- SOLUTION CARD POPUP -->
 <div class="solution-overlay" id="solutionOverlay">
@@ -1380,6 +1386,10 @@ function openCamera() {
   document.getElementById('cameraInput').click();
 }
 
+function openFile() {
+  document.getElementById('fileInput').click();
+}
+
 async function handleImageUpload(event) {
   const file = event.target.files[0];
   if (!file) return;
@@ -1395,14 +1405,20 @@ async function handleImageUpload(event) {
     // Show preview bubble
     const hist = document.getElementById('convoHistory');
     const preview = document.createElement('div');
-    preview.className = 'image-preview';
-    preview.innerHTML = `<img src="${dataUrl}" alt="Your photo">`;
+    if (file.type === 'application/pdf') {
+      preview.className = 'image-analyzing';
+      preview.innerHTML = '📄 ' + file.name;
+    } else {
+      preview.className = 'image-preview';
+      preview.innerHTML = '<img src="' + dataUrl + '" alt="Your photo">';
+    }
     hist.appendChild(preview);
 
     // Show analyzing indicator
     const analyzing = document.createElement('div');
     analyzing.className = 'image-analyzing';
-    analyzing.innerHTML = '<div class="dots"><span></span><span></span><span></span></div> Analyzing your photo...';
+    const fileType = file.type === 'application/pdf' ? 'document' : 'photo';
+    analyzing.innerHTML = '<div class="dots"><span></span><span></span><span></span></div> Reading your ' + fileType + '...';
     hist.appendChild(analyzing);
     scrollHistory();
 
@@ -1428,10 +1444,9 @@ async function handleImageUpload(event) {
       if (data.description) {
         // Add to conversation
         history.push({ role: 'user', content: '[Photo shared] ' + data.description });
-        addAIBubble('I can see: ' + data.description, getChips());
-        
-        // Speak what we see
-        speakThenListen('I can see ' + data.description);
+        const prefix = data.isPDF ? 'From your document: ' : 'I can see: ';
+        addAIBubble(prefix + data.description, getChips());
+        speakThenListen(prefix + data.description);
         
         // Continue conversation with this context
         callConcierge();
