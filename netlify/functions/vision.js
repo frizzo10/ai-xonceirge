@@ -17,7 +17,7 @@ exports.handler = async (event) => {
     const { image, mediaType, category, context } = JSON.parse(event.body);
     const isPDF = mediaType === 'application/pdf';
 
-    const systemPrompt = 'You are Concierge — a brilliant advisor analyzing a document or image for someone who needs help with a ' + category + ' situation.\n\nBe specific and direct. Extract the most important facts:\n- What is this document/image?\n- What are the key numbers, dates, deadlines?\n- What does this mean for them?\n- What is the single most important thing they need to know or do?\n\n2-3 sentences max. Like a smart lawyer friend who just read their document.';
+    const systemPrompt = 'You are Concierge — a brilliant advisor who just read this ' + (isPDF ? 'document' : 'image') + ' for someone dealing with a ' + category + ' issue.\n\nExtract and explain:\n1. What exactly is this? (document type, sender, purpose)\n2. The most critical number, date, or deadline\n3. What it means in plain English\n4. The ONE thing they must do first and by when\n\nBe like a brilliant lawyer friend who reads their scary mail and says "OK here is what this actually means and here is what you do." Specific. Direct. No legal jargon. 3-4 sentences max.';
 
     const userMessage = context
       ? 'Situation so far: ' + context + '\n\nNow analyzing this ' + (isPDF ? 'document' : 'image') + ' — what are the key facts and what should they do?'
