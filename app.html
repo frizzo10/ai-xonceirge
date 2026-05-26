@@ -937,7 +937,7 @@ function speakThenListen(text) {
   document.getElementById('micBtn').className = 'mic-btn waiting';
 
   // Speak directly — must be synchronous for iOS Safari user gesture
-  const clean = text.replace(/[*_#`]/g, '').replace(/\n+/g, ' ').trim().substring(0, 250);
+  const clean = text.replace(/[*_#`]/g, '').replace(/\n+/g, ' ').trim().substring(0, 600);
   
   let wentGreen = false;
   const goGreen = () => {
@@ -1095,7 +1095,7 @@ async function speakElevenLabs(text, onEnd) {
 function fallbackTTS(text, onEnd) {
   if (window.speechSynthesis) {
     window.speechSynthesis.cancel();
-    const utt = new SpeechSynthesisUtterance(text.substring(0, 250));
+    const utt = new SpeechSynthesisUtterance(text.substring(0, 600));
     if (selectedVoice) utt.voice = selectedVoice;
     utt.rate = 1.05;
     utt.pitch = 1.0;
