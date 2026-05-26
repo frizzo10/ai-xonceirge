@@ -328,6 +328,54 @@ body{
 }
 .places-call:active{opacity:0.85}
 
+/* SOLUTION CARD POPUP */
+.solution-overlay{
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  background:rgba(10,40,0,0.7);backdrop-filter:blur(4px);
+  z-index:400;display:none;align-items:flex-end;
+  padding-bottom:var(--safe);
+}
+.solution-overlay.show{display:flex}
+.solution-sheet{
+  width:100%;background:var(--surface);
+  border-radius:24px 24px 0 0;padding:24px 20px;
+  padding-bottom:calc(24px + var(--safe));
+}
+.solution-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:20px;
+}
+.solution-title{font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3)}
+.solution-close{font-size:24px;color:var(--text3);cursor:pointer;padding:4px;-webkit-tap-highlight-color:transparent}
+.solution-cards{display:flex;flex-direction:column;gap:12px}
+.solution-card{
+  background:var(--bg);border:1.5px solid var(--border);
+  border-radius:16px;padding:16px;
+}
+.solution-card-name{font-size:17px;font-weight:700;color:var(--text);margin-bottom:4px}
+.solution-card-addr{font-size:13px;color:var(--text3);margin-bottom:12px;line-height:1.4}
+.solution-card-meta{display:flex;gap:8px;margin-bottom:14px}
+.solution-rating{font-size:13px;color:var(--green-dark);font-weight:600}
+.solution-open{font-size:12px;padding:3px 10px;border-radius:20px;font-weight:700}
+.solution-open.yes{background:var(--green-dim);color:var(--green-dark)}
+.solution-open.no{background:rgba(214,59,59,0.1);color:var(--red)}
+.solution-btns{display:flex;gap:8px}
+.solution-btn{
+  flex:1;padding:12px;border-radius:12px;border:none;
+  font-size:14px;font-weight:700;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;text-decoration:none;
+  text-align:center;display:block;
+}
+.solution-btn.call{background:var(--green);color:white}
+.solution-btn.map{background:var(--green-light);color:var(--green-dark);border:1.5px solid var(--green-border)}
+.solution-next{
+  width:100%;padding:14px;border-radius:14px;
+  background:var(--surface2);border:1.5px solid var(--border);
+  font-size:14px;font-weight:600;color:var(--text2);
+  cursor:pointer;margin-top:12px;-webkit-tap-highlight-color:transparent;
+  text-align:center;
+}
+
 /* RESOLVED BANNER */
 .resolved-banner{
   margin:8px 12px;padding:16px 20px;
@@ -603,6 +651,18 @@ body{
   <input class="ob-input" id="obInput" placeholder="" onkeydown="if(event.key==='Enter') obNext()">
   <button class="ob-next" onclick="obNext()">Continue →</button>
   <div class="ob-skip" onclick="obSkip()">Skip this</div>
+</div>
+
+<!-- SOLUTION CARD POPUP -->
+<div class="solution-overlay" id="solutionOverlay">
+  <div class="solution-sheet">
+    <div class="solution-header">
+      <span class="solution-title" id="solutionTitle">Found near you</span>
+      <span class="solution-close" onclick="closeSolution()">×</span>
+    </div>
+    <div class="solution-cards" id="solutionCards"></div>
+    <div class="solution-next" id="solutionNext" onclick="closeSolution()" style="display:none">Done</div>
+  </div>
 </div>
 
 <!-- INSTALL BANNERS -->
@@ -1285,6 +1345,11 @@ function finishConversation() {
   showHome();
 }
 
+// CLOSE SOLUTION
+function closeSolution() {
+  document.getElementById('solutionOverlay').classList.remove('show');
+}
+
 // START NEW TOPIC
 function startNewTopic() {
   document.getElementById('resolvedBanner').classList.remove('show');
@@ -1321,14 +1386,14 @@ async function doPlacesSearch(query, location) {
     }
 
     // Show results
-    const hist = document.getElementById('convoHistory');
-    const wrapper = document.createElement('div');
-    wrapper.style.cssText = 'display:flex;flex-direction:column;gap:8px;align-self:flex-start;width:92%';
-
-    const label = document.createElement('div');
-    label.style.cssText = 'font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3)';
-    label.textContent = `Found near ${location}`;
-    wrapper.appendChild(label);
+    // Show as popup sheet
+    const overlay = document.getElementById('solutionOverlay');
+    const cards = document.getElementById('solutionCards');
+    const title = document.getElementById('solutionTitle');
+    document.getElementById('solutionNext').style.display = 'block';
+    title.textContent = 'Found near ' + location;
+    cards.innerHTML = '';
+    const wrapper = cards;
 
     data.places.forEach(p => {
       const card = document.createElement('div');
@@ -1347,11 +1412,16 @@ async function doPlacesSearch(query, location) {
       wrapper.appendChild(card);
     });
 
-    hist.appendChild(wrapper);
-    scrollHistory();
+    // Show popup
+    overlay.classList.add('show');
+
+    // Speak the results
+    const names = data.places.map(p => p.name).join(', ');
+    const speakText = 'I found ' + data.places.length + ' options near you. ' + names + '. I've shown them on your screen.';
+    speakThenListen(speakText);
 
     // Tell Groq we found results
-    history.push({ role: 'assistant', content: `I found ${data.places.length} options near ${location}: ${data.places.map(p => p.name).join(', ')}. Which one would you like to call first?` });
+    history.push({ role: 'assistant', content: 'I found ' + data.places.length + ' options near ' + location + ': ' + names + '. Shown on screen.' });
 
   } catch(e) {
     removeTypingBubble(loadingId);
