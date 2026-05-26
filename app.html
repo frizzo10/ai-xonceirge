@@ -1532,7 +1532,7 @@ async function doPlacesSearch(query, location) {
 
     // Speak the results
     const names = data.places.map(p => p.name).join(', ');
-    const speakText = 'I found ' + data.places.length + ' options near you. ' + names + '. I've shown them on your screen.';
+    const speakText = 'I found ' + data.places.length + ' options near you. ' + names + '. I have shown them on your screen.';
     speakThenListen(speakText);
 
     // Tell Groq we found results
