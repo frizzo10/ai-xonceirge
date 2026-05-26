@@ -1036,6 +1036,9 @@ async function speakElevenLabs(text, onEnd) {
   stopSpeaking();
   stopRecording();
   const clean = text.replace(/[*_#`]/g, '').replace(/\n+/g, ' ').trim().substring(0, 400);
+  // Use browser TTS directly — reliable on all devices
+  fallbackTTS(clean, onEnd);
+  return;
   try {
     const res = await fetch('/api/speak', {
       method: 'POST',
