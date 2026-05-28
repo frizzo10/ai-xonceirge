@@ -542,40 +542,28 @@ body{
 
     <!-- VOICE -->
     <div class="voice-state" id="voiceState" style="display:none">
+
+      <!-- TOP NAV -->
       <div class="voice-nav">
         <div class="back-btn" onclick="navHome()">
           <svg viewBox="0 0 24 24"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
           Home
         </div>
-        <div class="stop-btn" id="stopBtn" onclick="stopConversation()">⏹ Stop</div>
-      </div>
-      <div class="voice-top">
-        <span class="voice-category" id="voiceCategory"></span>
-        <p class="voice-prompt" id="voicePrompt"></p>
-        <p style="font-size:11px;color:var(--text3);margin-top:-4px">Green = your turn · Red = please wait</p>
-        <div class="mic-wrap" style="position:relative">
-          <div class="mic-ring" id="ring1"></div>
-          <div class="mic-ring delay" id="ring2"></div>
-          <button class="mic-btn" id="micBtn" onclick="toggleMic()">
-            <svg viewBox="0 0 24 24">
-              <rect x="9" y="2" width="6" height="13" rx="3"/>
-              <path d="M5 10a7 7 0 0 0 14 0" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"/>
-              <line x1="12" y1="17" x2="12" y2="21" stroke="white" stroke-width="2" stroke-linecap="round"/>
-              <line x1="8" y1="21" x2="16" y2="21" stroke="white" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-          </button>
-        </div>
-        <p class="mic-hint" id="micHint">Speak now</p>
-        <div style="display:flex;gap:6px;justify-content:center;margin-top:4px">
-          <button class="camera-btn" onclick="openCamera()" title="Take photo" style="position:relative">
-            <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-          </button>
-          <button class="camera-btn" onclick="openFile()" title="Upload file or PDF" style="position:relative">
-            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9,15 12,12 15,15"/></svg>
-          </button>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="voice-category" id="voiceCategory"></span>
+          <div class="stop-btn" id="stopBtn" onclick="stopConversation()">⏹ Stop</div>
         </div>
       </div>
+
+      <!-- PROMPT — compact, above history -->
+      <div style="padding:6px 16px 4px;flex-shrink:0;text-align:center">
+        <p class="voice-prompt" id="voicePrompt" style="font-size:15px;margin:0"></p>
+      </div>
+
+      <!-- CONVERSATION HISTORY — fills all available space -->
       <div class="convo-history" id="convoHistory"></div>
+
+      <!-- RESOLVED BANNER -->
       <div class="resolved-banner" id="resolvedBanner">
         <div class="resolved-title">✓ Problem solved.</div>
         <div class="resolved-sub">Anything else on your mind?</div>
@@ -585,12 +573,34 @@ body{
         </div>
       </div>
       <div class="done-btn" id="doneBtn" onclick="finishConversation()">✓ Done — close this case</div>
-      <div class="type-bar">
-        <input class="type-input" id="typeInput" placeholder="Or type here..." onkeydown="handleTypeKey(event)">
-        <button class="type-send" onclick="sendTyped()">
-          <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+
+      <!-- BOTTOM BAR — mic + type + camera -->
+      <div style="flex-shrink:0;padding:8px 12px 8px;border-top:1px solid var(--border);background:var(--surface);display:flex;align-items:center;gap:8px">
+        <input class="type-input" id="typeInput" placeholder="Type here..." onkeydown="handleTypeKey(event)" style="flex:1;font-size:13px">
+        <button class="camera-btn" onclick="openCamera()" title="Photo" style="width:34px;height:34px;flex-shrink:0">
+          <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
         </button>
+        <button class="camera-btn" onclick="openFile()" title="Upload" style="width:34px;height:34px;flex-shrink:0">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9,15 12,12 15,15"/></svg>
+        </button>
+        <div style="position:relative;width:48px;height:48px;flex-shrink:0;display:flex;align-items:center;justify-content:center">
+          <div class="mic-ring" id="ring1"></div>
+          <div class="mic-ring delay" id="ring2"></div>
+          <button class="mic-btn" id="micBtn" onclick="toggleMic()" style="width:44px;height:44px;border-radius:22px">
+            <svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:white">
+              <rect x="9" y="2" width="6" height="13" rx="3"/>
+              <path d="M5 10a7 7 0 0 0 14 0" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"/>
+              <line x1="12" y1="17" x2="12" y2="21" stroke="white" stroke-width="2" stroke-linecap="round"/>
+              <line x1="8" y1="21" x2="16" y2="21" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
       </div>
+      <!-- Mic hint below bar -->
+      <div style="flex-shrink:0;text-align:center;padding:2px 0 calc(4px + var(--safe));background:var(--surface)">
+        <span class="mic-hint" id="micHint">Speak now</span>
+      </div>
+
     </div>
 
     <!-- PROFILE SCREEN -->
@@ -1356,6 +1366,8 @@ function addUserBubble(text) {
 }
 
 function addAIBubble(text, chips) {
+  const ep = document.getElementById('emptyPrompt');
+  if (ep) ep.style.display = 'none';
   removeChips();
   const b = document.createElement('div');
   b.className = 'bubble-ai'; b.textContent = text;
