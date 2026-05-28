@@ -328,6 +328,42 @@ body{
 }
 .places-call:active{opacity:0.85}
 
+/* MEDIA ACTION SHEET */
+.media-sheet-overlay{
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  background:rgba(0,0,0,0.5);z-index:500;display:none;
+  align-items:flex-end;
+}
+.media-sheet-overlay.show{display:flex}
+.media-sheet{
+  width:100%;background:var(--surface);
+  border-radius:20px 20px 0 0;padding:16px;
+  padding-bottom:calc(16px + var(--safe));
+}
+.media-sheet-title{
+  text-align:center;font-size:12px;font-weight:700;
+  letter-spacing:1px;color:var(--text3);
+  text-transform:uppercase;margin-bottom:12px;
+}
+.media-option{
+  display:flex;align-items:center;gap:14px;
+  padding:16px;border-radius:14px;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  margin-bottom:8px;background:var(--bg);
+  border:1.5px solid var(--border);
+}
+.media-option:active{background:var(--green-light)}
+.media-option-icon{font-size:24px;width:40px;text-align:center}
+.media-option-label{font-size:15px;font-weight:600;color:var(--text)}
+.media-option-sub{font-size:12px;color:var(--text3)}
+.media-cancel{
+  width:100%;padding:14px;border-radius:14px;
+  background:var(--surface);border:1.5px solid var(--border);
+  font-size:15px;font-weight:600;color:var(--red);
+  cursor:pointer;text-align:center;margin-top:4px;
+  -webkit-tap-highlight-color:transparent;
+}
+
 /* CAMERA / FILE UPLOAD */
 .camera-btn{
   position:absolute;right:0;bottom:0;
@@ -577,11 +613,8 @@ body{
       <!-- BOTTOM BAR — mic + type + camera -->
       <div style="flex-shrink:0;padding:8px 12px 8px;border-top:1px solid var(--border);background:var(--surface);display:flex;align-items:center;gap:8px">
         <input class="type-input" id="typeInput" placeholder="Type here..." onkeydown="handleTypeKey(event)" style="flex:1;font-size:13px">
-        <button class="camera-btn" onclick="openCamera()" title="Photo" style="width:34px;height:34px;flex-shrink:0">
-          <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-        </button>
-        <button class="camera-btn" onclick="openFile()" title="Upload" style="width:34px;height:34px;flex-shrink:0">
-          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9,15 12,12 15,15"/></svg>
+        <button class="camera-btn" onclick="openMediaSheet()" title="Share photo or document" style="width:34px;height:34px;flex-shrink:0">
+          <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:var(--green-dark);fill:none;stroke-width:1.5;stroke-linecap:round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
         </button>
         <div style="position:relative;width:48px;height:48px;flex-shrink:0;display:flex;align-items:center;justify-content:center">
           <div class="mic-ring" id="ring1"></div>
@@ -697,7 +730,37 @@ body{
 
 <!-- HIDDEN FILE INPUT FOR CAMERA -->
 <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none" onchange="handleImageUpload(event)">
-<input type="file" id="fileInput" accept="image/*,application/pdf,.pdf" style="display:none" onchange="handleImageUpload(event)">
+<input type="file" id="libraryInput" accept="image/*" style="display:none" onchange="handleImageUpload(event)">
+<input type="file" id="fileInput" accept="application/pdf,image/*" style="display:none" onchange="handleImageUpload(event)">
+
+<!-- MEDIA ACTION SHEET -->
+<div class="media-sheet-overlay" id="mediaSheetOverlay" onclick="closeMediaSheet()">
+  <div class="media-sheet" onclick="event.stopPropagation()">
+    <div class="media-sheet-title">Share with Concierge</div>
+    <div class="media-option" onclick="takePhoto()">
+      <div class="media-option-icon">📷</div>
+      <div>
+        <div class="media-option-label">Take a Photo</div>
+        <div class="media-option-sub">Open camera — dashboard, damage, letter</div>
+      </div>
+    </div>
+    <div class="media-option" onclick="chooseFromLibrary()">
+      <div class="media-option-icon">🖼️</div>
+      <div>
+        <div class="media-option-label">Choose from Library</div>
+        <div class="media-option-sub">Select an existing photo</div>
+      </div>
+    </div>
+    <div class="media-option" onclick="uploadDocument()">
+      <div class="media-option-icon">📄</div>
+      <div>
+        <div class="media-option-label">Upload a Document</div>
+        <div class="media-option-sub">PDF, lease, letter, bill, insurance doc</div>
+      </div>
+    </div>
+    <button class="media-cancel" onclick="closeMediaSheet()">Cancel</button>
+  </div>
+</div>
 
 <!-- SOLUTION CARD POPUP -->
 <div class="solution-overlay" id="solutionOverlay">
@@ -1419,13 +1482,31 @@ function finishConversation() {
 }
 
 // CAMERA & VISION
-function openCamera() {
-  document.getElementById('cameraInput').click();
+function openMediaSheet() {
+  document.getElementById('mediaSheetOverlay').classList.add('show');
 }
 
-function openFile() {
-  document.getElementById('fileInput').click();
+function closeMediaSheet() {
+  document.getElementById('mediaSheetOverlay').classList.remove('show');
 }
+
+function takePhoto() {
+  closeMediaSheet();
+  setTimeout(() => document.getElementById('cameraInput').click(), 200);
+}
+
+function chooseFromLibrary() {
+  closeMediaSheet();
+  setTimeout(() => document.getElementById('libraryInput').click(), 200);
+}
+
+function uploadDocument() {
+  closeMediaSheet();
+  setTimeout(() => document.getElementById('fileInput').click(), 200);
+}
+
+function openCamera() { openMediaSheet(); }
+function openFile() { openMediaSheet(); }
 
 async function handleImageUpload(event) {
   const file = event.target.files[0];
