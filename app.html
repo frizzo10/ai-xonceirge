@@ -1008,22 +1008,47 @@ function getLocalProfile() {
   return parts.length ? parts.join('. ') : null;
 }
 
-function resumeCase(c) {
+async function resumeCase(c) {
   currentCaseId = c.id; currentCategory = c.category;
   history = Array.isArray(c.context) ? c.context : [];
   document.getElementById('voiceCategory').textContent = c.category;
   document.getElementById('voicePrompt').textContent = 'Picking up where we left off.';
   document.getElementById('homeState').style.display = 'none';
   document.getElementById('voiceState').style.display = 'flex';
+  document.getElementById('resolvedBanner').classList.remove('show');
+  document.getElementById('doneBtn').style.display = '';
   setNav('navTalk');
   requestWakeLock();
+
   const hist = document.getElementById('convoHistory');
   hist.innerHTML = '';
   history.forEach(m => { if(m.role==='user') addUserBubble(m.content); else addAIBubble(m.content,[]); });
   if (history.length) addChips(getChips());
-  setHint('Speak now','');
   setActiveCase(c.id);
   scrollHistory();
+
+  if (history.length > 0) {
+    setHint('Please wait...', '');
+    document.getElementById('micBtn').className = 'mic-btn waiting';
+    try {
+      const userProfile = getLocalProfile();
+      const recentHistory = history.slice(-6).map(m => m.role + ': ' + m.content).join(' | ');
+      const resumePrompt = 'The user is resuming a ' + c.category + ' case. Recent conversation: ' + recentHistory + '. Welcome them back warmly in 1-2 sentences, summarize exactly where we left off, and state the next step clearly.';
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: [{ role: 'user', content: resumePrompt }], category: c.category, deviceId, caseId: c.id, profile: userProfile })
+      });
+      const data = await res.json();
+      const summary = data.reply || 'Welcome back. Let us continue where we left off.';
+      addAIBubble(summary, getChips());
+      speakThenListen(summary);
+    } catch(e) {
+      speakThenListen('Welcome back. Let us pick up where we left off.');
+    }
+  } else {
+    setHint('Speak now', '');
+  }
 }
 
 // VOICE ENGINE
