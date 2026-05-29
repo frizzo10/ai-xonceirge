@@ -103,7 +103,14 @@ body{
 .home-greeting{padding:20px 16px 12px}
 .home-greeting strong{color:var(--green-dark);font-weight:600;display:block;font-size:17px;margin-bottom:3px}
 .home-greeting span{font-size:13px;color:var(--text2)}
-.prob-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 12px 24px}
+.prob-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 12px 8px}
+.more-toggle{
+  margin:0 12px 8px;padding:12px;border-radius:14px;
+  background:var(--surface);border:1.5px solid var(--border);
+  text-align:center;cursor:pointer;font-size:13px;font-weight:700;
+  color:var(--green-dark);-webkit-tap-highlight-color:transparent;
+}
+.more-toggle:active{background:var(--green-light)}
 .prob-btn{
   border:1.5px solid var(--border);border-radius:16px;
   background:var(--surface);padding:18px 8px 14px;
@@ -552,19 +559,28 @@ body{
         <strong id="greeting">What do you need help with?</strong>
         <span>Tap what's happening — we take it from there.</span>
       </div>
+      <!-- TOP 10 always visible -->
       <div class="prob-grid">
         <div class="prob-btn" onclick="openCarVoice()"><div class="pbi">🚙</div><div class="pbl">Car</div></div>
         <div class="prob-btn" onclick="openVoice('medical','Medical','What\'s going on with your health?')"><div class="pbi">🏥</div><div class="pbl">Medical</div></div>
-        <div class="prob-btn" onclick="openVoice('kids','Kids','Tell me about your child.')"><div class="pbi">👶</div><div class="pbl">Kids</div></div>
         <div class="prob-btn" onclick="openVoice('legal','Legal','What\'s the legal situation?')"><div class="pbi">⚖️</div><div class="pbl">Legal</div></div>
         <div class="prob-btn" onclick="openVoice('landlord','Landlord','Tell me what\'s happening.')"><div class="pbi">🏠</div><div class="pbl">Landlord</div></div>
         <div class="prob-btn" onclick="openVoice('money','Money','What\'s the financial situation?')"><div class="pbi">💸</div><div class="pbl">Money</div></div>
         <div class="prob-btn" onclick="openVoice('bills','Bills','Which company is this with?')"><div class="pbi">📄</div><div class="pbl">Bills</div></div>
         <div class="prob-btn" onclick="openVoice('insurance','Insurance','Auto, home, or health?')"><div class="pbi">🛡️</div><div class="pbl">Insurance</div></div>
         <div class="prob-btn" onclick="openVoice('work','Work','What specifically happened?')"><div class="pbi">💼</div><div class="pbl">Work</div></div>
-        <div class="prob-btn" onclick="openVoice('relationship','Relationship','Tell me what\'s going on.')"><div class="pbi">❤️</div><div class="pbl">Relationship</div></div>
-        <div class="prob-btn" onclick="openVoice('anxiety','Anxiety','Something specific or a feeling that won\'t go away?')"><div class="pbi">🧠</div><div class="pbl">Anxiety</div></div>
         <div class="prob-btn" onclick="openVoice('home','Home repair','Describe what you see, hear, or smell.')"><div class="pbi">🔧</div><div class="pbl">Home</div></div>
+        <div class="prob-btn" onclick="openVoice('talk','Just talk','I\'m here. What\'s on your mind?')"><div class="pbi">💬</div><div class="pbl">Just talk</div></div>
+      </div>
+
+      <!-- MORE accordion -->
+      <div class="more-toggle" id="moreToggle" onclick="toggleMore()">
+        <span id="moreLabel">+ More topics</span>
+      </div>
+      <div class="prob-grid" id="moreGrid" style="display:none">
+        <div class="prob-btn" onclick="openVoice('kids','Kids','Tell me about your child.')"><div class="pbi">👶</div><div class="pbl">Kids</div></div>
+        <div class="prob-btn" onclick="openVoice('relationship','Relationship','Tell me what\'s going on.')"><div class="pbi">❤️</div><div class="pbl">Relationship</div></div>
+        <div class="prob-btn" onclick="openVoice('anxiety','Anxiety','Something specific or a feeling?')"><div class="pbi">🧠</div><div class="pbl">Anxiety</div></div>
         <div class="prob-btn" onclick="openVoice('pet','Pet','What kind of pet and what are you seeing?')"><div class="pbi">🐾</div><div class="pbl">Pet</div></div>
         <div class="prob-btn" onclick="openVoice('school','School','How old is your child?')"><div class="pbi">🏫</div><div class="pbl">School</div></div>
         <div class="prob-btn" onclick="openVoice('neighbor','Neighbor','What happened?')"><div class="pbi">🏘️</div><div class="pbl">Neighbor</div></div>
@@ -572,7 +588,6 @@ body{
         <div class="prob-btn" onclick="openVoice('food','Dinner','What\'s in your fridge?')"><div class="pbi">🍽️</div><div class="pbl">Dinner</div></div>
         <div class="prob-btn" onclick="openVoice('sleep','Sleep','Can\'t fall asleep or wake up at night?')"><div class="pbi">😴</div><div class="pbl">Sleep</div></div>
         <div class="prob-btn" onclick="openVoice('job','Find a job','Looking now or dealing with a current job?')"><div class="pbi">🔍</div><div class="pbl">Find a job</div></div>
-        <div class="prob-btn" onclick="openVoice('talk','Just talk','I\'m here. What\'s on your mind?')"><div class="pbi">💬</div><div class="pbl">Just talk</div></div>
       </div>
     </div>
 
@@ -1020,6 +1035,14 @@ function showHome() {
   document.querySelectorAll('.case-item').forEach(el => el.classList.remove('active'));
   setNav('navHome');
   releaseWakeLock();
+}
+
+function toggleMore() {
+  const grid = document.getElementById('moreGrid');
+  const label = document.getElementById('moreLabel');
+  const isOpen = grid.style.display !== 'none';
+  grid.style.display = isOpen ? 'none' : 'grid';
+  label.textContent = isOpen ? '+ More topics' : '- Less';
 }
 
 function openCarVoice() {
