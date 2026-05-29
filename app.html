@@ -1150,35 +1150,43 @@ function speakThenListen(text) {
   if (window.speechSynthesis) {
     window.speechSynthesis.cancel();
 
-    // Split into chunks of max 150 chars at word boundaries - iOS cuts long utterances
-    const words = clean.split(' ');
-    const chunks = [];
-    let current = '';
-    for (const word of words) {
-      if ((current + ' ' + word).length > 150) {
-        if (current) chunks.push(current.trim());
-        current = word;
-      } else {
-        current = current ? current + ' ' + word : word;
+    setTimeout(() => {
+      const words = clean.split(' ');
+      const chunks = [];
+      let current = '';
+      for (const word of words) {
+        if ((current + ' ' + word).length > 140) {
+          if (current) chunks.push(current.trim());
+          current = word;
+        } else {
+          current = current ? current + ' ' + word : word;
+        }
       }
-    }
-    if (current) chunks.push(current.trim());
+      if (current) chunks.push(current.trim());
 
-    let chunkIdx = 0;
-    function speakChunk() {
-      if (chunkIdx >= chunks.length) { setTimeout(goGreen, 300); return; }
-      const utt = new SpeechSynthesisUtterance(chunks[chunkIdx]);
-      if (selectedVoice) utt.voice = selectedVoice;
-      utt.rate = 1.05;
-      utt.onend = () => { chunkIdx++; setTimeout(speakChunk, 50); };
-      utt.onerror = () => { chunkIdx++; setTimeout(speakChunk, 50); };
-      window.speechSynthesis.speak(utt);
-      // Don't increment here - wait for onend
-    }
+      let chunkIdx = 0;
+      let finished = false;
+      const goGreenOnce = () => { if (!finished) { finished = true; setTimeout(goGreen, 200); } };
 
-    // iOS failsafe
-    setTimeout(goGreen, Math.max(4000, clean.length * 65));
-    speakChunk();
+      // Chrome bug: speechSynthesis pauses when tab not focused — keep it alive
+      const keepAlive = setInterval(() => {
+        if (finished) { clearInterval(keepAlive); return; }
+        if (window.speechSynthesis.paused) window.speechSynthesis.resume();
+      }, 250);
+
+      function speakChunk() {
+        if (chunkIdx >= chunks.length) { clearInterval(keepAlive); goGreenOnce(); return; }
+        const utt = new SpeechSynthesisUtterance(chunks[chunkIdx]);
+        if (selectedVoice) utt.voice = selectedVoice;
+        utt.rate = 1.05;
+        utt.onend = () => { chunkIdx++; setTimeout(speakChunk, 50); };
+        utt.onerror = () => { chunkIdx++; setTimeout(speakChunk, 50); };
+        window.speechSynthesis.speak(utt);
+      }
+
+      setTimeout(() => { clearInterval(keepAlive); goGreenOnce(); }, Math.max(5000, clean.length * 70));
+      speakChunk();
+    }, 50);
   } else {
     setTimeout(goGreen, 1000);
   }
