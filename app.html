@@ -1658,7 +1658,10 @@ async function doPlacesSearch(query, location) {
     removeTypingBubble(loadingId);
 
     if (!data.places || data.places.length === 0) {
-      addAIBubble(`I couldn't find results near ${location}. Try searching Google Maps for "${query}".`, []);
+      const last = (data.attempts || []).slice(-1)[0];
+      const why = data.error || (last ? last.status + (last.error ? ' - ' + last.error : '') : 'no response');
+      console.log('Places attempts:', JSON.stringify(data.attempts || data));
+      addAIBubble(`I couldn't find results near ${location}. Try searching Google Maps for "${query}". (Google said: ${why})`, []);
       return;
     }
 
