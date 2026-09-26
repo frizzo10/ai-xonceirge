@@ -19,19 +19,26 @@ exports.handler = async (event) => {
     const searchQuery = encodeURIComponent(`${query} near ${location}`);
     const path = `/maps/api/place/textsearch/json?query=${searchQuery}&key=${apiKey}`;
 
-    const result = await new Promise((resolve, reject) => {
-      https.get({
-        hostname: 'maps.googleapis.com',
-        path,
-        headers: { 'Accept': 'application/json' }
-      }, res => {
-        let d = '';
-        res.on('data', c => d += c);
-        res.on('end', () => resolve({ status: res.statusCode, body: d }));
-      }).on('error', reject);
-    });
+    // Google sometimes comes back empty on the first try and fine a moment later — retry once.
+    let data;
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      const result = await new Promise((resolve, reject) => {
+        https.get({
+          hostname: 'maps.googleapis.com',
+          path,
+          headers: { 'Accept': 'application/json' }
+        }, res => {
+          let d = '';
+          res.on('data', c => d += c);
+          res.on('end', () => resolve({ status: res.statusCode, body: d }));
+        }).on('error', reject);
+      });
 
-    const data = JSON.parse(result.body);
+      data = JSON.parse(result.body);
+      if (data.status === 'OK' && (data.results || []).length > 0) break;
+      console.error(`Places attempt ${attempt}: ${data.status} — ${data.error_message || ''}`);
+      if (attempt === 1) await new Promise(r => setTimeout(r, 1000));
+    }
     if (data.status !== 'OK' && data.status !== 'ZERO_RESULTS') {
       throw new Error(`Places API: ${data.status} — ${data.error_message || ''}`);
     }
