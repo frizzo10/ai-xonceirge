@@ -1148,6 +1148,19 @@ async function resumeCase(c) {
 }
 
 // VOICE ENGINE
+// Make zip codes speak as digits ("2 8 6 0 7") instead of "twenty-eight thousand..."
+// Only touches the saved zip, zips after a state (e.g. "NC 28607") or after "zip"/"zip code",
+// so mileage and dollar amounts are still read normally. Display text is unchanged.
+function speakableText(text) {
+  const spell = z => z.split('').join(' ');
+  let t = String(text || '');
+  const saved = (localStorage.getItem('user_zip') || '').trim();
+  if (/^\d{5}$/.test(saved)) t = t.replace(new RegExp('\\b' + saved + '\\b', 'g'), spell(saved));
+  t = t.replace(/\b([A-Z]{2}),?\s+(\d{5})(?:-\d{4})?\b/g, (m, st, z) => st + ' ' + spell(z));
+  t = t.replace(/\b(zip(?:\s*code)?)\s*(?:is\s*)?(\d{5})\b/gi, (m, w, z) => w + ' ' + spell(z));
+  return t;
+}
+
 function speakThenListen(text) {
   stopSpeaking();
   stopRecording();
@@ -1157,7 +1170,7 @@ function speakThenListen(text) {
   document.getElementById('micBtn').className = 'mic-btn waiting';
 
   // Speak directly - must be synchronous for iOS Safari user gesture
-  const clean = text.replace(/[*_#`]/g, '').replace(/\n+/g, ' ').trim().substring(0, 600);
+  const clean = speakableText(text).replace(/[*_#`]/g, '').replace(/\n+/g, ' ').trim().substring(0, 600);
   
   let wentGreen = false;
   const goGreen = () => {
@@ -1345,7 +1358,7 @@ async function speakElevenLabs(text, onEnd) {
 function fallbackTTS(text, onEnd) {
   if (window.speechSynthesis) {
     window.speechSynthesis.cancel();
-    const utt = new SpeechSynthesisUtterance(text.substring(0, 600));
+    const utt = new SpeechSynthesisUtterance(speakableText(text).substring(0, 600));
     if (selectedVoice) utt.voice = selectedVoice;
     utt.rate = 1.05;
     utt.pitch = 1.0;
