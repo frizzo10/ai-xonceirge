@@ -6,6 +6,32 @@ const CORS = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS'
 };
 
+function googleSearch(text, apiKey) {
+  const path = `/maps/api/place/textsearch/json?query=${encodeURIComponent(text)}&region=us&key=${apiKey}`;
+  return new Promise((resolve, reject) => {
+    https.get({ hostname: 'maps.googleapis.com', path, headers: { 'Accept': 'application/json' } }, res => {
+      let d = '';
+      res.on('data', c => d += c);
+      res.on('end', () => { try { resolve(JSON.parse(d)); } catch (e) { reject(e); } });
+    }).on('error', reject);
+  });
+}
+
+// The AI words the search differently every time ("auto repair near 28607",
+// "auto repair near user's location", "auto repair near city"...). Don't depend on it:
+// take just the business type, then try a few phrasings Google handles well.
+function buildQueries(query, location) {
+  let base = String(query || '').replace(/\s+(near|in|around)\s+.*$/i, '').trim() || 'auto repair';
+  const loc = String(location || '').trim();
+  if (!loc) return [base];
+  return [
+    `${base} near ${loc}`,
+    `${base} in ${loc} USA`,
+    `${base} ${loc}`,
+    `${query} near ${loc}` // original behavior, last resort
+  ].filter((q, i, a) => a.indexOf(q) === i);
+}
+
 exports.handler = async (event) => {
   if (event.httpMethod === 'OPTIONS') return { statusCode: 200, headers: CORS, body: '' };
   if (event.httpMethod !== 'POST') return { statusCode: 405, body: 'Method not allowed' };
@@ -14,37 +40,20 @@ exports.handler = async (event) => {
   if (!apiKey) return { statusCode: 500, headers: { ...CORS, 'Content-Type': 'application/json' }, body: JSON.stringify({ error: 'No API key' }) };
 
   try {
-    const { query, location, type } = JSON.parse(event.body);
-    // Build search query
-    const searchQuery = encodeURIComponent(`${query} near ${location}`);
-    const path = `/maps/api/place/textsearch/json?query=${searchQuery}&key=${apiKey}`;
+    const { query, location } = JSON.parse(event.body);
+    const attempts = [];
+    let data = null;
 
-    // Google sometimes comes back empty on the first try and fine a moment later — retry once.
-    let data;
-    for (let attempt = 1; attempt <= 2; attempt++) {
-      const result = await new Promise((resolve, reject) => {
-        https.get({
-          hostname: 'maps.googleapis.com',
-          path,
-          headers: { 'Accept': 'application/json' }
-        }, res => {
-          let d = '';
-          res.on('data', c => d += c);
-          res.on('end', () => resolve({ status: res.statusCode, body: d }));
-        }).on('error', reject);
-      });
-
-      data = JSON.parse(result.body);
-      if (data.status === 'OK' && (data.results || []).length > 0) break;
-      console.error(`Places attempt ${attempt}: ${data.status} — ${data.error_message || ''}`);
-      if (attempt === 1) await new Promise(r => setTimeout(r, 1000));
-    }
-    if (data.status !== 'OK' && data.status !== 'ZERO_RESULTS') {
-      throw new Error(`Places API: ${data.status} — ${data.error_message || ''}`);
+    for (const text of buildQueries(query, location)) {
+      const d = await googleSearch(text, apiKey);
+      attempts.push({ text, status: d.status, count: (d.results || []).length, error: d.error_message || undefined });
+      console.log('Places try:', JSON.stringify(attempts[attempts.length - 1]));
+      if (d.status === 'OK' && (d.results || []).length > 0) { data = d; break; }
+      // A key/billing problem won't fix itself by rewording — stop and report it
+      if (d.status === 'REQUEST_DENIED' || d.status === 'INVALID_REQUEST') break;
     }
 
-    // Return top 3 results cleaned up
-    const places = (data.results || []).slice(0, 3).map(p => ({
+    const places = ((data && data.results) || []).slice(0, 3).map(p => ({
       name: p.name,
       address: p.formatted_address,
       rating: p.rating,
@@ -56,7 +65,7 @@ exports.handler = async (event) => {
     return {
       statusCode: 200,
       headers: { ...CORS, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ places, status: data.status })
+      body: JSON.stringify({ places, status: places.length ? 'OK' : 'ZERO_RESULTS', attempts })
     };
 
   } catch (err) {
