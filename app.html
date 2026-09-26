@@ -1672,14 +1672,14 @@ async function doPlacesSearch(query, location) {
     cards.innerHTML = '';
     const wrapper = cards;
 
-    data.places.forEach(p => {
+    data.places.forEach((p, i) => {
       const card = document.createElement('div');
       card.className = 'places-card';
       const openStatus = p.open_now === true ? '<span class="places-open yes">Open now</span>' :
                          p.open_now === false ? '<span class="places-open no">Closed</span>' : '';
       const rating = p.rating ? `<span class="places-rating">★ ${p.rating}</span>` : '';
       card.innerHTML = `
-        <div class="places-card-name">${p.name}</div>
+        <div class="places-card-name">${i + 1}. ${p.name}</div>
         <div class="places-card-addr">${p.address}</div>
         <div class="places-card-meta">${rating}${openStatus}</div>
         <a class="places-call" href="https://www.google.com/maps/place/?q=place_id:${p.place_id}" target="_blank">
@@ -1693,8 +1693,9 @@ async function doPlacesSearch(query, location) {
     overlay.classList.add('show');
 
     // Speak the results
-    const names = data.places.map(p => p.name).join(', ');
-    const speakText = 'I found ' + data.places.length + ' options near you. ' + names + '. I have shown them on your screen.';
+    const names = data.places.map((p, i) => (i + 1) + '. ' + p.name).join(', ');
+    const spokenNames = data.places.map((p, i) => 'Number ' + (i + 1) + ', ' + p.name).join('. ');
+    const speakText = 'I found ' + data.places.length + ' options near you. ' + spokenNames + '. I have shown them on your screen.';
     speakThenListen(speakText);
 
     // Tell Groq we found results
