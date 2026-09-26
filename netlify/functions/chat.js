@@ -60,8 +60,10 @@ async function scheduleFollowup(caseId, deviceId, message, daysFromNow) {
 
 async function callGroq(messages, systemPrompt) {
   const payload = JSON.stringify({
-    model: 'llama-3.3-70b-versatile',
-    max_tokens: 180,
+    model: 'openai/gpt-oss-20b',
+    reasoning_effort: 'low',
+    include_reasoning: false,
+    max_tokens: 1024, // gpt-oss counts reasoning tokens here; 180 would truncate replies to empty
     temperature: 0.5,
     messages: [{ role: 'system', content: systemPrompt }, ...messages]
   });
@@ -86,7 +88,9 @@ async function callGroq(messages, systemPrompt) {
   });
   const data = JSON.parse(result.body);
   if (result.status !== 200) throw new Error(data.error ? data.error.message : 'Groq error');
-  return data.choices[0].message.content;
+  const content = (data.choices[0].message.content || '').trim();
+  if (!content) throw new Error('Empty response from Groq');
+  return content;
 }
 
 async function generateTimeline(category, messages) {
